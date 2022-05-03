@@ -1,0 +1,9 @@
+- name: Ensure a list of packages installed
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages|flatten(levels=1) }}"
+
+- name: All done!
+  debug:
+    msg: Packages have been successfully installed
