@@ -1,0 +1,29 @@
+- name: Add main user with sudo permissions
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    comment: "{{ main_user }}"
+    group: sudo
+  become: true
+
+- name: Set authorized key taken from file for main user
+  ansible.posix.authorized_key:
+    user: "{{ main_user }}"
+    state: present
+    key: "{{ main_user_public_key }}"
+  tags: auto1
+  become: true
+
+- name: Add automation user
+  ansible.builtin.user:
+    name: "{{ automation_user }}"
+    comment: "{{ automation_user }}"
+  tags: auto2
+  become: true
+
+- name: Set authorized key taken from file for automation user
+  ansible.posix.authorized_key:
+    user: "{{ automation_user }}"
+    state: present
+    key: "{{ automation_user_public_key }}"
+  tags: auto1
+  become: true
