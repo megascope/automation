@@ -3,5 +3,5 @@
     - curl
     - htop
     - git
-    - python-apt
+    - python3-apt
     - etckeeper

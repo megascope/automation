@@ -1,1 +1,6 @@
-"{{ automation_user }}" ALL=(ALL) NOPASSWD: /root/jobs/"{{ automation_user }}"/update, /sbin/reboot
+{%- for line in automation_sudo_nopasswd %}
+{{ automation_user }} ALL=(ALL) NOPASSWD: {{ line }}
+{% endfor %}
+{%- for line in automation_sudo_nopasswd_host %}
+{{ automation_user }} ALL=(ALL) NOPASSWD: {{ line }}
+{% endfor %}

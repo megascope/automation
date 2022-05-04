@@ -16,7 +16,10 @@
   ansible.builtin.user:
     name: "{{ automation_user }}"
     comment: "{{ automation_user }}"
+    password_lock: yes
+    password: "*"
   become: true
+  tags: automation_user
 
 - name: Set authorized key taken from file for automation user
   ansible.posix.authorized_key:
@@ -24,3 +27,25 @@
     state: present
     key: "{{ automation_user_public_key }}"
   become: true
+  tags: automation_user
+
+- name: Copy automation sudoers file
+  ansible.builtin.template:
+    src: automation_sudoers.j2
+    dest: /etc/sudoers.d/automation_sudoers
+    owner: root
+    group: root
+    mode: '400'
+  tags: automation_user
+  become: true
+
+- name: Copy automation automation_scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /root/automation/scripts/
+    owner: root
+    group: root
+    mode: '500'
+  loop: "{{ automation_scripts + automation_scripts_host }}"
+  become: true
+  tags: automation_user
