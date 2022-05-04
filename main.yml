@@ -1,4 +1,7 @@
-- hosts: primary
+- hosts: all
   roles:
     - { role: packages, tags: packages }
+
+- hosts: secondary
+  roles: 
     - { role: users, tags: users }

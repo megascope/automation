@@ -5,3 +5,7 @@
     - git
     - python3-apt
     - etckeeper
+    - tmux
+    - vim
+    - ack
+  
