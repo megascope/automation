@@ -1,3 +1,17 @@
+- name: Checking OS
+  debug:
+    msg: OS Family is {{ ansible_os_family }}
+
+- name: Update package cache
+  ansible.builtin.yum: update_cache=yes
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Update package cache
+  ansible.builtin.apt: update_cache=yes
+  when: ansible_os_family == "Debian"
+  become: true
+
 - name: Ensure a list of packages installed
   ansible.builtin.package:
     name: "{{ item }}"
