@@ -17,7 +17,7 @@
     name: "{{ item }}"
     state: latest
   become: true
-  loop: "{{ packages|flatten(levels=1) }}"
+  loop: "{{ required_packages|flatten(levels=1) }}"
 
 - name: All done!
   debug:
