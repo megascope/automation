@@ -4,3 +4,10 @@
 {%- for line in automation_sudo_nopasswd_host %}
 {{ automation_user }} ALL=(ALL) NOPASSWD: {{ line }}
 {% endfor %}
+
+{%- for line in main_user_sudo_nopasswd %}
+{{ main_user }} ALL=(ALL) NOPASSWD: {{ line }}
+{% endfor %}
+{%- for line in main_user_sudo_nopasswd_host %}
+{{ main_user }} ALL=(ALL) NOPASSWD: {{ line }}
+{% endfor %}
