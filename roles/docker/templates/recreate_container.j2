@@ -1,0 +1,14 @@
+#!/bin/sh
+# do not call docker-compose down as that might delete
+# from 3rd party container managers
+
+PROJECT={{docker_project_root}}/$1
+
+if ! test -f $PROJECT/docker-compose.yml; then
+    echo Could not find $PROJECT/docker-compose.yml
+    exit 1
+fi
+
+cd $PROJECT
+docker compose pull
+docker compose up --force-recreate --build -d

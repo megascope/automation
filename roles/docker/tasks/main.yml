@@ -1,17 +1,35 @@
+- name: Make sure docker_user in docker group
+  user:
+    name: '{{docker_user}}'
+    groups: docker
+    append: yes
+  become: true
+
 - name: Create docker project directory
   ansible.builtin.file:
     path: "{{ docker_project_root }}/{{ item }}"
     state: directory
     mode: '0700'
-    owner: "{{ docker_user}}"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
   become: true
   loop: "{{ docker_containers }}"
+
+- name: Copy recreate container
+  ansible.builtin.template:
+    src: "recreate_container.j2"
+    dest: "{{docker_project_root}}/recreate_container"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+    mode: '700'
+  become: true
 
 - name: Copy templated dockerfiles
   ansible.builtin.template:
     src: "{{ item }}.yml.j2"
     dest: "{{ docker_project_root }}/{{ item }}/docker-compose.yml"
-    owner: "{{ docker_user}}"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
     mode: '600'
   become: true
   loop: "{{ docker_containers }}"
