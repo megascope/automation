@@ -1,0 +1,9 @@
+plex_container_name: plex
+plex_claim_code: null
+plex_uuid: 1000
+plex_guid: 1000
+plex_advertise_ip: null
+# /config and /data must be provided and mounted on the host
+plex_volumes:
+  - /tmp:/config
+  - /tmp:/data:ro

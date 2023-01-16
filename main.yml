@@ -5,3 +5,7 @@
 - hosts: secondary
   roles: 
     - { role: users, tags: users }
+
+- hosts: docker_hosts
+  roles:
+    - { role: docker, tags: docker }

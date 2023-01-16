@@ -1,0 +1,20 @@
+version: '3'
+services:
+  plex:
+    image: linuxserver/plex
+    container_name: "{{ plex_container_name }}"
+    hostname: {{ inventory_hostname_short }}-plex
+    environment:
+      TZ: "{{ time_zone }}"
+      ADVERTISE_IP: "{{ plex_advertise_ip }}"
+      c: "{{ plex_claim_code }}"
+      PUID: {{ plex_uuid }}
+      PGID: {{ plex_guid }}
+    ports:
+      - 32400:32400
+    volumes:
+{% for line in plex_volumes %}
+      - "{{ line }}"
+{% endfor %}
+    network_mode: host
+    restart: unless-stopped

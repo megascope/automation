@@ -1,0 +1,4 @@
+time_zone: "Etc/UTC"
+docker_user: root
+docker_project_root: "/{{docker_user}}/docker"
+docker_containers: []

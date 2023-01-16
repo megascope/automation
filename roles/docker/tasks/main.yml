@@ -1,0 +1,18 @@
+- name: Create docker project directory
+  ansible.builtin.file:
+    path: "{{ docker_project_root }}/{{ item }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ docker_user}}"
+  become: true
+  loop: "{{ docker_containers }}"
+
+- name: Copy templated dockerfiles
+  ansible.builtin.template:
+    src: "{{ item }}.yml.j2"
+    dest: "{{ docker_project_root }}/{{ item }}/docker-compose.yml"
+    owner: "{{ docker_user}}"
+    mode: '600'
+  become: true
+  loop: "{{ docker_containers }}"
+
