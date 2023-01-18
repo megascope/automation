@@ -3,6 +3,7 @@ plex_claim_code: null
 plex_uuid: 1000
 plex_guid: 1000
 plex_advertise_ip: null
+plex_network_mode: host
 # /config and /data must be provided and mounted on the host
 plex_volumes:
   - /tmp:/config

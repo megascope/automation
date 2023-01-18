@@ -10,11 +10,13 @@ services:
       c: "{{ plex_claim_code }}"
       PUID: {{ plex_uuid }}
       PGID: {{ plex_guid }}
-    ports:
+{% if plex_network_mode == 'bridge' %}
+    ports: []
       - 32400:32400
+{% endif %}
     volumes:
 {% for line in plex_volumes %}
       - "{{ line }}"
 {% endfor %}
-    network_mode: host
+    network_mode: {{plex_network_mode}}
     restart: unless-stopped
