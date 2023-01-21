@@ -1,8 +1,18 @@
+- name: Set fact for Debian
+  set_fact:
+    sudo_group: "sudo"
+  when: ansible_os_family == "Debian"
+
+- name: Set fact for RedHat
+  set_fact:
+    sudo_group: "wheel"
+  when: ansible_os_family == "RedHat"
+
 - name: Add main user with sudo permissions
   ansible.builtin.user:
     name: "{{ main_user }}"
     comment: "{{ main_user }}"
-    group: sudo
+    group: '{{sudo_group}}'
   become: true
 
 - name: Set authorized key taken from file for main user
