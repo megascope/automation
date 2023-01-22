@@ -1,5 +1,6 @@
 - hosts: all
   roles:
+    - { role: base, tags: base }
     - { role: packages, tags: packages }
 
 - hosts: secondary
