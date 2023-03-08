@@ -12,6 +12,7 @@
   ansible.builtin.user:
     name: "{{ main_user }}"
     comment: "{{ main_user }}"
+    shell: "{{ main_user_shell }}"
     group: '{{sudo_group}}'
   become: true
 
@@ -26,6 +27,7 @@
   ansible.builtin.user:
     name: "{{ automation_user }}"
     comment: "{{ automation_user }}"
+    shell: "{{ automation_user_shell }}"
     password_lock: yes
     password: "*"
   become: true

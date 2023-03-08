@@ -2,9 +2,6 @@
   roles:
     - { role: base, tags: base }
     - { role: packages, tags: packages }
-
-- hosts: secondary
-  roles: 
     - { role: users, tags: users }
 
 - hosts: docker_hosts
