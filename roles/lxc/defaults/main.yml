@@ -1,1 +1,16 @@
+# list of container definitions
+# example:
+# lxc_containers:
+#  - name: test
+#    idmap_start: 200000
+#    backing_store: lvm
+#    lvm_vg_name: lvm_pool_name
+#    lvm_thinpool: thinpool_name
+#    template: download
+#    template_options: "--dist debian --release bullseye --arch amd64"
+#    config: 
+#      - "lxc.config.param1=value1"
+#      - "lxc.config.param2=value2"
 lxc_containers: []
+
+lxc_lib_path: "/var/lib/lxc"

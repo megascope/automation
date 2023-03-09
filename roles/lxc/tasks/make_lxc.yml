@@ -6,18 +6,33 @@
     ccfg_extra:
       - "lxc.idmap=u 0 {{ lxc_item.idmap_start }} 65536"
       - "lxc.idmap=g 0 {{ lxc_item.idmap_start }} 65536"
+    ccfg_extra_filename: "{{lxc_lib_path}}/{{lxc_item.name}}.init.config"
+
+# need to do this via file since you cannot override idmap on
+# lxc-create command line
+- name: Copy initial config file
+  ansible.builtin.template:
+    src: "config.j2"
+    dest: "{{ccfg_extra_filename}}"
+    mode: '600'
+  become: true
 
 - name: Message
   debug:
-    msg: "Creating container {{ lxc_item.name }} with config {{ lxc_item.config + ccfg_extra }}"
+    msg: "Creating container {{ lxc_item.name }} with config {{ ccfg_extra_filename }}"
 
-# Create filesystem container, configure it, and archive it, and start it.
+# Create container
 - name: Create container
   community.general.lxc_container:
     name: "{{ lxc_item.name }}"
     backing_store: "{{ lxc_item.backing_store }}"
     template: "{{ lxc_item.template }}"
+    config: "{{ccfg_extra_filename}}"
     state: stopped
-    container_config: "{{ lxc_item.config + ccfg_extra }}" 
+    container_config: "{{ lxc_item.config }}" 
     template_options: "{{ lxc_item.template_options }}"
+
+    # these are only required if using lvm
+    vg_name: "{{ lxc_item.lvm_vg_name | default(omit) }}"
+    thinpool: "{{ lxc_item.lvm_thinpool | default(omit) }}"
   become: true
