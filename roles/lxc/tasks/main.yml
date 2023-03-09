@@ -1,0 +1,8 @@
+# this needs the following package installed via packages role
+#   - python3-lxc
+
+# loop of loops
+- include_tasks: make_lxc.yml
+  loop: "{{ lxc_containers }}"
+  loop_control:
+    loop_var: lxc_item

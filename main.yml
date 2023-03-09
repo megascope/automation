@@ -7,3 +7,7 @@
 - hosts: docker_hosts
   roles:
     - { role: docker, tags: docker }
+
+- hosts: lxc_hosts
+  roles:
+    - { role: lxc, tags: lxc }

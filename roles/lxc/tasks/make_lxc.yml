@@ -1,0 +1,23 @@
+
+# note this this currently doesn't actually work with the ansible
+# module, simply duplicates the config
+- name: extra container config
+  set_fact:
+    ccfg_extra:
+      - "lxc.idmap=u 0 {{ lxc_item.idmap_start }} 65536"
+      - "lxc.idmap=g 0 {{ lxc_item.idmap_start }} 65536"
+
+- name: Message
+  debug:
+    msg: "Creating container {{ lxc_item.name }} with config {{ lxc_item.config + ccfg_extra }}"
+
+# Create filesystem container, configure it, and archive it, and start it.
+- name: Create container
+  community.general.lxc_container:
+    name: "{{ lxc_item.name }}"
+    backing_store: "{{ lxc_item.backing_store }}"
+    template: "{{ lxc_item.template }}"
+    state: stopped
+    container_config: "{{ lxc_item.config + ccfg_extra }}" 
+    template_options: "{{ lxc_item.template_options }}"
+  become: true
