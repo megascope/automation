@@ -2,13 +2,26 @@
 # do not call docker-compose down as that might delete
 # from 3rd party container managers
 
+if [ "$1" = "recreate" ]; then
+    RECREATE="--force-recreate"
+    shift
+else
+    RECREATE=''
+fi
+
+if [ -z $1 ]; then
+    echo "Usage: $0 [recreate] docker_project_name"
+    echo "Setting recreate will force-recreate the container"
+    exit 1
+fi
+
 PROJECT={{docker_project_root}}/$1
 
 if ! test -f $PROJECT/docker-compose.yml; then
     echo Could not find $PROJECT/docker-compose.yml
     exit 1
-fi
+fi  
 
 cd $PROJECT
 docker compose pull
-docker compose up --force-recreate --build -d
+docker compose up $RECREATE --build -d
