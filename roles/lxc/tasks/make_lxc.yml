@@ -1,6 +1,7 @@
 
 # note this this currently doesn't actually work with the ansible
-# module, simply duplicates the config
+# module, simply duplicates the config in the file without actually using it
+# so have to create the config file
 - name: extra container config
   set_fact:
     ccfg_extra:

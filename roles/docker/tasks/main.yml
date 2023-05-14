@@ -16,6 +16,9 @@
     name:
       - docker 
       - docker-compose
+  become: true
+  become_user: "{{docker_user}}"
+
 
 - name: Make sure docker_user in docker group
   user:
@@ -60,3 +63,6 @@
     project_src: "{{ docker_project_root }}/{{ item }}"
     pull: true
   loop: "{{ docker_containers }}"
+  become: true
+  become_user: "{{docker_user}}"
+

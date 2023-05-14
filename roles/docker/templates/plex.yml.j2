@@ -10,7 +10,7 @@ services:
       c: "{{ plex_claim_code }}"
       PUID: {{ plex_uuid }}
       PGID: {{ plex_guid }}
-      VERSION: {{ plex_update_version }}
+      VERSION: "{{ plex_update_version }}"
 {% if plex_network_mode == 'bridge' %}
     ports: []
       - 32400:32400
