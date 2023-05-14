@@ -12,6 +12,7 @@ services:
     shm_size: "1gb"
     restart: unless-stopped
 
+  # configure this in cloudflared zero trust to connect to http://firefox:3000
   tunnel:
     container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
