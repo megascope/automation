@@ -1,0 +1,17 @@
+version: "3"
+services:
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN={{cloudflared_tunnel_token}}
+{% if cloudflared_tunnel_token_network is defined %}
+  network:
+    - mynetwork
+networks:
+  mynetwork:
+    name: {{cloudflared_tunnel_token_network}}
+    external: true
+{% endif %}
