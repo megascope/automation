@@ -19,5 +19,11 @@ services:
 {% for line in plex_volumes %}
       - "{{ line }}"
 {% endfor %}
+
+{% if plex_intel_transcode == true %}
+    devices:
+      - /dev/dri:/dev/dri
+{% endif %}
+
     network_mode: {{plex_network_mode}}
     restart: unless-stopped
