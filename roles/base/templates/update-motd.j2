@@ -1,0 +1,10 @@
+#!/bin/sh
+[ -f /etc/motd_banner ] && cat /etc/motd_banner
+ip addr | awk '
+/^[0-9]+:/ {
+  sub(/:/,"",$2); iface=$2 }
+/^[[:space:]]*inet / {
+  split($2, a, "/")
+  print iface" : "a[1]
+}' | grep -v lo:
+uptime
