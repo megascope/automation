@@ -1,0 +1,21 @@
+version: '3'
+services:
+  caddy:
+    image: caddy
+    restart: unless-stopped
+
+    cap_add:
+{% for line in caddy_capabilities %}
+      - "{{ line }}"
+{% endfor %}
+
+    ports:
+{% for line in caddy_ports %}
+      - "{{ line }}"
+{% endfor %}
+
+    volumes:
+      - "{{caddy_caddyfile}}:/etc/caddy/Caddyfile"
+      - "{{caddy_srv}}:/srv"
+      - "{{caddy_data}}:/data"
+      - "{{caddy_config}}:/config"

@@ -1,3 +1,15 @@
+- name: OS Installation details
+  debug:
+      msg: >
+        Installing docker for {{ansible_os_family}}
+        / {{ansible_distribution}}
+        / {{ansible_distribution_release}}
+        / {{ansible_distribution_version}}
+
+- name: Install docker-ce
+  include_tasks:
+    file: install_{{ansible_os_family|lower}}.yml
+
 - name: Create docker project directory
   ansible.builtin.file:
     path: "{{ docker_project_root }}"
@@ -6,19 +18,6 @@
     owner: "{{docker_user}}"
     group: "{{docker_user}}"
   become: true
-
-# following packages must be installed via package role first
-# python3-pip
-# virtualenv
-- name: Install Docker Module for Python into venv
-  pip:
-    virtualenv: '{{docker_python_venv}}'
-    name:
-      - docker 
-      - docker-compose
-  become: true
-  become_user: "{{docker_user}}"
-
 
 - name: Make sure docker_user in docker group
   user:
@@ -56,13 +55,17 @@
   become: true
   loop: "{{ docker_containers }}"
 
-- name: Start docker containers
-  vars:
-    ansible_python_interpreter: '{{docker_python_interpreter}}'
-  community.docker.docker_compose:
-    project_src: "{{ docker_project_root }}/{{ item }}"
-    pull: true
-  loop: "{{ docker_containers }}"
+- name: Write start everything file, ansible does not start the containers as that would not be idempotent
+  ansible.builtin.template:
+    src: "recreate_all_containers.j2"
+    dest: "{{docker_project_root}}/recreate_all_containers"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+    mode: '700'
   become: true
-  become_user: "{{docker_user}}"
 
+- name: Run any per-container task sets
+  include_tasks:
+      file: "{{item}}_tasks.yml"
+  when: lookup('vars', item + '_tasks', default=false)
+  loop: "{{ docker_containers }}"

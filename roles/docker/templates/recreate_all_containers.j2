@@ -1,0 +1,5 @@
+#!/bin/sh
+
+{% for item in docker_containers %}
+{{docker_project_root}}/recreate_container {{item}} "$@"
+{% endfor %}

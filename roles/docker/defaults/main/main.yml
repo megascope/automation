@@ -1,8 +1,4 @@
 time_zone: "Etc/UTC"
 docker_user: root
 docker_project_root: "/opt/docker-projects"
-
-# install docker compose and docker modules into venv
-docker_python_venv: "/opt/docker-projects/venv"
-docker_python_interpreter: "{{docker_python_venv}}/bin/python3"
 docker_containers: []
