@@ -6,6 +6,7 @@ plex_guid: 1000
 plex_advertise_ip: null
 plex_network_mode: host
 plex_update_version: public
+plex_intel_transcode: false
 # /config and /data must be provided and mounted on the host
 plex_volumes:
   - /tmp:/config

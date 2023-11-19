@@ -3,3 +3,38 @@
     name: '{{base_timezone}}'
   become: true
 
+- name: Copy banner if specified
+  ansible.builtin.copy:
+    src: "{{ motd_banner_file }}"
+    dest: /etc/motd_banner
+    owner: root
+    group: root
+    mode: '444'
+  become: true
+  when: motd_banner_file != None
+
+- name: Check for update-motd.d
+  stat:
+    path: "/etc/update-motd.d"
+  register: update_motd_dir
+
+- name: Copy script for ubuntu update-motd
+  when: update_motd_dir.stat.exists | default(false)
+  ansible.builtin.template:
+    src: "update-motd.j2"
+    dest: "{{ update_motd_dir.stat.path }}/1-dashboard"
+    mode: '755'
+  become: true
+
+- name: Check for /etc/motd.d
+  stat:
+    path: "/etc/motd.d"
+  register: rhel_motd_dir
+
+- name: RHEL motd.d directory, link to banner only
+  when: rhel_motd_dir.stat.exists and motd_banner_file != None
+  ansible.builtin.file:
+    src: /etc/motd_banner
+    dest: "{{ rhel_motd_dir.stat.path }}/banner"
+    state: link
+  become: true
