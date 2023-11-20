@@ -41,6 +41,7 @@
 
 - name: Setup firewall
   tags: firewall
+  when: firewall_zerotier or firewall_mosh or firewall_persist
   block:
   - include_tasks:
       file: firewall.yml

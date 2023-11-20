@@ -1,7 +1,14 @@
 # set these to true in host or group vars to enable
 # iptables rules
 firewall_zerotier: False
-firewall_https: False
+firewall_mosh: False
 
 # save firewall state to rules.v4
 firewall_persist: False
+
+# used to save custom chain
+firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
+
+firewall_ip_versions:
+- ipv4
+- ipv6

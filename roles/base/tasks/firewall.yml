@@ -1,44 +1,54 @@
-- name: Accept Zerotier
+- name: Create custom chain
+  become: true
+  iptables:
+    chain: "{{ firewall_custom_chain }}"
+    chain_management: true
+    state: present
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
+- name: Flush custom chain
+  become: true
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
+    flush: yes
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
+- name: Add custom chain to INPUT
   become: true
   when: firewall_zerotier
   ansible.builtin.iptables:
     chain: INPUT
+    action: insert
+    jump: "{{ firewall_custom_chain }}"
+    comment: defer to custom chain
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
+- name: Accept Zerotier
+  become: true
+  when: firewall_zerotier
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
     protocol: udp
     destination_port: 9993
     jump: ACCEPT
     comment: zerotier
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
 
-- name: Accept Zerotier
+- name: Accept Mosh
   become: true
-  when: firewall_zerotier
+  when: firewall_mosh
   ansible.builtin.iptables:
-    chain: INPUT
+    chain: "{{ firewall_custom_chain }}"
     protocol: udp
-    destination_port: 9993
+    destination_port: 60000:61000
     jump: ACCEPT
-    ip_version: ipv6
-    comment: zerotier v6
-
-- name: Accept https traffic
-  become: true
-  when: firewall_https
-  ansible.builtin.iptables:
-    chain: INPUT
-    protocol: tcp
-    destination_port: 443
-    jump: ACCEPT
-    comment: https
-
-- name: Accept https traffic
-  become: true
-  when: firewall_https
-  ansible.builtin.iptables:
-    chain: INPUT
-    protocol: tcp
-    destination_port: 443
-    jump: ACCEPT
-    ip_version: ipv6
-    comment: https v6
+    comment: mosh
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
 
 # This will apply to all loaded/active IPv4 tables.
 - name: Save current state of the firewall in system file
