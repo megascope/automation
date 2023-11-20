@@ -65,7 +65,9 @@
   become: true
 
 - name: Run any per-container task sets
-  include_tasks:
+  tags: dockersubtasks
+  block:
+  - include_tasks:
       file: "{{item}}_tasks.yml"
-  when: lookup('vars', item + '_tasks', default=false)
-  loop: "{{ docker_containers }}"
+    when: lookup('vars', item + '_tasks', default=false)
+    loop: "{{ docker_containers }}"

@@ -38,3 +38,9 @@
     dest: "{{ rhel_motd_dir.stat.path }}/banner"
     state: link
   become: true
+
+- name: Setup firewall
+  tags: firewall
+  block:
+  - include_tasks:
+      file: firewall.yml
