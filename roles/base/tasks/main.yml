@@ -45,3 +45,18 @@
   block:
   - include_tasks:
       file: firewall.yml
+
+- name: Check for /etc/needrestart/conf.d
+  tags: irritations
+  stat:
+    path: "/etc/needrestart/conf.d"
+  register: needrestart_conf_dir
+
+- name: Set needrestart to be less annoying
+  tags: irritations
+  when: needrestart_conf_dir.stat.exists
+  copy:
+    content: "$nrconf{restart} = 'l';\n"
+    dest: "{{ needrestart_conf_dir.stat.path }}/no_interactive.conf"
+    force: no
+  become: true
