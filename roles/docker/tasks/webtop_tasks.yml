@@ -1,0 +1,8 @@
+- name: Create data directory
+  file:
+    path: "{{webtop_data}}"
+    state: directory
+    mode: '0700'
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+  become: true

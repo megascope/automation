@@ -1,0 +1,8 @@
+
+webtop_tasks: true
+webtop_home: "{{docker_project_root}}/webtop"
+webtop_data: "{{webtop_home}}/data"
+webtop_tag: debian-xfce
+webtop_uuid: 1000
+webtop_guid: 1000
+webtop_privileged: False
