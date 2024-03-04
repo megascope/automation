@@ -12,11 +12,13 @@
     mode: '444'
   become: true
   when: motd_banner_file != None
+  tags: banner
 
 - name: Check for update-motd.d
   stat:
     path: "/etc/update-motd.d"
   register: update_motd_dir
+  tags: banner
 
 - name: Copy script for ubuntu update-motd
   when: update_motd_dir.stat.exists | default(false)
@@ -25,11 +27,13 @@
     dest: "{{ update_motd_dir.stat.path }}/1-dashboard"
     mode: '755'
   become: true
+  tags: banner
 
 - name: Check for /etc/motd.d
   stat:
     path: "/etc/motd.d"
   register: rhel_motd_dir
+  tags: banner
 
 - name: RHEL motd.d directory, link to banner only
   when: rhel_motd_dir.stat.exists and motd_banner_file != None
@@ -38,6 +42,7 @@
     dest: "{{ rhel_motd_dir.stat.path }}/banner"
     state: link
   become: true
+  tags: banner
 
 - name: Setup firewall
   tags: firewall
