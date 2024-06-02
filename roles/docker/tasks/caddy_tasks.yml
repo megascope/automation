@@ -37,3 +37,15 @@
     group: "{{docker_user}}"
     mode: '600'
   become: true
+
+- name: Copy caddy web data
+  ansible.builtin.template:
+    src: "{{ caddy_item }}"
+    dest: "{{caddy_srv}}/{{ caddy_item | basename | regex_replace('\\.j2$', '') }}"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+    mode: '444'
+  loop: "{{ caddy_srv_templates }}"
+  loop_control:
+    loop_var: caddy_item
+  become: true
