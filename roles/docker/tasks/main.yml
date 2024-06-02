@@ -27,6 +27,7 @@
   become: true
 
 - name: Create docker project item directories
+  tags: dockerupdate
   ansible.builtin.file:
     path: "{{ docker_project_root }}/{{ item }}"
     state: directory
@@ -37,6 +38,7 @@
   loop: "{{ docker_containers }}"
 
 - name: Copy recreate container
+  tags: dockerupdate
   ansible.builtin.template:
     src: "recreate_container.j2"
     dest: "{{docker_project_root}}/recreate_container"
@@ -46,6 +48,7 @@
   become: true
 
 - name: Copy templated dockerfiles
+  tags: dockerupdate
   ansible.builtin.template:
     src: "{{ item }}.yml.j2"
     dest: "{{ docker_project_root }}/{{ item }}/docker-compose.yml"
@@ -56,6 +59,7 @@
   loop: "{{ docker_containers }}"
 
 - name: Write start everything file, ansible does not start the containers as that would not be idempotent
+  tags: dockerupdate
   ansible.builtin.template:
     src: "recreate_all_containers.j2"
     dest: "{{docker_project_root}}/recreate_all_containers"
@@ -65,7 +69,9 @@
   become: true
 
 - name: Run any per-container task sets
-  tags: dockersubtasks
+  tags:
+    - dockerupdate
+    - dockersubtasks
   block:
   - include_tasks:
       file: "{{item}}_tasks.yml"
