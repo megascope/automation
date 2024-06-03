@@ -19,6 +19,14 @@
   become: true
   loop: "{{required_packages + required_packages_group + required_packages_host}}"
 
+- name: Run any per-package task sets
+  tags: packageupdate
+  block:
+  - include_tasks:
+      file: "{{item}}_tasks.yml"
+    when: lookup('vars', item + '_tasks', default=false)
+    loop: "{{required_packages + required_packages_group + required_packages_host}}"
+
 - name: All done!
   debug:
     msg: Packages have been successfully installed
