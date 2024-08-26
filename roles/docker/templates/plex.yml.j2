@@ -1,3 +1,4 @@
+# from https://hub.docker.com/r/linuxserver/plex
 services:
   plex:
     image: linuxserver/plex
@@ -11,7 +12,7 @@ services:
       PGID: {{ plex_guid }}
       VERSION: "{{ plex_update_version }}"
 {% if plex_network_mode == 'bridge' %}
-    ports: []
+    ports:
       - 32400:32400
 {% endif %}
     volumes:

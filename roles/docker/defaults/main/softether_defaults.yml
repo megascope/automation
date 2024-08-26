@@ -1,0 +1,14 @@
+softether_tasks: true
+softether_home: "{{docker_project_root}}/softether"
+
+
+# Ports forwarded from the host can be overriden here
+softether_ports:
+    - 53:53
+    - 443:443
+    - 992:992
+    - 1194:1194/udp
+    - 5555:5555
+    - 500:500/udp
+    - 4500:4500/udp
+    - 1701:1701/udp
