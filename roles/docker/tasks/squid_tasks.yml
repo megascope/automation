@@ -1,0 +1,23 @@
+- name: Create data directories
+  file:
+    path: "{{squid_item}}"
+    state: directory
+    mode: '0700'
+    owner: "{{squid_proxy_user}}"
+    group: "{{squid_proxy_user}}"
+  become: true
+  loop:
+    - "{{squid_home}}/cache"
+    - "{{squid_home}}/log"
+  loop_control:
+    loop_var: squid_item
+
+
+- name: Set squid.conf
+  ansible.builtin.template:
+    src: "{{squid_conf_template}}"
+    dest: "{{squid_home}}/squid.conf"
+    owner: "{{squid_proxy_user}}"
+    group: "{{squid_proxy_user}}"
+    mode: '600'
+  become: true

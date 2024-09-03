@@ -1,0 +1,23 @@
+# from https://hub.docker.com/r/ubuntu/squid
+services:
+  squid:
+    image: ubuntu/squid:latest
+    restart: always
+{% if squid_port %}
+    ports:
+      - {{ squid_port }}:3128
+{% endif %}
+
+    volumes:
+      - "{{squid_home}}/log:/var/log/squid"
+      - "{{squid_home}}/cache:/var/spool/squid"
+      - "{{squid_home}}/squid.conf:/etc/squid/squid.conf"
+
+{% if squid_shared_network is defined %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{squid_shared_network}}
+    external: true
+{% endif %}
