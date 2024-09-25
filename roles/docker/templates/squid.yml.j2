@@ -13,7 +13,7 @@ services:
       - "{{squid_home}}/cache:/var/spool/squid"
       - "{{squid_home}}/squid.conf:/etc/squid/squid.conf"
 
-{% if squid_shared_network is defined %}
+{% if squid_shared_network %}
     networks:
       - shared_network
 networks:
