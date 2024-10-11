@@ -1,0 +1,12 @@
+# if you're using the default template, set/override these variables
+grafana_alloy_metrics_endpoint: null
+grafana_alloy_loki_endpoint: null
+
+# must be set for grafana cloud and/or using the template
+grafana_alloy_basic_auth_username: null
+grafana_alloy_basic_auth_password: null
+
+# override this in your host_vars with the appropriate template
+grafana_alloy_config_template: conf.alloy.j2
+
+grafana_alloy_user: alloy

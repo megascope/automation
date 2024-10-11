@@ -1,0 +1,1 @@
+ grafana_alloy_config: "{{ lookup('template', grafana_alloy_config_template) }}"

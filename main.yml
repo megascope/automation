@@ -11,3 +11,7 @@
 - hosts: lxc_hosts
   roles:
     - { role: lxc, tags: lxc }
+
+- hosts: grafana_hosts
+  roles:
+    - { role: grafana, tags: grafana }
