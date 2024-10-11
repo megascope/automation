@@ -10,16 +10,6 @@
   include_tasks:
     file: install_{{ansible_os_family|lower}}.yml
 
-- name: Write username to file
-  tags: grafanaconfig
-  ansible.builtin.copy:
-    content: "{{ grafana_alloy_basic_auth_username }}"
-    dest: "/etc/alloy/api.username"
-    mode: 0600
-    owner: "{{grafana_alloy_user}}"
-  become: true
-  when: grafana_alloy_basic_auth_username is not none
-
 - name: Write api key to file
   tags: grafanaconfig
   ansible.builtin.copy:
@@ -37,4 +27,11 @@
     dest: "/etc/alloy/config.alloy"
     owner: "{{grafana_alloy_user}}"
     mode: '640'
+  become: true
+
+- name: Enable alloy service, and restart to pick up changes
+  ansible.builtin.systemd_service:
+    name: alloy
+    state: restarted
+    enabled: yes
   become: true

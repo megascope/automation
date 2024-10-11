@@ -2,10 +2,6 @@ local.file "api_password" {
   filename  = "/etc/alloy/api.password"
 }
 
-local.file "api_username" {
-  filename  = "/etc/alloy/api.username"
-}
-
 prometheus.exporter.self "alloy_check" { }
 
 discovery.relabel "alloy_check" {
@@ -49,7 +45,7 @@ prometheus.remote_write "metrics_service" {
     url = "{{ grafana_alloy_metrics_endpoint }}"
 
     basic_auth {
-      username = local.file.api_username.content
+      username = "{{ grafana_alloy_basic_auth_metrics_username }}"
       password = local.file.api_password.content
     }
   }
@@ -60,7 +56,7 @@ loki.write "grafana_cloud_loki" {
     url = "{{ grafana_alloy_loki_endpoint }}"
 
     basic_auth {
-      username = local.file.api_username.content
+      username = "{{ grafana_alloy_basic_auth_loki_username }}"
       password = local.file.api_password.content
     }
   }
