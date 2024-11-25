@@ -5,7 +5,7 @@ squid_home: "{{docker_project_root}}/squid"
 # set this if you want the port to be forwarded
 squid_port: null
 
-# set this if you want squid to be in the same docker network
+# set this if you want this to be in the same docker network
 # as something else
 squid_shared_network: null
 

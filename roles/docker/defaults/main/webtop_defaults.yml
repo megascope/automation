@@ -6,3 +6,6 @@ webtop_tag: debian-xfce
 webtop_uuid: 1000
 webtop_guid: 1000
 webtop_privileged: False
+
+# set if you need to share a network with something
+webtop_shared_network: null

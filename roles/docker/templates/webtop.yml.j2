@@ -25,3 +25,12 @@ services:
       - /dev/dri:/dev/dri #optional
     shm_size: "1gb" #optional
     restart: unless-stopped
+
+{% if webtop_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{webtop_shared_network}}
+    external: true
+{% endif %}
