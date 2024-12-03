@@ -7,6 +7,9 @@ webtop_uuid: 1000
 webtop_guid: 1000
 webtop_privileged: False
 
+# set this if you want the ports to be forwarded
+webtop_port: null
+
 # set this if you want this to be in the same docker network
 # as something else
 webtop_shared_network: null

@@ -3,7 +3,8 @@ grafana_alloy_metrics_endpoint: null
 grafana_alloy_loki_endpoint: null
 
 # must be set for grafana cloud and/or using the template
-grafana_alloy_basic_auth_username: null
+grafana_alloy_basic_auth_loki_username: null
+grafana_alloy_basic_auth_metrics_username: null
 grafana_alloy_basic_auth_password: null
 
 # override this in your host_vars with the appropriate template

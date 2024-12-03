@@ -18,9 +18,11 @@ services:
 {% if webtop_privileged == true %}
       - /var/run/docker.sock:/var/run/docker.sock
 {% endif %}
+{% if webtop_port %}
     ports:
       - 3000:3000
       - 3001:3001
+{% endif %}
     devices:
       - /dev/dri:/dev/dri #optional
     shm_size: "1gb" #optional
