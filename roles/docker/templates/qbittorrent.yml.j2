@@ -4,15 +4,18 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID={{qbittorrent_uuid}}
+      - PGID={{qbittorrent_guid}}
       - TZ=Etc/UTC
       - WEBUI_PORT=8080
       - TORRENTING_PORT=6881
 
+{% if qbittorrent_ports %}
+    ports:
 {% for line in qbittorrent_ports %}
-      - "{{ line }}"
+    - "{{ line }}"
 {% endfor %}
+{% endif %}
 
     volumes:
       - "{{qbittorrent_config}}:/config"
@@ -20,6 +23,6 @@ services:
 
     restart: unless-stopped
 
-{% if qbittorrent_network_mode %}
-    network_mode: "{{qbittorrent_network_mode}}"
+{% if qbittorrent_upstream_container %}
+    network_mode: container:{{qbittorrent_upstream_container}}
 {% endif %}

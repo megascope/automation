@@ -1,0 +1,35 @@
+gluetun_tasks: true
+gluetun_home: "{{docker_project_root}}/gluetun"
+gluetun_data: "{{gluetun_home}}/data"
+
+# See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+gluetun_vpn: null
+
+# e.g.
+# - "OPENVPN_USER=abc"
+# - "OPENVPN_PASSWORD=abc"
+# OR
+# - "WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
+gluetun_credentials: null
+
+gluetun_vpn_type: openvpn
+
+gluetun_ports:
+  - "8888:8888/tcp # HTTP proxy"
+  - "8388:8388/tcp # Shadowsocks"
+  - "8388:8388/udp # Shadowsocks"
+
+gluetun_updater_period: 72h
+
+# example list of countries
+gluetun_server_countries:
+  - United States
+  - Germany
+  - France
+  - Ireland
+  - United Kingdom
+  - Canada
+  - Australia
+  - Japan
+
+gluetun_shared_network: null

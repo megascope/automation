@@ -1,6 +1,4 @@
 nordvpn_tasks: true
 nordvpn_home: "{{docker_project_root}}/nordvpn"
 nordvpn_data: "{{nordvpn_home}}/data"
-
-nordvpn_ports:
-  - "8888:8888/tcp # forward proxy proxy"
+nordvpn_ports: []

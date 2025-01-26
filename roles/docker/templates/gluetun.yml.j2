@@ -1,42 +1,41 @@
 services:
   gluetun:
     image: qmcgaw/gluetun
-    # container_name: gluetun
+    container_name: gluetun
     # line above must be uncommented to allow external containers to connect.
     # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
+{% if gluetun_ports %}
     ports:
-{% for line in glueton_ports %}
+{% for line in gluetun_ports %}
       - "{{ line }}"
 {% endfor %}
-
+{% endif %}
     volumes:
-      - "{{glueton_data}}:/gluetun"
+      - "{{gluetun_data}}:/gluetun"
 
     environment:
       # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
-      - VPN_SERVICE_PROVIDER=ivpn
-      - VPN_TYPE=openvpn
-      # OpenVPN:
-      - OPENVPN_USER=
-      - OPENVPN_PASSWORD=
-      # Wireguard:
-      # - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
-      # - WIREGUARD_ADDRESSES=10.64.222.21/32
+      - VPN_SERVICE_PROVIDER={{gluetun_vpn}}
+      - VPN_TYPE={{gluetun_vpn_type}}
+{% for line in gluetun_credentials %}
+      - {{line}}
+{% endfor %}
+      - SERVER_COUNTRIES={{ gluetun_server_countries | join(',') }}
       # Timezone for accurate log times
-      - TZ=
+      - TZ={{time_zone}}
       # Server list updater
       # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
-      - UPDATER_PERIOD=
+      - UPDATER_PERIOD={{gluetun_updater_period}}
 
-{% if glueton_shared_network %}
+{% if gluetun_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{glueton_shared_network}}
+    name: {{gluetun_shared_network}}
     external: true
 {% endif %}

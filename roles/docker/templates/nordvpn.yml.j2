@@ -1,24 +1,31 @@
-# from https://github.com/bubuntux/nordvpn
 services:
-  vpn:
-    image: ghcr.io/bubuntux/nordvpn
+  nordvpn:
+    image: nordvpn
+    container_name: nordvpn-active
+
     cap_add:
-      - NET_ADMIN               # Required
-      - NET_RAW                 # Required
-    environment:                # Review https://github.com/bubuntux/nordvpn#environment-variables
-      - TOKEN=f6f2bb45...     # Required
-      - CONNECT=United_States
-      - TECHNOLOGY=NordLynx
-      - NETWORK=192.168.1.0/24  # So it can be accessed within the local network
-    ports:
-      - 8080:8080
+      - NET_ADMIN
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
-  torrent:
-    image: ghcr.io/linuxserver/qbittorrent
-    network_mode: service:vpn
-    depends_on:
-      - vpn
 
-# The torrent service would be available at http://localhost:8080/
-# or anywhere inside of the local network http://192.168.1.xxx:8080
+{% if nordvpn_ports %}
+    ports:
+{% for line in nordvpn_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+    volumes:
+      - "{{nordvpn_data}}:/var/lib/nordvpn"
+
+{% if nordvpn_shared_network %}
+    networks:
+      - shared_network
+      - nordvpn_network
+networks:
+  shared_network:
+    name: {{nordvpn_shared_network}}
+    external: true
+  nordvpn_network:
+    driver: bridge
+{% endif %}
