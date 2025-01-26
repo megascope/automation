@@ -1,0 +1,14 @@
+qbittorrent_tasks: true
+qbittorrent_home: "{{docker_project_root}}/qbittorrent"
+
+qbittorrent_ports:
+  - "8080:8080"
+  - "6881:6881"
+  - "6881:6881/udp"
+
+qbittorrent_downloads: "{{qbittorrent_home}}/downloads"
+qbittorrent_config: "{{qbittorrent_home}}/config"
+
+
+# use this to have the container share network namespace with another
+qbittorrent_network_mode: null
