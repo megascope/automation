@@ -3,6 +3,6 @@
     path: "{{webtop_data}}"
     state: directory
     mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{webtop_uuid}}"
+    group: "{{webtop_guid}}"
   become: true

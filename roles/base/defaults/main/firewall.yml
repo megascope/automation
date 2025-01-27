@@ -1,5 +1,6 @@
 # set these to true in host or group vars to enable
 # iptables rules
+firewall_ssh: True
 firewall_zerotier: False
 firewall_mosh: False
 

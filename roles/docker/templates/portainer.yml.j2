@@ -1,0 +1,27 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-volume-data:/data
+
+{% if portainer_ports %}
+    ports:
+{% for line in portainer_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+{% if portainer_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{portainer_shared_network}}
+    external: true
+{% endif %}
+
+volumes:
+    portainer-volume-data:

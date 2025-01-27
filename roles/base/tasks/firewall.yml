@@ -26,6 +26,18 @@
     ip_version: "{{ item }}"
   with_items: "{{ firewall_ip_versions }}"
 
+- name: Accept ssh
+  become: true
+  when: firewall_ssh
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
+    protocol: tcp
+    destination_port: 22
+    jump: ACCEPT
+    comment: ssh
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
 - name: Accept Zerotier
   become: true
   when: firewall_zerotier

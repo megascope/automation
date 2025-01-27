@@ -2,7 +2,7 @@ services:
   nordvpn:
     image: nordvpn
     container_name: nordvpn-active
-
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     sysctls:

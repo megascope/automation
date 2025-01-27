@@ -8,3 +8,6 @@ jackett_shared_network: null
 # user/group to run as
 jackett_uuid: 65534
 jackett_guid: 65534
+
+jackett_ports:
+  - "9117:9117"

@@ -3,15 +3,19 @@ services:
     image: caddy
     restart: unless-stopped
 
+{% if caddy_capabilities %}
     cap_add:
 {% for line in caddy_capabilities %}
       - "{{ line }}"
 {% endfor %}
+{% endif %}
 
+{% if caddy_ports %}
     ports:
 {% for line in caddy_ports %}
       - "{{ line }}"
 {% endfor %}
+{% endif %}
 
     volumes:
       - "{{caddy_caddyfile}}:/etc/caddy/Caddyfile"
