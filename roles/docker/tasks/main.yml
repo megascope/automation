@@ -10,6 +10,16 @@
   include_tasks:
     file: install_{{ansible_os_family|lower}}.yml
 
+- name: Write daemon.json
+  tags: dockerupdate, bongo
+  ansible.builtin.copy:
+    content: "{{ docker_daemon_config | to_nice_json }}\n"
+    dest: /etc/docker/daemon.json
+    owner: "root"
+    group: "root"
+    mode: '644'
+  become: true
+
 - name: Create docker project directory
   ansible.builtin.file:
     path: "{{ docker_project_root }}"
