@@ -11,7 +11,7 @@
     file: install_{{ansible_os_family|lower}}.yml
 
 - name: Write daemon.json
-  tags: dockerupdate, bongo
+  tags: dockerupdate
   ansible.builtin.copy:
     content: "{{ docker_daemon_config | to_nice_json }}\n"
     dest: /etc/docker/daemon.json
