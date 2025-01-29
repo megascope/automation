@@ -1,6 +1,6 @@
-- name: Create caddy config directory
+- name: Create caddy conf directory
   file:
-    path: "{{caddy_config}}"
+    path: "{{caddy_conf}}"
     state: directory
     mode: '0700'
     owner: "{{docker_user}}"
@@ -10,15 +10,6 @@
 - name: Create caddy srv directory
   file:
     path: "{{caddy_srv}}"
-    state: directory
-    mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-  become: true
-
-- name: Create caddy data directory
-  file:
-    path: "{{caddy_data}}"
     state: directory
     mode: '0700'
     owner: "{{docker_user}}"

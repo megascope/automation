@@ -3,10 +3,14 @@ squid_conf_template: squid_squid.conf.j2
 squid_home: "{{docker_project_root}}/squid"
 
 # set this if you want the port to be forwarded
-squid_port: null
+squid_ports:
+  - "3128:3128"
 
 # set this if you want this to be in the same docker network
 # as something else
 squid_shared_network: null
+
+# use this to have the container share network namespace with another
+squid_upstream_container: null
 
 squid_proxy_user: proxy

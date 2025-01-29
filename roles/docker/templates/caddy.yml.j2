@@ -2,6 +2,7 @@ services:
   caddy:
     image: caddy
     restart: unless-stopped
+    container_name: caddy
 
 {% if caddy_capabilities %}
     cap_add:
@@ -18,7 +19,13 @@ services:
 {% endif %}
 
     volumes:
-      - "{{caddy_caddyfile}}:/etc/caddy/Caddyfile"
-      - "{{caddy_srv}}:/srv"
-      - "{{caddy_data}}:/data"
-      - "{{caddy_config}}:/config"
+      - "{{caddy_conf}}:/etc/caddy"
+      - "{{caddy_srv}}:/srv:ro"
+      - "caddy-data:/data"
+      - "caddy-config:/config"
+{% if caddy_certs %}
+      - "{{caddy_certs}}:/etc/ssl/private:ro"
+{% endif %}
+volumes:
+    caddy-config:
+    caddy-data:

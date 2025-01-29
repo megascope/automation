@@ -2,16 +2,25 @@
 services:
   squid:
     image: ubuntu/squid:latest
-    restart: always
-{% if squid_port %}
+    restart: unless-stopped
+    container_name: squid
+{% if squid_ports %}
     ports:
-      - {{ squid_port }}:3128
+{% for line in squid_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - "squid-log:/var/log/squid"
+      - "squid-cache:/var/spool/squid"
+      - "{{squid_home}}/squid.conf:/etc/squid/squid.conf"
+{% if squid_upstream_container %}
+    network_mode: container:{{squid_upstream_container}}
 {% endif %}
 
-    volumes:
-      - "{{squid_home}}/log:/var/log/squid"
-      - "{{squid_home}}/cache:/var/spool/squid"
-      - "{{squid_home}}/squid.conf:/etc/squid/squid.conf"
+volumes:
+    squid-cache:
+    squid-log:
 
 {% if squid_shared_network %}
     networks:
