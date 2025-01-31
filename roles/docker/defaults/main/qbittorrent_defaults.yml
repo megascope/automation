@@ -1,4 +1,5 @@
 qbittorrent_tasks: true
+qbittorrent_image: lscr.io/linuxserver/qbittorrent:latest
 qbittorrent_home: "{{docker_project_root}}/qbittorrent"
 
 qbittorrent_ports:
@@ -15,3 +16,6 @@ qbittorrent_network_mode: null
 # user/group to run as
 qbittorrent_uuid: 1000
 qbittorrent_guid: 1000
+
+# want to be careful about restarting this in case it needs a proxy
+qbittorrent_restart_policy: "no"

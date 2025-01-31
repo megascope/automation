@@ -1,8 +1,8 @@
 services:
   caddy:
     image: caddy
-    restart: unless-stopped
     container_name: caddy
+    restart: {{ caddy_restart_policy }}
 
 {% if caddy_capabilities %}
     cap_add:

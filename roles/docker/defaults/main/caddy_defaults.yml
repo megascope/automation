@@ -23,3 +23,5 @@ caddy_certs: null
 
 # A list of jinja templates to copy to the srv folder
 caddy_srv_templates: []
+
+caddy_restart_policy: "always"

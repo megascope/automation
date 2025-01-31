@@ -1,8 +1,9 @@
 # from https://docs.linuxserver.io/images/docker-qbittorrent
 services:
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: {{ qbittorrent_image }}
     container_name: qbittorrent
+    restart: {{ qbittorrent_restart_policy }}
     environment:
       - PUID={{qbittorrent_uuid}}
       - PGID={{qbittorrent_guid}}
@@ -21,7 +22,6 @@ services:
       - "{{qbittorrent_config}}:/config"
       - "{{qbittorrent_downloads}}:/downloads"
 
-    restart: unless-stopped
 
 {% if qbittorrent_upstream_container %}
     network_mode: container:{{qbittorrent_upstream_container}}
