@@ -60,4 +60,4 @@
     mode: '500'
   loop: "{{ automation_scripts + automation_scripts_host }}"
   become: true
-  tags: automation_user
+  tags: automation_user, scripts

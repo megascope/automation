@@ -50,6 +50,18 @@
     ip_version: "{{ item }}"
   with_items: "{{ firewall_ip_versions }}"
 
+- name: Accept Tailscale
+  become: true
+  when: firewall_tailscale
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
+    protocol: udp
+    destination_port: 41641
+    jump: ACCEPT
+    comment: tailscale
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
 - name: Accept Mosh
   become: true
   when: firewall_mosh
