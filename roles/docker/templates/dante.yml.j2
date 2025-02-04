@@ -7,6 +7,11 @@ services:
     environment:
       - PROXY_PASSWORD={{ dante_password }}
 
+{% if dante_config_template %}
+    volumes:
+      - "{{dante_config_template_location}}:/etc/sockd.conf:ro"
+{% endif %}
+
 {% if dante_ports %}
     ports:
 {% for line in dante_ports %}
