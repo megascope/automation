@@ -52,9 +52,10 @@
   become: true
 
 - name: Copy automation automation_scripts
-  ansible.builtin.copy:
+  #ansible.builtin.copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: /root/automation/scripts/
+    dest: "/root/automation/scripts/{{ item | basename | regex_replace('\\.j2$', '') }}"
     owner: root
     group: root
     mode: '500'
