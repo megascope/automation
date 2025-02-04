@@ -13,7 +13,7 @@ docker_caddy_ports:
 # note that docker_caddy_config is not the "config" folder, but the
 # conf folder that the Caddyfile and certs can be put in
 
-docker_caddy_caddyfile_template: docker_caddy_Caddyfile.j2
+docker_caddy_caddyfile_template: caddy_Caddyfile.j2
 docker_caddy_conf: "{{docker_caddy_home}}/conf"
 docker_caddy_caddyfile: "{{docker_caddy_conf}}/Caddyfile"
 docker_caddy_srv: "{{docker_caddy_home}}/srv"

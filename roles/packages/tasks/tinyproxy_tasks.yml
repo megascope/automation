@@ -1,16 +1,16 @@
 - name: tinyproxy config management
   debug:
     msg:
-    - "{{ tinyproxy_config }}"
+    - "{{ packages_tinyproxy_config }}"
     - "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['network'] }}"
     - "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['prefix'] }}"
 
 - name: Update tinyproxy config
   ansible.builtin.lineinfile:
-    path: "{{ tinyproxy_config }}"
+    path: "{{ packages_tinyproxy_config }}"
     state: present
-    line: "{{ tinyproxy_item }}"
-  loop: "{{ tinyproxy_required_lines }}"
+    line: "{{ packages_tinyproxy_item }}"
+  loop: "{{ packages_tinyproxy_required_lines }}"
   loop_control:
-    loop_var: tinyproxy_item
+    loop_var: packages_tinyproxy_item
   become: true

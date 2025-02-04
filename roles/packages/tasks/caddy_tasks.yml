@@ -1,0 +1,8 @@
+- name: Set caddyfile
+  ansible.builtin.template:
+    src: "{{packages_caddy_caddyfile_template}}"
+    dest: "{{packages_caddy_config}}"
+    owner: "{{packages_caddy_user}}"
+    group: "{{packages_caddy_group}}"
+    mode: '440'
+  become: true

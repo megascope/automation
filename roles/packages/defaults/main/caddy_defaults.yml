@@ -1,0 +1,5 @@
+packages_caddy_tasks: true
+packages_caddy_config: /etc/caddy/Caddyfile
+packages_caddy_user: caddy
+packages_caddy_group: caddy
+packages_caddy_caddyfile_template: Caddyfile.j2

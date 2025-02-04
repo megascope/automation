@@ -24,7 +24,7 @@
   block:
   - include_tasks:
       file: "{{item}}_tasks.yml"
-    when: lookup('vars', item + '_tasks', default=false)
+    when: lookup('vars', 'packages_' + item + '_tasks', default=false)
     loop: "{{required_packages + required_packages_group + required_packages_host}}"
 
 - name: All done!

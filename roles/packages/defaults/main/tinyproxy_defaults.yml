@@ -1,5 +1,5 @@
-tinyproxy_tasks: true
-tinyproxy_config: /etc/tinyproxy/tinyproxy.conf
+packages_tinyproxy_tasks: true
+packages_tinyproxy_config: /etc/tinyproxy/tinyproxy.conf
 
 # add any lines you must have in the config file here
-tinyproxy_required_lines: []
+packages_tinyproxy_required_lines: []
