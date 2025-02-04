@@ -1,0 +1,19 @@
+# from https://github.com/megascope/dante
+services:
+  dante:
+    image: {{ dante_image }}
+    container_name: {{ dante_container_name }}
+    restart: {{ dante_restart_policy }}
+    environment:
+      - PROXY_PASSWORD={{ dante_password }}
+
+{% if dante_ports %}
+    ports:
+{% for line in dante_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+{% if dante_upstream_container %}
+    network_mode: container:{{dante_upstream_container}}
+{% endif %}
