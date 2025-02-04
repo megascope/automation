@@ -1,6 +1,6 @@
 - name: Create caddy conf directory
   file:
-    path: "{{caddy_conf}}"
+    path: "{{docker_caddy_conf}}"
     state: directory
     mode: '0700'
     owner: "{{docker_user}}"
@@ -9,7 +9,7 @@
 
 - name: Create caddy srv directory
   file:
-    path: "{{caddy_srv}}"
+    path: "{{docker_caddy_srv}}"
     state: directory
     mode: '0700'
     owner: "{{docker_user}}"
@@ -18,12 +18,12 @@
 
 - name: Set caddyfile
   debug:
-    msg: "{{caddy_caddyfile}}"
+    msg: "{{docker_caddy_caddyfile}}"
 
 - name: Set caddyfile
   ansible.builtin.template:
-    src: "{{caddy_caddyfile_template}}"
-    dest: "{{caddy_caddyfile}}"
+    src: "{{docker_caddy_caddyfile_template}}"
+    dest: "{{docker_caddy_caddyfile}}"
     owner: "{{docker_user}}"
     group: "{{docker_user}}"
     mode: '600'
@@ -31,12 +31,12 @@
 
 - name: Copy caddy web data
   ansible.builtin.template:
-    src: "{{ caddy_item }}"
-    dest: "{{caddy_srv}}/{{ caddy_item | basename | regex_replace('\\.j2$', '') }}"
+    src: "{{ docker_caddy_item }}"
+    dest: "{{docker_caddy_srv}}/{{ docker_caddy_item | basename | regex_replace('\\.j2$', '') }}"
     owner: "{{docker_user}}"
     group: "{{docker_user}}"
     mode: '444'
-  loop: "{{ caddy_srv_templates }}"
+  loop: "{{ docker_caddy_srv_templates }}"
   loop_control:
-    loop_var: caddy_item
+    loop_var: docker_caddy_item
   become: true

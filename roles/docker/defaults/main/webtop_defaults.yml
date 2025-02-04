@@ -1,15 +1,15 @@
 
-webtop_tasks: true
-webtop_home: "{{docker_project_root}}/webtop"
-webtop_data: "{{webtop_home}}/data"
-webtop_tag: debian-xfce
-webtop_uuid: 1000
-webtop_guid: 1000
-webtop_privileged: False
+docker_webtop_tasks: true
+docker_webtop_home: "{{docker_project_root}}/webtop"
+docker_webtop_data: "{{docker_webtop_home}}/data"
+docker_webtop_tag: debian-xfce
+docker_webtop_uuid: 1000
+docker_webtop_guid: 1000
+docker_webtop_privileged: False
 
 # set this if you want the ports to be forwarded
-webtop_port: null
+docker_webtop_port: null
 
 # set this if you want this to be in the same docker network
 # as something else
-webtop_shared_network: null
+docker_webtop_shared_network: null

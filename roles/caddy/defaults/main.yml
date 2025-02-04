@@ -1,0 +1,3 @@
+caddy_caddyfile: root
+docker_project_root: "/opt/docker-projects"
+docker_containers: []

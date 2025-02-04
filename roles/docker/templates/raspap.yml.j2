@@ -11,5 +11,5 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     restart: unless-stopped
     environment:
-      - RASPAP_SSID={{raspap_ssid}}
-      - RASPAP_COUNTRY={{raspap_country}}
+      - docker_raspap_SSID={{docker_raspap_ssid}}
+      - docker_raspap_COUNTRY={{docker_raspap_country}}

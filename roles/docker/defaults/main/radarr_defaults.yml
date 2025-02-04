@@ -1,7 +1,7 @@
 
-radarr_uuid: 1000
-radarr_guid: 1000
+docker_radarr_uuid: 1000
+docker_radarr_guid: 1000
 
 # /config must be mounted as the primary drive
-radarr_volumes:
+docker_radarr_volumes:
   - /tmp:/config

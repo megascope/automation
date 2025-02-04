@@ -1,27 +1,27 @@
 # from https://hub.docker.com/_/caddy/
-caddy_home: "{{docker_project_root}}/caddy"
-caddy_tasks: true
+docker_caddy_home: "{{docker_project_root}}/caddy"
+docker_caddy_tasks: true
 
-caddy_capabilities:
+docker_caddy_capabilities:
   - NET_ADMIN
 
-caddy_ports:
+docker_caddy_ports:
   - "80:80"
   - "443:443"
   - "443:443/udp"
 
-# note that caddy_config is not the "config" folder, but the
+# note that docker_caddy_config is not the "config" folder, but the
 # conf folder that the Caddyfile and certs can be put in
 
-caddy_caddyfile_template: caddy_Caddyfile.j2
-caddy_conf: "{{caddy_home}}/conf"
-caddy_caddyfile: "{{caddy_conf}}/Caddyfile"
-caddy_srv: "{{caddy_home}}/srv"
+docker_caddy_caddyfile_template: docker_caddy_Caddyfile.j2
+docker_caddy_conf: "{{docker_caddy_home}}/conf"
+docker_caddy_caddyfile: "{{docker_caddy_conf}}/Caddyfile"
+docker_caddy_srv: "{{docker_caddy_home}}/srv"
 
 # set this to mount the specified directory into /etc/ssl/private
-caddy_certs: null
+docker_caddy_certs: null
 
 # A list of jinja templates to copy to the srv folder
-caddy_srv_templates: []
+docker_caddy_srv_templates: []
 
-caddy_restart_policy: "always"
+docker_caddy_restart_policy: "always"

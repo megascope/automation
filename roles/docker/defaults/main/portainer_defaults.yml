@@ -1,7 +1,7 @@
-portainer_tasks: false
-portainer_ports:
+docker_portainer_tasks: false
+docker_portainer_ports:
   - "9443:9443" # HTTPS UI
 # - "9000:9000" # HTTP UI
 # - "8000:8000" # Edge compute features
 
-portainer_shared_network: null
+docker_portainer_shared_network: null

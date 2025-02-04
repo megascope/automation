@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
     command: tunnel run
     environment:
-      - TUNNEL_TOKEN={{cloudflared_tunnel_token}}
-{% if cloudflared_tunnel_token_network is defined %}
+      - TUNNEL_TOKEN={{docker_cloudflared_tunnel_token}}
+{% if docker_cloudflared_tunnel_token_network is defined %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{cloudflared_tunnel_token_network}}
+    name: {{docker_cloudflared_tunnel_token_network}}
     external: true
 {% endif %}

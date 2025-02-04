@@ -4,29 +4,29 @@ services:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID={{jackett_uuid}}
-      - PGID={{jackett_guid}}
+      - PUID={{docker_jackett_uuid}}
+      - PGID={{docker_jackett_guid}}
       - TZ=Etc/UTC
       - AUTO_UPDATE=true #optional
       - RUN_OPTS= #optional
     volumes:
-      - {{jackett_home}}/data:/config
-      - {{jackett_home}}/downloads:/downloads
+      - {{docker_jackett_home}}/data:/config
+      - {{docker_jackett_home}}/downloads:/downloads
 
-{% if jackett_ports %}
+{% if docker_jackett_ports %}
     ports:
-{% for line in jackett_ports %}
+{% for line in docker_jackett_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
     restart: unless-stopped
 
-{% if jackett_shared_network %}
+{% if docker_jackett_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{jackett_shared_network}}
+    name: {{docker_jackett_shared_network}}
     external: true
 {% endif %}

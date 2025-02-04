@@ -4,29 +4,29 @@ services:
     image: ubuntu/squid:latest
     restart: unless-stopped
     container_name: squid
-{% if squid_ports %}
+{% if docker_squid_ports %}
     ports:
-{% for line in squid_ports %}
+{% for line in docker_squid_ports %}
     - "{{ line }}"
 {% endfor %}
 {% endif %}
     volumes:
       - "squid-log:/var/log/squid"
       - "squid-cache:/var/spool/squid"
-      - "{{squid_home}}/squid.conf:/etc/squid/squid.conf"
-{% if squid_upstream_container %}
-    network_mode: container:{{squid_upstream_container}}
+      - "{{docker_squid_home}}/squid.conf:/etc/squid/squid.conf"
+{% if docker_squid_upstream_container %}
+    network_mode: container:{{docker_squid_upstream_container}}
 {% endif %}
 
 volumes:
     squid-cache:
     squid-log:
 
-{% if squid_shared_network %}
+{% if docker_squid_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{squid_shared_network}}
+    name: {{docker_squid_shared_network}}
     external: true
 {% endif %}

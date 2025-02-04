@@ -85,5 +85,5 @@
   block:
   - include_tasks:
       file: "{{item}}_tasks.yml"
-    when: lookup('vars', item + '_tasks', default=false)
+    when: lookup('vars', 'docker_' + item + '_tasks', default=false)
     loop: "{{ docker_containers }}"

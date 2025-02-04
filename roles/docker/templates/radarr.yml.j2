@@ -4,11 +4,11 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID={{ radarr_uuid }}
-      - PGID={{ radarr_guid }}
+      - PUID={{ docker_radarr_uuid }}
+      - PGID={{ docker_radarr_guid }}
       - TZ={{ time_zone }}
     volumes:
-{% for line in radarr_volumes %}
+{% for line in docker_radarr_volumes %}
       - "{{ line }}"
 {% endfor %}
     ports:

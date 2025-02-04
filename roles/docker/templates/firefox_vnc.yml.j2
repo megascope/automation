@@ -3,11 +3,11 @@ services:
     image: lscr.io/linuxserver/firefox:latest
     container_name: firefox
     environment:
-      - PUID={{ firefox_vnc_uuid }}
-      - PGID={{ firefox_vnc_guid }}
+      - PUID={{ docker_firefox_vnc_uuid }}
+      - PGID={{ docker_firefox_vnc_guid }}
       - TZ=Etc/UTC
     volumes:
-      - "{{firefox_vnc_persistent_config}}:/config"
+      - "{{docker_firefox_vnc_persistent_config}}:/config"
     shm_size: "1gb"
     restart: unless-stopped
 
@@ -18,4 +18,4 @@ services:
     restart: unless-stopped
     command: tunnel run
     environment:
-      - TUNNEL_TOKEN={{firefox_vnc_cloudflared_token}}
+      - TUNNEL_TOKEN={{docker_firefox_vnc_cloudflared_token}}

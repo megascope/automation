@@ -1,13 +1,13 @@
-jackett_tasks: true
-jackett_home: "{{docker_project_root}}/jackett"
+docker_jackett_tasks: true
+docker_jackett_home: "{{docker_project_root}}/jackett"
 
 # set this if you want jackett to be in the same docker network
 # as something else
-jackett_shared_network: null
+docker_jackett_shared_network: null
 
 # user/group to run as
-jackett_uuid: 65534
-jackett_guid: 65534
+docker_jackett_uuid: 65534
+docker_jackett_guid: 65534
 
-jackett_ports:
+docker_jackett_ports:
   - "9117:9117"

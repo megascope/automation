@@ -1,17 +1,17 @@
 - name: Create qbittorrent config directory
   file:
-    path: "{{qbittorrent_config}}"
+    path: "{{docker_qbittorrent_config}}"
     state: directory
     mode: '0700'
-    owner: "{{qbittorrent_uuid}}"
-    group: "{{qbittorrent_guid}}"
+    owner: "{{docker_qbittorrent_uuid}}"
+    group: "{{docker_qbittorrent_guid}}"
   become: true
 
 - name: Create qbittorrent downloads directory
   file:
-    path: "{{qbittorrent_downloads}}"
+    path: "{{docker_qbittorrent_downloads}}"
     state: directory
     mode: '0700'
-    owner: "{{qbittorrent_uuid}}"
-    group: "{{qbittorrent_guid}}"
+    owner: "{{docker_qbittorrent_uuid}}"
+    group: "{{docker_qbittorrent_guid}}"
   become: true

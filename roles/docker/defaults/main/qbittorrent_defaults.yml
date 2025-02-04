@@ -1,21 +1,21 @@
-qbittorrent_tasks: true
-qbittorrent_image: lscr.io/linuxserver/qbittorrent:latest
-qbittorrent_home: "{{docker_project_root}}/qbittorrent"
+docker_qbittorrent_tasks: true
+docker_qbittorrent_image: lscr.io/linuxserver/qbittorrent:latest
+docker_qbittorrent_home: "{{docker_project_root}}/qbittorrent"
 
-qbittorrent_ports:
+docker_qbittorrent_ports:
   - "8080:8080"
   - "6881:6881"
   - "6881:6881/udp"
 
-qbittorrent_downloads: "{{qbittorrent_home}}/downloads"
-qbittorrent_config: "{{qbittorrent_home}}/config"
+docker_qbittorrent_downloads: "{{docker_qbittorrent_home}}/downloads"
+docker_qbittorrent_config: "{{docker_qbittorrent_home}}/config"
 
 # use this to have the container share network namespace with another
-qbittorrent_network_mode: null
+docker_qbittorrent_network_mode: null
 
 # user/group to run as
-qbittorrent_uuid: 1000
-qbittorrent_guid: 1000
+docker_qbittorrent_uuid: 1000
+docker_qbittorrent_guid: 1000
 
 # want to be careful about restarting this in case it needs a proxy
-qbittorrent_restart_policy: "no"
+docker_qbittorrent_restart_policy: "no"

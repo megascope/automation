@@ -7,19 +7,19 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-volume-data:/data
 
-{% if portainer_ports %}
+{% if docker_portainer_ports %}
     ports:
-{% for line in portainer_ports %}
+{% for line in docker_portainer_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if portainer_shared_network %}
+{% if docker_portainer_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{portainer_shared_network}}
+    name: {{docker_portainer_shared_network}}
     external: true
 {% endif %}
 

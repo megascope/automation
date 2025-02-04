@@ -8,23 +8,23 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1  # Recomended if using ipv4 only
 
-{% if nordvpn_ports %}
+{% if docker_nordvpn_ports %}
     ports:
-{% for line in nordvpn_ports %}
+{% for line in docker_nordvpn_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
     volumes:
-      - "{{nordvpn_data}}:/var/lib/nordvpn"
+      - "{{docker_nordvpn_data}}:/var/lib/nordvpn"
 
-{% if nordvpn_shared_network %}
+{% if docker_nordvpn_shared_network %}
     networks:
       - shared_network
       - nordvpn_network
 networks:
   shared_network:
-    name: {{nordvpn_shared_network}}
+    name: {{docker_nordvpn_shared_network}}
     external: true
   nordvpn_network:
     driver: bridge

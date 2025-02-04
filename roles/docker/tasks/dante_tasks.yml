@@ -1,9 +1,9 @@
 - name: Set dante socks.conf
   ansible.builtin.template:
-    src: "{{dante_config_template}}"
-    dest: "{{dante_config_template_location}}"
+    src: "{{docker_dante_config_template}}"
+    dest: "{{docker_dante_config_template_location}}"
     owner: "{{docker_user}}"
     group: "{{docker_user}}"
     mode: '444'
   become: true
-  when: dante_config_template is defined
+  when: docker_dante_config_template is defined

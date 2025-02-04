@@ -1,4 +1,4 @@
-nordvpn_tasks: true
-nordvpn_home: "{{docker_project_root}}/nordvpn"
-nordvpn_data: "{{nordvpn_home}}/data"
-nordvpn_ports: []
+docker_nordvpn_tasks: true
+docker_nordvpn_home: "{{docker_project_root}}/nordvpn"
+docker_nordvpn_data: "{{docker_nordvpn_home}}/data"
+docker_nordvpn_ports: []

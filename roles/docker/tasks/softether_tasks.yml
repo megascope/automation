@@ -1,15 +1,15 @@
 - name: Create data directories
   file:
-    path: "{{softether_item}}"
+    path: "{{docker_softether_item}}"
     state: directory
     mode: '0700'
     owner: "{{docker_user}}"
     group: "{{docker_user}}"
   become: true
   loop:
-    - "{{softether_home}}/data"
-    - "{{softether_home}}/log"
-    - "{{softether_home}}/packetlog"
-    - "{{softether_home}}/securitylog"
+    - "{{docker_softether_home}}/data"
+    - "{{docker_softether_home}}/log"
+    - "{{docker_softether_home}}/packetlog"
+    - "{{docker_softether_home}}/securitylog"
   loop_control:
-    loop_var: softether_item
+    loop_var: docker_softether_item

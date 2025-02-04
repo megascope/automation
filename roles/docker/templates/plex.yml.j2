@@ -2,28 +2,28 @@
 services:
   plex:
     image: linuxserver/plex
-    container_name: "{{ plex_container_name }}"
+    container_name: "{{ docker_plex_container_name }}"
     hostname: {{ inventory_hostname_short }}-plex
     environment:
       TZ: "{{ time_zone }}"
-      ADVERTISE_IP: "{{ plex_advertise_ip }}"
-      c: "{{ plex_claim_code }}"
-      PUID: {{ plex_uuid }}
-      PGID: {{ plex_guid }}
-      VERSION: "{{ plex_update_version }}"
-{% if plex_network_mode == 'bridge' %}
+      ADVERTISE_IP: "{{ docker_plex_advertise_ip }}"
+      c: "{{ docker_plex_claim_code }}"
+      PUID: {{ docker_plex_uuid }}
+      PGID: {{ docker_plex_guid }}
+      VERSION: "{{ docker_plex_update_version }}"
+{% if docker_plex_network_mode == 'bridge' %}
     ports:
       - 32400:32400
 {% endif %}
     volumes:
-{% for line in plex_volumes %}
+{% for line in docker_plex_volumes %}
       - "{{ line }}"
 {% endfor %}
 
-{% if plex_intel_transcode == true %}
+{% if docker_plex_intel_transcode == true %}
     devices:
       - /dev/dri:/dev/dri
 {% endif %}
 
-    network_mode: {{plex_network_mode}}
+    network_mode: {{docker_plex_network_mode}}
     restart: unless-stopped

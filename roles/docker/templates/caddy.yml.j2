@@ -2,29 +2,29 @@ services:
   caddy:
     image: caddy
     container_name: caddy
-    restart: {{ caddy_restart_policy }}
+    restart: {{ docker_caddy_restart_policy }}
 
-{% if caddy_capabilities %}
+{% if docker_caddy_capabilities %}
     cap_add:
-{% for line in caddy_capabilities %}
+{% for line in docker_caddy_capabilities %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if caddy_ports %}
+{% if docker_caddy_ports %}
     ports:
-{% for line in caddy_ports %}
+{% for line in docker_caddy_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
     volumes:
-      - "{{caddy_conf}}:/etc/caddy"
-      - "{{caddy_srv}}:/srv:ro"
+      - "{{docker_caddy_conf}}:/etc/caddy"
+      - "{{docker_caddy_srv}}:/srv:ro"
       - "caddy-data:/data"
       - "caddy-config:/config"
-{% if caddy_certs %}
-      - "{{caddy_certs}}:/etc/ssl/private:ro"
+{% if docker_caddy_certs %}
+      - "{{docker_caddy_certs}}:/etc/ssl/private:ro"
 {% endif %}
 volumes:
     caddy-config:

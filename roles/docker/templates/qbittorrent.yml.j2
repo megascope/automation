@@ -1,28 +1,28 @@
 # from https://docs.linuxserver.io/images/docker-qbittorrent
 services:
   qbittorrent:
-    image: {{ qbittorrent_image }}
+    image: {{ docker_qbittorrent_image }}
     container_name: qbittorrent
-    restart: {{ qbittorrent_restart_policy }}
+    restart: {{ docker_qbittorrent_restart_policy }}
     environment:
-      - PUID={{qbittorrent_uuid}}
-      - PGID={{qbittorrent_guid}}
+      - PUID={{docker_qbittorrent_uuid}}
+      - PGID={{docker_qbittorrent_guid}}
       - TZ=Etc/UTC
       - WEBUI_PORT=8080
       - TORRENTING_PORT=6881
 
-{% if qbittorrent_ports %}
+{% if docker_qbittorrent_ports %}
     ports:
-{% for line in qbittorrent_ports %}
+{% for line in docker_qbittorrent_ports %}
     - "{{ line }}"
 {% endfor %}
 {% endif %}
 
     volumes:
-      - "{{qbittorrent_config}}:/config"
-      - "{{qbittorrent_downloads}}:/downloads"
+      - "{{docker_qbittorrent_config}}:/config"
+      - "{{docker_qbittorrent_downloads}}:/downloads"
 
 
-{% if qbittorrent_upstream_container %}
-    network_mode: container:{{qbittorrent_upstream_container}}
+{% if docker_qbittorrent_upstream_container %}
+    network_mode: container:{{docker_qbittorrent_upstream_container}}
 {% endif %}
