@@ -4,6 +4,7 @@ firewall_ssh: True
 firewall_zerotier: False
 firewall_tailscale: False
 firewall_mosh: False
+firewall_http: False
 
 # save firewall state to rules.v4
 firewall_persist: False
