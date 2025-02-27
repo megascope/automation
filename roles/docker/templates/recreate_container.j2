@@ -17,11 +17,10 @@ fi
 
 PROJECT={{docker_project_root}}/$1
 
-if ! test -f $PROJECT/docker-compose.yml; then
-    echo Could not find $PROJECT/docker-compose.yml
+if ! test -f $PROJECT/stack; then
+    echo Could not find $PROJECT/stack
     exit 1
-fi  
+fi
 
-cd $PROJECT
-docker compose pull
-docker compose up $RECREATE --build -d
+$PROJECT/stack pull
+$PROJECT/stack up $RECREATE --build -d

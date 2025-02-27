@@ -68,6 +68,21 @@
   become: true
   loop: "{{ docker_containers }}"
 
+# Allows for merging of containers into a single stack if xxx_merge_containers
+# is set. Make sure yyy_merge_containers is null for all dependant containers.
+- name: Copy templated stack file
+  tags: dockerupdate
+  ansible.builtin.template:
+    src: "stack.j2"
+    dest: "{{ docker_project_root }}/{{ item }}/stack"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+    mode: '755'
+  vars:
+    docker_merge_containers: "{{ lookup('vars', item + '_merge_containers', default=[item]) }}"
+  become: true
+  loop: "{{ docker_containers }}"
+
 - name: Write start everything file, ansible does not start the containers as that would not be idempotent
   tags: dockerupdate
   ansible.builtin.template:

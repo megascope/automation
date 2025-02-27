@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{% if not docker_merge_containers %}
+echo "No containers defined, nothing to do"
+{% else %}
+docker compose {% for item in docker_merge_containers %} -f {{docker_project_root}}/{{item}}/docker-compose.yml {% endfor %} "$@"
+{% endif %}
