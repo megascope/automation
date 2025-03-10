@@ -1,8 +1,12 @@
 - hosts: all
   roles:
     - { role: base, tags: base }
-    - { role: packages, tags: packages }
+    - { role: packages, tags: packages, when: "'packages_hosts' not in group_names" }
     - { role: users, tags: users }
+
+- hosts: packages_hosts
+  roles:
+    - { role: packages, tags: packages }
 
 - hosts: docker_hosts
   roles:
