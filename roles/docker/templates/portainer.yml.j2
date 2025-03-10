@@ -14,7 +14,9 @@ services:
 {% endfor %}
 {% endif %}
 
-{% if docker_portainer_shared_network %}
+{% if docker_portainer_shared_network == "bridge" %}
+    network_mode: bridge
+{% elif docker_portainer_shared_network %}
     networks:
       - shared_network
 networks:
