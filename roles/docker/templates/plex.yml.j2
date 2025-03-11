@@ -7,7 +7,9 @@ services:
     environment:
       TZ: "{{ time_zone }}"
       ADVERTISE_IP: "{{ docker_plex_advertise_ip }}"
-      c: "{{ docker_plex_claim_code }}"
+{% if docker_plex_claim_code %}
+      PLEX_CLAIM: "{{ docker_plex_claim_code }}"
+{% endif %}
       PUID: {{ docker_plex_uuid }}
       PGID: {{ docker_plex_guid }}
       VERSION: "{{ docker_plex_update_version }}"
