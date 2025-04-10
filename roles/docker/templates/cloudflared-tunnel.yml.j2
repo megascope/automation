@@ -6,11 +6,14 @@ services:
     command: tunnel run
     environment:
       - TUNNEL_TOKEN={{docker_cloudflared_tunnel_token}}
-{% if docker_cloudflared_tunnel_token_network is defined %}
+
+{% if docker_cloudflared_tunnel_network_mode is defined %}
+    network_mode: {{docker_cloudflared_tunnel_network_mode}}
+{% elif docker_cloudflared_tunnel_network is defined %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{docker_cloudflared_tunnel_token_network}}
+    name: {{docker_cloudflared_tunnel_network}}
     external: true
 {% endif %}
