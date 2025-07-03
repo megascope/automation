@@ -1,0 +1,13 @@
+docker_get_iplayer_downloads: "{{docker_project_root}}/get_iplayer/downloads"
+docker_get_iplayer_config: "{{docker_project_root}}/get_iplayer/config"
+docker_get_iplayer_container_name: get_iplayer
+docker_get_iplayer_image: ghcr.io/thespad/get_iplayer
+docker_get_iplayer_restart_policy: unless-stopped
+docker_get_iplayer_upstream_container: null
+docker_get_iplayer_ports:
+  - 1935:1935
+
+docker_get_iplayer_uuid: 1000
+docker_get_iplayer_guid: 1000
+
+docker_get_iplayer_tasks: true

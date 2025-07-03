@@ -1,0 +1,28 @@
+services:
+  get_iplayer:
+    image: {{ docker_get_iplayer_image }}
+    container_name: {{ docker_get_iplayer_container_name }}
+    environment:
+      - PUID={{ docker_get_iplayer_uuid }}
+      - PGID={{ docker_get_iplayer_guid }}
+      - TZ=America/New_York
+      - INCLUDERADIO= #optional
+      - BASEURL= #optional
+      - ENABLEIMPORT= #optional
+    volumes:
+      - "{{docker_get_iplayer_config}}:/config"
+      - "{{docker_get_iplayer_downloads}}:/downloads"
+
+    restart: {{ docker_get_iplayer_restart_policy }}
+    network_mode: container:nordvpn
+
+{% if docker_get_iplayer_ports %}
+    ports:
+{% for line in docker_get_iplayer_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+{% if docker_get_iplayer_upstream_container %}
+    network_mode: container:{{docker_get_iplayer_upstream_container}}
+{% endif %}
