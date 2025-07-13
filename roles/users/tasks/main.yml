@@ -51,6 +51,13 @@
   tags: automation_user
   become: true
 
+- name: Create scripts directory
+  ansible.builtin.file:
+    path: /root/automation/scripts/
+    state: directory
+    mode: '0755'
+  become: true
+
 - name: Copy automation automation_scripts
   #ansible.builtin.copy:
   ansible.builtin.template:
