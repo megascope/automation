@@ -1,0 +1,4 @@
+docker_portainer_agent_tasks: false
+docker_portainer_agent_ports:
+  - "9001:9001" # Agent TLS
+docker_portainer_agent_restart_policy: always
