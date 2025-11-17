@@ -1,0 +1,5 @@
+docker_vscode_tasks: true
+docker_vscode_home: "{{docker_project_root}}/vscode"
+docker_vscode_instances:
+  - rust
+  - typescript

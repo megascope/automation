@@ -1,0 +1,20 @@
+services:
+
+{% for docker_vscode_instance_name in docker_vscode_instances %}
+  vscode-remote-{{docker_vscode_instance_name}}:
+    build:
+      context: .
+      dockerfile: {{docker_vscode_instance_name}}_Dockerfile
+    container_name: vscode-{{docker_vscode_instance_name}}
+    hostname: vscode-{{docker_vscode_instance_name}}
+    volumes:
+      - {{docker_vscode_instance_name}}_home:/home/vscode
+
+    restart: unless-stopped
+
+{% endfor %}
+
+volumes:
+{% for docker_vscode_instance_name in docker_vscode_instances %}
+  {{docker_vscode_instance_name}}_home:
+{% endfor %}

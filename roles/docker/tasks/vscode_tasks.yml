@@ -1,0 +1,10 @@
+- name: Create individual vscode dockerfiles
+  ansible.builtin.template:
+    src: "vscode_{{ docker_vscode_instance_name }}_Dockerfile.j2"
+    dest: "{{ docker_vscode_home }}/{{ docker_vscode_instance_name }}_Dockerfile"
+    owner: "{{docker_user}}"
+    group: "{{docker_user}}"
+  become: true
+  loop: "{{ docker_vscode_instances }}"
+  loop_control:
+    loop_var: docker_vscode_instance_name
