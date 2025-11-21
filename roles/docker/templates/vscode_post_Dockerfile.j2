@@ -1,6 +1,23 @@
 # essential utils
 RUN apt-get update && \
-    apt-get install -y curl git ripgrep sudo fd-find
+    apt-get install -y locales curl git ripgrep sudo fd-find \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+  && apt-get update \
+  && apt-get install -y gh \
+  && rm -rf /var/lib/apt/lists/*
+
+# setup utf 8 locale
+RUN sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8
+
+
+ENV LANG=en_US.UTF-8
 
 # Download VS Code CLI based on architecture
 RUN set -e; \
