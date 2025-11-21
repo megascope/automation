@@ -2,10 +2,11 @@ FROM debian:latest
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y curl git build-essential ca-certificates libssl-dev pkg-config && \
-    # Install Rust toolchain
-    curl https://sh.rustup.rs -sSf | sh -s -- -y && \
-    # Add Rust to PATH for all users
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> /etc/profile.d/rust.sh
+    apt-get install -y curl git build-essential ca-certificates libssl-dev pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust toolchain
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    && echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> /etc/profile.d/rust.sh
 
 {% include "vscode_post_Dockerfile.j2" %}
