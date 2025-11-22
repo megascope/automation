@@ -1,0 +1,13 @@
+docker_rclonewebdav_tasks: false
+docker_rclonewebdav_home: "{{docker_project_root}}/rclonewebdav"
+docker_rclonewebdav_container_name: rclonewebdav
+docker_rclonewebdav_site_path: /var/tmp
+docker_rclonewebdav_user: guest
+docker_rclonewebdav_password: guest
+
+# user/group to run as
+docker_rclonewebdav_uuid: 65534
+docker_rclonewebdav_guid: 65534
+
+docker_rclonewebdav_ports:
+  - "8080:8080"

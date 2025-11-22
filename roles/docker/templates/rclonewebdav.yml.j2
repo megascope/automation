@@ -1,0 +1,20 @@
+# from https://hub.docker.com/r/rclone/rclone
+services:
+  rclonewebdav:
+    image: rclone/rclone:latest
+    container_name: "{{ docker_rclonewebdav_container_name }}"
+    hostname: "{{ docker_rclonewebdav_container_name }}"
+    command: serve webdav /site --addr :8080 --user "{{ docker_rclonewebdav_user }}" --pass "{{ docker_rclonewebdav_password }}"
+    user: "{{docker_rclonewebdav_uuid}}:{{docker_rclonewebdav_guid}}"
+
+{% if docker_rclonewebdav_ports %}
+    ports:
+{% for line in docker_rclonewebdav_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+    volumes:
+    - "{{ docker_rclonewebdav_site_path }}:/site:ro"
+
+    restart: unless-stopped
