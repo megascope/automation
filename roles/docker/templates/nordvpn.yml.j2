@@ -16,7 +16,7 @@ services:
 {% endif %}
 
     volumes:
-      - "{{docker_nordvpn_data}}:/var/lib/nordvpn"
+      - "nordvpn-volume-data:/var/lib/nordvpn"
 
 {% if docker_nordvpn_shared_network %}
     networks:
@@ -29,3 +29,6 @@ networks:
   nordvpn_network:
     driver: bridge
 {% endif %}
+
+volumes:
+    nordvpn-volume-data:
