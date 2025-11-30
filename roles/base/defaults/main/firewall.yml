@@ -1,4 +1,10 @@
 # set these to true in host or group vars to enable
+
+# set to true to do anything
+firewall_enable: False
+
+# using iptables over nftables since docker does 
+# not play nice with nftables
 # iptables rules
 firewall_ssh: True
 firewall_zerotier: False
@@ -7,10 +13,13 @@ firewall_mosh: False
 firewall_http: False
 
 # save firewall state to rules.v4
+# defaults to false so a reboot unsets everything
 firewall_persist: False
 
 # used to save custom chain
 firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
+
+firewall_default_input_policy: DROP
 
 firewall_ip_versions:
 - ipv4
