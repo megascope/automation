@@ -17,12 +17,32 @@
 
 - name: Add custom chain to INPUT
   become: true
-  when: firewall_zerotier
   ansible.builtin.iptables:
     chain: INPUT
     action: insert
     jump: "{{ firewall_custom_chain }}"
     comment: defer to custom chain
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
+- name: Accept loopback traffic
+  become: true
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
+    in_interface: lo
+    jump: ACCEPT
+    comment: allow loopback
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
+- name: Accept established and related connections
+  become: true
+  ansible.builtin.iptables:
+    chain: "{{ firewall_custom_chain }}"
+    match: state
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+    comment: allow established,related
     ip_version: "{{ item }}"
   with_items: "{{ firewall_ip_versions }}"
 
@@ -98,6 +118,26 @@
     ip_version: "{{ item }}"
   with_items: "{{ firewall_ip_versions }}"
 
+# Ensure persistence tooling is present and active when requested
+- name: Ensure iptables-persistent is installed
+  become: true
+  when: firewall_persist
+  ansible.builtin.apt:
+    name: iptables-persistent
+    state: present
+    update_cache: yes
+    install_recommends: false
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Enable and start netfilter-persistent service
+  become: true
+  when: firewall_persist
+  ansible.builtin.service:
+    name: netfilter-persistent
+    enabled: true
+    state: started
+
 # This will apply to all loaded/active IPv4 tables.
 - name: Save current state of the firewall in system file
   become: true
@@ -115,3 +155,12 @@
     table: filter
     state: saved
     path: /etc/iptables/rules.v6
+
+# only do this at the end so fw rules are active 
+- name: Set default policy on INPUT
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: "{{ firewall_default_input_policy }}"
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"

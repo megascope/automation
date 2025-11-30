@@ -19,6 +19,8 @@ firewall_persist: False
 # used to save custom chain
 firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
 
+firewall_default_input_policy: DROP
+
 firewall_ip_versions:
 - ipv4
 - ipv6
