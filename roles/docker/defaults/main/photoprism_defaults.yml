@@ -1,0 +1,28 @@
+docker_photoprism_tasks: true
+
+docker_photoprism_ports:
+  - "2342:2342"
+
+## Shared devices for video hardware transcoding (optional):
+docker_photoprism_devices:
+#  - "/dev/dri:/dev/dri"                         # Required Intel QSV or VAAPI hardware transcoding
+#  - "/dev/video11:/dev/video11"
+
+docker_photoprism_additional_folders: []
+      # "/host/folder:/photoprism/folder"                # Example
+
+# required, location of storage folder on host
+docker_photoprism_data_storage: null
+
+# required, primary photo folder
+docker_photoprism_originals: null
+
+# required, root data directory
+docker_photoprism_data_root: /mnt/dockerdata/photoprism/
+
+# user/group to run as
+docker_photoprism_uuid: 1000
+docker_photoprism_guid: 1000
+
+# URL to access photoprism
+docker_photoprism_url: http://localhost:2342
