@@ -1,0 +1,22 @@
+docker_immich_tasks: false
+
+# eg v2
+docker_immich_version: release
+
+docker_immich_ports:
+  - "2283:2283"
+
+docker_immich_additional_folders: []
+      # "/host/folder:/immich/folder:ro"                # Example
+
+# required, writable location of upload folder on host
+docker_immich_upload_location: null
+
+# required, writable db data directory
+docker_immich_db_root: null
+
+# Connection secret for postgres. You should change it to a random password
+# Please use only the characters `A-Za-z0-9`, without special characters or spaces
+docker_immich_db_password: postgres
+docker_immich_db_username: postgres
+docker_immich_db_name: immich
