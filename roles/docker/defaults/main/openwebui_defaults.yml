@@ -1,0 +1,12 @@
+docker_openwebui_tasks: false
+
+docker_openwebui_version: latest
+
+docker_openwebui_ports:
+  - "8080:8080"
+
+docker_openwebui_additional_folders: []
+      # "/host/folder:/openwebui/folder:ro"                # Example
+
+# required, writable location of upload folder on host
+docker_openwebui_uri: http://localhost:3000
