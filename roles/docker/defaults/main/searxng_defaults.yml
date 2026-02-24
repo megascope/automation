@@ -1,0 +1,14 @@
+docker_searxng_tasks: false
+docker_searxng_image: searxng/searxng:latest
+
+docker_searxng_ports:
+  - "8080:8080"
+
+# set this if you want searxng to be in the same docker network
+# as something else
+docker_searxng_shared_network: null
+
+# restart policy
+docker_searxng_restart_policy: "unless-stopped"
+
+docker_searxng_uri: https://127.0.0.0:8080
