@@ -1,3 +1,12 @@
+- name: Create caddy web root directory
+  ansible.builtin.file:
+    path: "{{ packages_caddy_srv }}"
+    state: directory
+    owner: "{{ packages_caddy_user }}"
+    group: "{{ packages_caddy_group }}"
+    mode: '755'
+  become: true
+
 - name: Set caddyfile
   ansible.builtin.template:
     src: "{{packages_caddy_caddyfile_template}}"
@@ -5,4 +14,16 @@
     owner: "{{packages_caddy_user}}"
     group: "{{packages_caddy_group}}"
     mode: '440'
+  become: true
+
+- name: Copy caddy web data
+  ansible.builtin.template:
+    src: "{{ packages_caddy_item }}"
+    dest: "{{ packages_caddy_srv }}/{{ packages_caddy_item | basename | regex_replace('\\.j2$', '') }}"
+    owner: "{{ packages_caddy_user }}"
+    group: "{{ packages_caddy_group }}"
+    mode: '444'
+  loop: "{{ packages_caddy_srv_templates }}"
+  loop_control:
+    loop_var: packages_caddy_item
   become: true

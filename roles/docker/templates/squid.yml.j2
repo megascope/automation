@@ -12,14 +12,18 @@ services:
 {% endif %}
     volumes:
       - "squid-log:/var/log/squid"
+{% if docker_squid_cache_enabled %}
       - "squid-cache:/var/spool/squid"
+{% endif %}
       - "{{docker_squid_home}}/squid.conf:/etc/squid/squid.conf"
 {% if docker_squid_upstream_container %}
     network_mode: container:{{docker_squid_upstream_container}}
 {% endif %}
 
 volumes:
+{% if docker_squid_cache_enabled %}
     squid-cache:
+{% endif %}
     squid-log:
 
 {% if docker_squid_shared_network %}

@@ -1,6 +1,7 @@
 docker_squid_tasks: true
 docker_squid_conf_template: squid_squid.conf.j2
 docker_squid_home: "{{docker_project_root}}/squid"
+docker_squid_cache_enabled: true
 
 # set this if you want the port to be forwarded
 docker_squid_ports:
