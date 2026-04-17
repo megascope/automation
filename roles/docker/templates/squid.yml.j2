@@ -4,6 +4,14 @@ services:
     image: ubuntu/squid:latest
     restart: unless-stopped
     container_name: squid
+{% if docker_squid_healthcheck_enabled %}
+    healthcheck:
+      test: ["CMD-SHELL", "{{ docker_squid_healthcheck_test }}"]
+      interval: {{ docker_squid_healthcheck_interval }}
+      timeout: {{ docker_squid_healthcheck_timeout }}
+      retries: {{ docker_squid_healthcheck_retries }}
+      start_period: {{ docker_squid_healthcheck_start_period }}
+{% endif %}
 {% if docker_squid_ports %}
     ports:
 {% for line in docker_squid_ports %}

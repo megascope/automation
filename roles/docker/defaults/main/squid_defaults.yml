@@ -2,6 +2,15 @@ docker_squid_tasks: true
 docker_squid_conf_template: squid_squid.conf.j2
 docker_squid_home: "{{docker_project_root}}/squid"
 docker_squid_cache_enabled: true
+docker_squid_healthcheck_enabled: true
+docker_squid_healthcheck_test: "squid -k check -f /etc/squid/squid.conf >/dev/null 2>&1 || exit 1"
+docker_squid_healthcheck_interval: 30s
+docker_squid_healthcheck_timeout: 5s
+docker_squid_healthcheck_retries: 5
+docker_squid_healthcheck_start_period: 15s
+docker_squid_default_route_mode: direct
+docker_squid_fallback_proxy_host: null
+docker_squid_fallback_proxy_port: null
 
 # set this if you want the port to be forwarded
 docker_squid_ports:
