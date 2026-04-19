@@ -10,4 +10,4 @@ docker_jackett_uuid: 65534
 docker_jackett_guid: 65534
 
 docker_jackett_ports:
-  - "9117:9117"
+  - "127.0.0.1:9117:9117"

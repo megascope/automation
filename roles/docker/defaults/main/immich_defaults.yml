@@ -4,7 +4,7 @@ docker_immich_tasks: false
 docker_immich_version: release
 
 docker_immich_ports:
-  - "2283:2283"
+  - "127.0.0.1:2283:2283"
 
 docker_immich_additional_folders: []
       # "/host/folder:/immich/folder:ro"                # Example

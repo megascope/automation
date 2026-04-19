@@ -13,7 +13,8 @@
     name: "{{ main_user }}"
     comment: "{{ main_user }}"
     shell: "{{ main_user_shell }}"
-    group: '{{sudo_group}}'
+    groups: "{{ sudo_group }}"
+    append: true
   become: true
 
 - name: Set authorized key taken from file for main user
@@ -48,6 +49,7 @@
     owner: root
     group: root
     mode: '400'
+    validate: 'visudo -cf %s'
   tags: automation_user
   become: true
 
