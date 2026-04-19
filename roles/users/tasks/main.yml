@@ -8,6 +8,11 @@
     sudo_group: "wheel"
   when: ansible_os_family == "RedHat"
 
+- name: Fail for unsupported sudo group OS family
+  ansible.builtin.fail:
+    msg: "Unsupported ansible_os_family for sudo group mapping: {{ ansible_os_family }}"
+  when: sudo_group is not defined
+
 - name: Add main user with sudo permissions
   ansible.builtin.user:
     name: "{{ main_user }}"
