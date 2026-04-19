@@ -1,0 +1,25 @@
+services:
+  meshcommander:
+    image: ghcr.io/megascope/meshcommander:{{docker_meshcommander_version}}
+    container_name: meshcommander
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+
+{% if docker_meshcommander_ports %}
+    ports:
+{% for line in docker_meshcommander_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    networks:
+      - meshcommander_internal
+
+networks:
+  meshcommander_internal:
+    internal: true
