@@ -4,6 +4,6 @@ docker_meshcommander_home: "{{docker_project_root}}/meshcommander"
 docker_meshcommander_version: latest
 
 docker_meshcommander_ports:
-  - "3000:3000"
+  - "127.0.0.1:3000:3000"
 
 docker_meshcommander_shared_network: null

@@ -3,7 +3,7 @@ docker_qbittorrent_image: lscr.io/linuxserver/qbittorrent:latest
 docker_qbittorrent_home: "{{docker_project_root}}/qbittorrent"
 
 docker_qbittorrent_ports:
-  - "8080:8080"
+  - "127.0.0.1:8080:8080"
   - "6881:6881"
   - "6881:6881/udp"
 
