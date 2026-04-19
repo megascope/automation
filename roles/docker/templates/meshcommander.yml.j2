@@ -17,9 +17,14 @@ services:
       - "{{ line }}"
 {% endfor %}
 {% endif %}
-    networks:
-      - meshcommander_internal
 
+{% if docker_meshcommander_shared_network == "bridge" %}
+    network_mode: bridge
+{% elif docker_meshcommander_shared_network %}
+    networks:
+      - shared_network
 networks:
-  meshcommander_internal:
-    internal: true
+  shared_network:
+    name: {{docker_meshcommander_shared_network}}
+    external: true
+{% endif %}
