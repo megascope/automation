@@ -1,0 +1,43 @@
+services:
+  syncthing-init:
+    image: alpine
+    container_name: syncthing-init
+    user: root
+    command: chown -R {{ docker_syncthing_uuid }}:{{ docker_syncthing_guid }} /var/syncthing/config
+    volumes:
+      - "{{ docker_syncthing_config_volume }}:/var/syncthing/config"
+    restart: "no"
+
+  syncthing:
+    image: {{ docker_syncthing_image }}
+    container_name: syncthing
+    hostname: {{ docker_syncthing_hostname }}
+    depends_on:
+      syncthing-init:
+        condition: service_completed_successfully
+    environment:
+      - PUID={{ docker_syncthing_uuid }}
+      - PGID={{ docker_syncthing_guid }}
+    volumes:
+{% for line in docker_syncthing_volumes %}
+      - "{{ line }}"
+{% endfor %}
+      - "{{ docker_syncthing_config_volume }}:/var/syncthing/config"
+
+{% if docker_syncthing_ports %}
+    ports:
+{% for line in docker_syncthing_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    restart: {{ docker_syncthing_restart_policy }}
+{% if docker_syncthing_healthcheck_enabled %}
+    healthcheck:
+      test: {{ docker_syncthing_healthcheck_test }}
+      interval: {{ docker_syncthing_healthcheck_interval }}
+      timeout: {{ docker_syncthing_healthcheck_timeout }}
+      retries: {{ docker_syncthing_healthcheck_retries }}
+{% endif %}
+
+volumes:
+  {{ docker_syncthing_config_volume }}:

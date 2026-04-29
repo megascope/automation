@@ -1,0 +1,23 @@
+docker_syncthing_image: syncthing/syncthing
+docker_syncthing_hostname: syncthing
+
+# user/group to run as
+docker_syncthing_uuid: 1000
+docker_syncthing_guid: 1000
+
+docker_syncthing_config_volume: syncthing-config
+docker_syncthing_volumes:
+  - "/tmp:/var/syncthing"
+
+docker_syncthing_ports:
+  - "8384:8384"
+  - "22000:22000"
+  - "22000:22000/udp"
+
+docker_syncthing_restart_policy: unless-stopped
+
+docker_syncthing_healthcheck_enabled: true
+docker_syncthing_healthcheck_test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+docker_syncthing_healthcheck_interval: 1m
+docker_syncthing_healthcheck_timeout: 10s
+docker_syncthing_healthcheck_retries: 3
