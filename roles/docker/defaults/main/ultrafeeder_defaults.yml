@@ -1,0 +1,37 @@
+docker_ultrafeeder_tasks: false
+docker_ultrafeeder_image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder
+docker_ultrafeeder_restart_policy: unless-stopped
+
+docker_ultrafeeder_device_cgroup_rules:
+  - "c 189:* rwm"
+
+docker_ultrafeeder_readsb_enabled: true
+
+docker_ultrafeeder_ports:
+  - "8080:80"
+  - "9273-9274:9273-9274"
+
+docker_ultrafeeder_config:
+  - "adsb,dump978,30978,uat_in"
+  - "adsb,feed.adsb.fi,30004,beast_reduce_plus_out"
+  - "adsb,in.adsb.lol,30004,beast_reduce_plus_out"
+  - "adsb,feed.airplanes.live,30004,beast_reduce_plus_out"
+  - "adsb,feed.planespotters.net,30004,beast_reduce_plus_out"
+  - "adsb,feed.theairtraffic.com,30004,beast_reduce_plus_out"
+  - "adsb,data.avdelphi.com,24999,beast_reduce_plus_out"
+  - "adsb,skyfeed.hpradar.com,30004,beast_reduce_plus_out"
+  - "adsb,dati.flyitalyadsb.com,4905,beast_reduce_plus_out"
+  - "mlat,feed.adsb.fi,31090,39000"
+  - "mlat,in.adsb.lol,31090,39001"
+  - "mlat,feed.airplanes.live,31090,39002"
+  - "mlat,mlat.planespotters.net,31090,39003"
+  - "mlat,feed.theairtraffic.com,31090,39004"
+  - "mlat,skyfeed.hpradar.com,31090,39005"
+  - "mlat,dati.flyitalyadsb.com,30100,39007"
+
+docker_ultrafeeder_beast_host: null
+docker_ultrafeeder_uat_host: null
+docker_ultrafeeder_influx_enabled: true
+docker_ultrafeeder_prometheus_enable: true
+docker_ultrafeeder_978_enabled: false
+docker_ultrafeeder_piaware_enabled: false

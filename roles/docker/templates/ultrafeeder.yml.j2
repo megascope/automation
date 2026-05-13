@@ -1,0 +1,138 @@
+services:
+  ultrafeeder:
+    # Note - if you want to enable telegraf for use with InfluxDB/Prometheus and Grafana,
+    # use the following image instead:
+{% if docker_ultrafeeder_influx_enabled %}
+    image: {{ docker_ultrafeeder_image }}:telegraf
+{% else %}
+    image: {{ docker_ultrafeeder_image }}
+{% endif %}
+    container_name: ultrafeeder
+    hostname: ultrafeeder
+    restart: {{ docker_ultrafeeder_restart_policy }}
+{% if docker_ultrafeeder_device_cgroup_rules %}
+    device_cgroup_rules:
+{% for line in docker_ultrafeeder_device_cgroup_rules %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+{% if docker_ultrafeeder_ports %}
+    ports:
+{% for line in docker_ultrafeeder_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    environment:
+      # --------------------------------------------------
+      # general parameters:
+      - LOGLEVEL=${LOGLEVEL-verbose}
+      - TZ=${FEEDER_TZ}
+      # --------------------------------------------------
+      # SDR related parameters:
+{% if docker_ultrafeeder_readsb_enabled %}
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_GAIN=auto
+      - READSB_RTLSDR_DEVICE=${ADSB_SDR_SERIAL}
+      - READSB_RTLSDR_PPM=${ADSB_SDR_PPM}
+{% endif %}
+      #
+      # --------------------------------------------------
+      # readsb/decoder parameters:
+      - READSB_LAT=${FEEDER_LAT}
+      - READSB_LON=${FEEDER_LONG}
+      - READSB_ALT=${FEEDER_ALT_M}m
+      - READSB_RX_LOCATION_ACCURACY=2
+      - READSB_STATS_RANGE=true
+      #
+      # --------------------------------------------------
+      # Sources and Aggregator connections:
+      # Notes - remove the ones you are not using / feeding
+      #       - remove "adsb,dump978,30978,uat_in;" if you don't have dump978 and a UAT dongle connected to your station
+      #       - !!! make sure that each line ends with a semicolon ";",  with the exception of the last line which shouldn't have a ";" !!!
+{% set ultrafeeder_config = [] %}
+{% if docker_ultrafeeder_beast_host %}
+{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ docker_ultrafeeder_beast_host ~ ',30005,beast_in'] %}
+{% endif %}
+{% if docker_ultrafeeder_uat_host %}
+{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ docker_ultrafeeder_uat_host ~ ',30978,uat_in'] %}
+{% endif %}
+{% set ultrafeeder_config = ultrafeeder_config + docker_ultrafeeder_config %}
+      - ULTRAFEEDER_CONFIG=
+        {{ ultrafeeder_config | join(';\n        ') }}
+      # If you really want to feed ADSBExchange, you can do so by adding this above:
+      #        adsb,feed1.adsbexchange.com,30004,beast_reduce_plus_out,uuid=${ADSBX_UUID};
+      #        mlat,feed.adsbexchange.com,31090,39008,uuid=${ADSBX_UUID}
+      #
+      # --------------------------------------------------
+      - UUID=${MULTIFEEDER_UUID}
+      - MLAT_USER=${FEEDER_NAME}
+      #
+      # --------------------------------------------------
+      # TAR1090 (Map Web Page) parameters:
+      - UPDATE_TAR1090=true
+      - TAR1090_MESSAGERATEINTITLE=true
+      - TAR1090_PAGETITLE=${FEEDER_NAME}
+      - TAR1090_PLANECOUNTINTITLE=true
+      - TAR1090_ENABLE_AC_DB=true
+      - TAR1090_FLIGHTAWARELINKS=true
+      - HEYWHATSTHAT_PANORAMA_ID=${FEEDER_HEYWHATSTHAT_ID}
+      - HEYWHATSTHAT_ALTS=${FEEDER_HEYWHATSTHAT_ALTS}
+      - TAR1090_SITESHOW=true
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_RANGE_OUTLINE_WIDTH=2.0
+      - TAR1090_RANGERINGSDISTANCES=50,100,150,200
+      - TAR1090_RANGERINGSCOLORS='#1A237E','#0D47A1','#42A5F5','#64B5F6'
+      - TAR1090_USEROUTEAPI=true
+      #
+      # --------------------------------------------------
+      # GRAPHS1090 (Decoder and System Status Web Page) parameters:
+      # The two 978 related parameters should only be included if you are running dump978 for UAT reception (USA only)
+      - GRAPHS1090_DARKMODE=true
+{% if docker_ultrafeeder_978_enabled %}
+      - ENABLE_978=yes
+      - URL_978=http://dump978/skyaware978
+{% endif %}
+      #
+      # --------------------------------------------------
+      # Prometheus and InfluxDB connection parameters:
+      # (See above for the correct image tag you must use to enable this)
+{% if docker_ultrafeeder_influx_enabled %}
+      - INFLUXDBV2_URL=${INFLUX_URL}
+      - INFLUXDBV2_TOKEN=${INFLUX_TOKEN}
+      - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
+{% endif %}
+      - PROMETHEUS_ENABLE={{ docker_ultrafeeder_prometheus_enable | string | lower }}
+    volumes:
+      - /opt/adsb/ultrafeeder/globe_history:/var/globe_history
+      - /opt/adsb/ultrafeeder/graphs1090:/var/lib/collectd
+      - /proc/diskstats:/proc/diskstats:ro
+      - /dev/bus/usb:/dev/bus/usb
+    tmpfs:
+      - /run:exec,size=256M
+
+{% if docker_ultrafeeder_piaware_enabled %}
+  piaware:
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
+    container_name: piaware
+    restart: always
+    environment:
+      - TZ=${FEEDER_TZ}
+      - RECEIVER_TYPE=relay
+      - BEASTHOST=ultrafeeder
+      - BEASTPORT=30005
+      - MLAT_RESULTS_BEASTHOST=ultrafeeder
+      - MLAT_RESULTS_BEASTPORT=31004
+{% if docker_ultrafeeder_uat_host %}
+      - UAT_RECEIVER_TYPE=relay
+      - UAT_RECEIVER_HOST={{docker_ultrafeeder_uat_host}}
+      - UAT_RECEIVER_PORT=30978
+{% endif %}
+      - FEEDER_ID=${FLIGHTAWARE_UUID}
+
+    depends_on:
+      - ultrafeeder
+
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+{% endif %}
