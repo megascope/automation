@@ -129,6 +129,13 @@ services:
 {% endif %}
       - FEEDER_ID=${FLIGHTAWARE_UUID}
 
+{% if docker_ultrafeeder_piaware_ports %}
+    ports:
+{% for line in docker_ultrafeeder_piaware_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
     depends_on:
       - ultrafeeder
 

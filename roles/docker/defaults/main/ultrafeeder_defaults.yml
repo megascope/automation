@@ -11,6 +11,10 @@ docker_ultrafeeder_ports:
   - "8080:80"
   - "9273-9274:9273-9274"
 
+docker_ultrafeeder_piaware_ports:
+  - "8081:80"
+  - "8082:8080"
+
 docker_ultrafeeder_config:
   - "adsb,dump978,30978,uat_in"
   - "adsb,feed.adsb.fi,30004,beast_reduce_plus_out"
