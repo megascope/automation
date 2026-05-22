@@ -143,3 +143,27 @@ services:
       - /run:exec,size=64M
       - /var/log
 {% endif %}
+
+{% if docker_ultrafeeder_fr24_enabled %}
+  fr24feed:
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
+    container_name: fr24feed
+    restart: always
+{% if docker_ultrafeeder_fr24_ports %}
+    ports:
+{% for line in docker_ultrafeeder_fr24_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    environment:
+      - BEASTHOST=ultrafeeder
+      - FR24KEY=${FR24KEY}
+
+{% if docker_ultrafeeder_fr24_uat_enabled %}
+      - FR24KEY_UAT=${FR24KEY_UAT}
+      - UATHOST={{docker_ultrafeeder_uat_host}}
+      - UATPORT=30978
+{% endif %}
+
+    dns_search: . # prevents rare connection issues related to a bug in docker and fr24feed
+{% endif %}

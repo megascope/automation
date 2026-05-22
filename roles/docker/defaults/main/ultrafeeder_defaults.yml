@@ -15,6 +15,9 @@ docker_ultrafeeder_piaware_ports:
   - "8081:80"
   - "8082:8080"
 
+docker_ultrafeeder_fr24_ports:
+  - "8754:8754"
+
 docker_ultrafeeder_config:
   - "adsb,dump978,30978,uat_in"
   - "adsb,feed.adsb.fi,30004,beast_reduce_plus_out"
@@ -39,3 +42,5 @@ docker_ultrafeeder_influx_enabled: true
 docker_ultrafeeder_prometheus_enable: true
 docker_ultrafeeder_978_enabled: false
 docker_ultrafeeder_piaware_enabled: false
+docker_ultrafeeder_fr24_enabled: false
+docker_ultrafeeder_fr24_uat_enabled: false
