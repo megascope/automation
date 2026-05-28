@@ -1,0 +1,10 @@
+- name: Set samba smb.conf
+  ansible.builtin.template:
+    src: "{{ packages_samba_smb_conf_template }}"
+    dest: "{{ packages_samba_config }}"
+    owner: root
+    group: root
+    mode: '644'
+    validate: 'testparm -s %s'
+  when: packages_samba_smb_conf_template | length > 0
+  become: true

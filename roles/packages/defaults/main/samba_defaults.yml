@@ -1,0 +1,5 @@
+packages_samba_tasks: true
+packages_samba_config: /etc/samba/smb.conf
+
+# Set this to a template path to manage smb.conf.
+packages_samba_smb_conf_template: ""
