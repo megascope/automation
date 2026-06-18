@@ -8,7 +8,7 @@
 
 - name: Install docker-ce
   include_tasks:
-    file: install_{{ansible_os_family|lower}}.yml
+    file: install_{{ ansible_facts['os_family'] | lower }}.yml
 
 - name: Install uidmap for user namespace support
   become: true

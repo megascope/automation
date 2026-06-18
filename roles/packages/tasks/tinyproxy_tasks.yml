@@ -2,8 +2,8 @@
   debug:
     msg:
     - "{{ packages_tinyproxy_config }}"
-    - "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['network'] }}"
-    - "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['prefix'] }}"
+    - "{{ ansible_facts['default_ipv4']['network'] | default('unknown') }}"
+    - "{{ ansible_facts['default_ipv4']['prefix'] | default('unknown') }}"
 
 - name: Update tinyproxy config
   ansible.builtin.lineinfile:
