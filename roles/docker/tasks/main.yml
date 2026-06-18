@@ -36,6 +36,7 @@
   when: docker_userns_remap != false and docker_userns_remap != "default"
 
 - name: Check if nftables is present
+  tags: dockerupdate
   ansible.builtin.stat:
     path: /usr/sbin/nft
   register: _nft_binary
@@ -44,7 +45,7 @@
   tags: dockerupdate
   vars:
     _userns_config: "{{ {'userns-remap': docker_userns_remap} if docker_userns_remap else {} }}"
-    _nftables_config: "{{ {'firewall-backend': 'nftables'} if _nft_binary.stat.exists else {} }}"
+    _nftables_config: "{{ {'firewall-backend': 'nftables'} if (_nft_binary.stat.exists | default(false)) else {} }}"
   ansible.builtin.copy:
     content: "{{ docker_daemon_config | combine(_userns_config) | combine(_nftables_config) | to_nice_json }}\n"
     dest: /etc/docker/daemon.json

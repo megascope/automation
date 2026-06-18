@@ -11,7 +11,11 @@ services:
 {% endfor %}
 {% endif %}
 
-{% if docker_caddy_ports %}
+{% if docker_caddy_network_mode %}
+    network_mode: "{{ docker_caddy_network_mode }}"
+{% endif %}
+
+{% if docker_caddy_ports and docker_caddy_network_mode != 'host' %}
     ports:
 {% for line in docker_caddy_ports %}
       - "{{ line }}"

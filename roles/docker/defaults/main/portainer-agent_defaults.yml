@@ -1,4 +1,6 @@
 docker_portainer_agent_tasks: false
+# needs to be changed to something portainer can access
+# localhost is set as a default for safety
 docker_portainer_agent_ports:
-  - "9001:9001" # Agent TLS
+  - "127.0.0.01:9001:9001" # Agent TLS
 docker_portainer_agent_restart_policy: always

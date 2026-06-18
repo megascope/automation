@@ -2,8 +2,12 @@
 docker_caddy_home: "{{docker_project_root}}/caddy"
 docker_caddy_tasks: true
 
-docker_caddy_capabilities:
-  - NET_ADMIN
+docker_caddy_capabilities: []
+# might need NET_BIND_SERVICE
+
+# set to "host" to run caddy with host networking
+# leave as null to use normal bridge networking with port mappings
+docker_caddy_network_mode: null
 
 docker_caddy_ports:
   - "80:80"
