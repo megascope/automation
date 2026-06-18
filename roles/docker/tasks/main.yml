@@ -1,10 +1,10 @@
 - name: OS Installation details
   debug:
       msg: >
-        Installing docker for {{ansible_os_family}}
-        / {{ansible_distribution}}
-        / {{ansible_distribution_release}}
-        / {{ansible_distribution_version}}
+        Installing docker for {{ansible_facts["os_family"]}}
+        / {{ansible_facts["distribution"]}}
+        / {{ansible_facts["distribution_release"]}}
+        / {{ansible_facts["distribution_version"]}}
 
 - name: Install docker-ce
   include_tasks:
@@ -15,7 +15,7 @@
   ansible.builtin.apt:
     name: uidmap
     state: present
-  when: docker_userns_remap != false and ansible_os_family == "Debian"
+  when: docker_userns_remap != false and ansible_facts['os_family'] == "Debian"
 
 - name: Configure subuid for userns-remap user
   become: true

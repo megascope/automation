@@ -8,9 +8,10 @@
 
 - name: Add Docker Repository
   become: true
-  apt_repository:
-    repo: deb [signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ansible_distribution_release|lower}} stable
-    state: present
+  ansible.builtin.copy:
+    content: "deb [signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ansible_distribution_release|lower}} stable"
+    dest: /etc/apt/sources.list.d/docker.list
+    mode: '0644'
 
 - name: Update apt and install docker-ce
   become: true

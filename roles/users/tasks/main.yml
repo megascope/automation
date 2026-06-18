@@ -1,16 +1,16 @@
 - name: Set fact for Debian
   set_fact:
     sudo_group: "sudo"
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Set fact for RedHat
   set_fact:
     sudo_group: "wheel"
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Fail for unsupported sudo group OS family
   ansible.builtin.fail:
-    msg: "Unsupported ansible_os_family for sudo group mapping: {{ ansible_os_family }}"
+    msg: "Unsupported ansible_os_family for sudo group mapping: {{ ansible_facts['os_family'] }}"
   when: sudo_group is not defined
 
 - name: Add main user with sudo permissions
