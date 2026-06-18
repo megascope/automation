@@ -10,10 +10,43 @@
   include_tasks:
     file: install_{{ansible_os_family|lower}}.yml
 
+- name: Install uidmap for user namespace support
+  become: true
+  ansible.builtin.apt:
+    name: uidmap
+    state: present
+  when: docker_userns_remap != false and ansible_os_family == "Debian"
+
+- name: Configure subuid for userns-remap user
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    line: "{{ docker_userns_remap }}:100000:65536"
+    create: true
+    mode: '0644'
+  when: docker_userns_remap != false and docker_userns_remap != "default"
+
+- name: Configure subgid for userns-remap user
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    line: "{{ docker_userns_remap }}:100000:65536"
+    create: true
+    mode: '0644'
+  when: docker_userns_remap != false and docker_userns_remap != "default"
+
+- name: Check if nftables is present
+  ansible.builtin.stat:
+    path: /usr/sbin/nft
+  register: _nft_binary
+
 - name: Write daemon.json
   tags: dockerupdate
+  vars:
+    _userns_config: "{{ {'userns-remap': docker_userns_remap} if docker_userns_remap else {} }}"
+    _nftables_config: "{{ {'firewall-backend': 'nftables'} if _nft_binary.stat.exists else {} }}"
   ansible.builtin.copy:
-    content: "{{ docker_daemon_config | to_nice_json }}\n"
+    content: "{{ docker_daemon_config | combine(_userns_config) | combine(_nftables_config) | to_nice_json }}\n"
     dest: /etc/docker/daemon.json
     owner: "root"
     group: "root"

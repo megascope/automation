@@ -3,6 +3,11 @@ docker_user: root
 docker_project_root: "/opt/docker-projects"
 docker_containers: []
 
+# Set to "default" to enable Docker user namespace remapping using the
+# automatically-managed dockremap user, or to a specific username.
+# When enabled, subuid/subgid entries are configured and uidmap is installed.
+docker_userns_remap: false
+
 # from https://straz.to/2021-09-08-docker-address-pools/
 docker_daemon_config:
   default-address-pools:

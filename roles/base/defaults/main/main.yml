@@ -1,2 +1,3 @@
 base_timezone: "Etc/UTC"
 motd_banner_file: null
+machine_hostname: null

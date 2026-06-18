@@ -1,3 +1,9 @@
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ machine_hostname }}"
+  become: true
+  when: machine_hostname != None
+
 - name: Set timezone
   community.general.timezone:
     name: '{{base_timezone}}'
