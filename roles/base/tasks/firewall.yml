@@ -179,6 +179,15 @@
     ip_version: "{{ item }}"
   with_items: "{{ firewall_ip_versions }}"
 
+# only do this at the end so fw rules are active 
+- name: Set default policy on INPUT
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: "{{ firewall_default_input_policy }}"
+    ip_version: "{{ item }}"
+  with_items: "{{ firewall_ip_versions }}"
+
 # Ensure persistence tooling is present and active when requested
 - name: Ensure iptables-persistent is installed
   become: true
@@ -216,12 +225,3 @@
     table: filter
     state: saved
     path: /etc/iptables/rules.v6
-
-# only do this at the end so fw rules are active 
-- name: Set default policy on INPUT
-  become: true
-  ansible.builtin.iptables:
-    chain: INPUT
-    policy: "{{ firewall_default_input_policy }}"
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
