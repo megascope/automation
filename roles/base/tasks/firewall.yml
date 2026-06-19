@@ -2,7 +2,7 @@
   become: true
   when: firewall_ipv4_forwarding
   ansible.builtin.command:
-    cmd: sysctl -n net.ipv4.ip_forward
+    cmd: /usr/sbin/sysctl -n net.ipv4.ip_forward
   register: firewall_ipv4_forwarding_state
   changed_when: false
 
@@ -12,7 +12,7 @@
   - firewall_ipv4_forwarding
   - firewall_ipv4_forwarding_state.stdout != "1"
   ansible.builtin.command:
-    cmd: sysctl -w net.ipv4.ip_forward=1
+    cmd: /usr/sbin/sysctl -w net.ipv4.ip_forward=1
 
 - name: Persist IPv4 forwarding
   become: true
@@ -24,13 +24,14 @@
     value: "1"
     state: present
     sysctl_set: true
+    sysctl_file: "{{ firewall_sysctl_file }}"
     reload: true
 
 - name: Check IPv6 forwarding state
   become: true
   when: firewall_ipv6_forwarding
   ansible.builtin.command:
-    cmd: sysctl -n net.ipv6.conf.all.forwarding
+    cmd: /usr/sbin/sysctl -n net.ipv6.conf.all.forwarding
   register: firewall_ipv6_forwarding_state
   changed_when: false
 
@@ -40,7 +41,7 @@
   - firewall_ipv6_forwarding
   - firewall_ipv6_forwarding_state.stdout != "1"
   ansible.builtin.command:
-    cmd: sysctl -w net.ipv6.conf.all.forwarding=1 net.ipv6.conf.default.forwarding=1
+    cmd: /usr/sbin/sysctl -w net.ipv6.conf.all.forwarding=1 net.ipv6.conf.default.forwarding=1
 
 - name: Persist IPv6 forwarding
   become: true
@@ -52,6 +53,7 @@
     value: "1"
     state: present
     sysctl_set: true
+    sysctl_file: "{{ firewall_sysctl_file }}"
     reload: true
   loop:
   - net.ipv6.conf.all.forwarding

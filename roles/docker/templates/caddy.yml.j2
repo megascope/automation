@@ -13,6 +13,9 @@ services:
 
 {% if docker_caddy_network_mode %}
     network_mode: "{{ docker_caddy_network_mode }}"
+{% if docker_caddy_network_mode == 'host' and docker_userns_remap != false %}
+    userns_mode: "host"
+{% endif %}
 {% endif %}
 
 {% if docker_caddy_ports and docker_caddy_network_mode != 'host' %}
