@@ -16,6 +16,11 @@ firewall_http: False
 # defaults to false so a reboot unsets everything
 firewall_persist: False
 
+# enable IPv4 forwarding for routed/bridged workloads
+# this needs to be set explicity for docker using
+# nftables backend
+firewall_ipv4_forwarding: False
+
 # used to save custom chain
 firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
 
