@@ -26,6 +26,37 @@
     sysctl_set: true
     reload: true
 
+- name: Check IPv6 forwarding state
+  become: true
+  when: firewall_ipv6_forwarding
+  ansible.builtin.command:
+    cmd: sysctl -n net.ipv6.conf.all.forwarding
+  register: firewall_ipv6_forwarding_state
+  changed_when: false
+
+- name: Enable IPv6 forwarding for current boot
+  become: true
+  when:
+  - firewall_ipv6_forwarding
+  - firewall_ipv6_forwarding_state.stdout != "1"
+  ansible.builtin.command:
+    cmd: sysctl -w net.ipv6.conf.all.forwarding=1 net.ipv6.conf.default.forwarding=1
+
+- name: Persist IPv6 forwarding
+  become: true
+  when:
+  - firewall_ipv6_forwarding
+  - firewall_persist
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+    sysctl_set: true
+    reload: true
+  loop:
+  - net.ipv6.conf.all.forwarding
+  - net.ipv6.conf.default.forwarding
+
 - name: Create custom chain
   become: true
   iptables:

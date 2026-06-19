@@ -21,6 +21,9 @@ firewall_persist: False
 # nftables backend
 firewall_ipv4_forwarding: False
 
+# enable IPv6 forwarding for routed/bridged workloads
+firewall_ipv6_forwarding: False
+
 # used to save custom chain
 firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
 
