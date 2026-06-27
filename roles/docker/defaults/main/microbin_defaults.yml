@@ -1,0 +1,54 @@
+docker_microbin_tasks: false
+docker_microbin_image: danielszabo99/microbin:latest
+docker_microbin_restart_policy: "unless-stopped"
+
+docker_microbin_ports:
+  - "127.0.0.1:8080:8080"
+
+# Named volume: Docker initialises it from the image with the correct
+# ownership (uid/gid 65532) so the nonroot user can write to it.
+docker_microbin_data_volume: microbin-data
+docker_microbin_data_dir: /app/microbin_data
+
+docker_microbin_environment:
+  MICROBIN_BIND: "0.0.0.0"
+  MICROBIN_DATA_DIR: "{{ docker_microbin_data_dir }}"
+  MICROBIN_DISABLE_UPDATE_CHECKING: "true"
+  MICROBIN_DISABLE_TELEMETRY: "true"
+
+# Optional MicroBin settings. Override this with any supported MICROBIN_*
+# environment variables such as MICROBIN_PUBLIC_PATH, auth credentials, file
+# size limits, privacy defaults, or UI toggles.
+docker_microbin_extra_environment:
+   MICROBIN_ADMIN_USERNAME: "admin"
+   MICROBIN_ADMIN_PASSWORD: "changeme"
+   MICROBIN_PORT: 8080
+   MICROBIN_THREADS: 1
+   MICROBIN_PRIVATE: true
+   MICROBIN_ENABLE_READONLY: true
+   MICROBIN_ENCRYPTION_CLIENT_SIDE: false
+   MICROBIN_ENCRYPTION_SERVER_SIDE: false
+   MICROBIN_DEFAULT_PRIVACY: "unlisted"
+   MICROBIN_HIGHLIGHTSYNTAX: true
+   MICROBIN_ENABLE_BURN_AFTER: true
+   MICROBIN_ETERNAL_PASTA: false
+   MICROBIN_QR: false
+   MICROBIN_SHOW_READ_STATS: true
+   MICROBIN_WIDE: false
+   MICROBIN_HIDE_HEADER: false
+   MICROBIN_HIDE_FOOTER: false
+   MICROBIN_HIDE_LOGO: false
+   MICROBIN_NO_FILE_UPLOAD: false
+   MICROBIN_READONLY: false
+   MICROBIN_EDITABLE: true
+   MICROBIN_DEFAULT_EXPIRY: "24hour"
+   MICROBIN_MAX_EXPIRY: "1week"
+   MICROBIN_GC_DAYS: 90
+   MICROBIN_DEFAULT_BURN_AFTER: 0
+   MICROBIN_MAX_FILE_SIZE_ENCRYPTED_MB: 1
+   MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB: 10
+   MICROBIN_HASH_IDS: false
+   MICROBIN_NO_LISTING: false
+   MICROBIN_JSON_DB: false
+   MICROBIN_PURE_HTML: false
+   MICROBIN_LIST_SERVER: false

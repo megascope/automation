@@ -9,6 +9,9 @@ services:
 
 {% if docker_cloudflared_tunnel_network_mode is defined %}
     network_mode: {{docker_cloudflared_tunnel_network_mode}}
+{% if docker_cloudflared_tunnel_network_mode == 'host' and docker_userns_remap != false %}
+    userns_mode: "host"
+{% endif %}
 {% elif docker_cloudflared_tunnel_network is defined %}
     networks:
       - shared_network

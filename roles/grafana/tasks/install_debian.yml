@@ -5,7 +5,7 @@
     state: directory
     mode: '0755'
 
-- name: Add Docker GPG Key
+- name: Add Grafana GPG key
   become: true
   ansible.builtin.get_url:
     url: https://apt.grafana.com/gpg.key
@@ -13,7 +13,7 @@
     mode: '0644'
     force: true
 
-- name: Add Docker Repository
+- name: Add Grafana repository
   become: true
   ansible.builtin.copy:
     content: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"

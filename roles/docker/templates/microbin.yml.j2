@@ -1,0 +1,23 @@
+services:
+  microbin:
+    image: {{ docker_microbin_image }}
+    container_name: microbin
+    restart: {{ docker_microbin_restart_policy }}
+{% if docker_microbin_ports %}
+    ports:
+{% for line in docker_microbin_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - {{ docker_microbin_data_volume }}:{{ docker_microbin_data_dir }}
+{% set microbin_environment = docker_microbin_environment | combine(docker_microbin_extra_environment) %}
+{% if microbin_environment %}
+    environment:
+{% for key, value in microbin_environment.items() %}
+      {{ key }}: {{ value | to_json }}
+{% endfor %}
+{% endif %}
+
+volumes:
+  {{ docker_microbin_data_volume }}:

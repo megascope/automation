@@ -1,0 +1,21 @@
+- name: Find duplicate Grafana apt source files
+  become: true
+  ansible.builtin.find:
+    paths: /etc/apt/sources.list.d
+    patterns:
+      - '*.list'
+      - '*.sources'
+    contains: 'apt\.grafana\.com'
+    read_whole_file: true
+  register: grafana_apt_source_files
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Remove duplicate Grafana apt source files
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ grafana_apt_source_files.files | default([]) }}"
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - item.path != '/etc/apt/sources.list.d/grafana.list'

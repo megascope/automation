@@ -1,4 +1,23 @@
 - hosts: all
+  pre_tasks:
+    - name: Clean Grafana apt sources before package cache updates
+      ansible.builtin.include_role:
+        name: grafana
+        tasks_from: cleanup_apt_sources
+        apply:
+          tags: grafana
+      when: "'grafana_hosts' in group_names"
+      tags: grafana
+
+    - name: Clean Docker apt sources before package cache updates
+      ansible.builtin.include_role:
+        name: docker
+        tasks_from: cleanup_apt_sources
+        apply:
+          tags: docker
+      when: "'docker_hosts' in group_names"
+      tags: docker
+
   roles:
     - { role: base, tags: base }
     - { role: packages, tags: packages, when: "'packages_hosts' not in group_names" }
