@@ -8,6 +8,10 @@ docker_containers: []
 # When enabled, subuid/subgid entries are configured and uidmap is installed.
 docker_userns_remap: false
 
+# Firewalld uses its nftables backend independently. Keep Docker on its mature
+# iptables backend unless a host explicitly opts into Docker's nftables backend.
+docker_firewall_backend: iptables
+
 # from https://straz.to/2021-09-08-docker-address-pools/
 docker_daemon_config:
   default-address-pools:

@@ -1,26 +1,19 @@
-# set these to true in host or group vars to enable
+# Set to true in host or group vars to configure firewalld.
+firewall_enable: false
 
-# set to true to do anything
-firewall_enable: False
+# Host services managed by the role.
+firewall_ssh: true
+firewall_zerotier: false
+firewall_tailscale: false
+firewall_mosh: false
+firewall_http: false
 
-# using iptables over nftables since docker does 
-# not play nice with nftables
-# iptables rules
-firewall_ssh: True
-firewall_zerotier: False
-firewall_tailscale: False
-firewall_mosh: False
-firewall_http: False
+# A dedicated zone avoids inheriting distribution-specific services from
+# firewalld's built-in public zone. Unmatched traffic is dropped.
+firewall_zone: ansible-managed
+firewall_zone_target: DROP
 
-# save firewall state to rules.v4
-# defaults to false so a reboot unsets everything
-firewall_persist: False
-
-# used to save custom chain
-firewall_custom_chain: INPUT-ANSIBLE-AUTOMATION
-
-firewall_default_input_policy: DROP
-
-firewall_ip_versions:
-- ipv4
-- ipv6
+# Tailscale is the trusted network. The UDP transport port is still opened in
+# firewall_zone because those packets arrive through a physical interface.
+firewall_tailscale_interface: tailscale0
+firewall_tailscale_zone: trusted
