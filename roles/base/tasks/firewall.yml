@@ -9,16 +9,16 @@
 - name: Enable IPv4 forwarding for current boot
   become: true
   when:
-  - firewall_ipv4_forwarding
-  - firewall_ipv4_forwarding_state.stdout != "1"
+    - firewall_ipv4_forwarding
+    - firewall_ipv4_forwarding_state.stdout != "1"
   ansible.builtin.command:
     cmd: /usr/sbin/sysctl -w net.ipv4.ip_forward=1
 
 - name: Persist IPv4 forwarding
   become: true
   when:
-  - firewall_ipv4_forwarding
-  - firewall_persist
+    - firewall_ipv4_forwarding
+    - firewall_persist
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: "1"
@@ -38,16 +38,16 @@
 - name: Enable IPv6 forwarding for current boot
   become: true
   when:
-  - firewall_ipv6_forwarding
-  - firewall_ipv6_forwarding_state.stdout != "1"
+    - firewall_ipv6_forwarding
+    - firewall_ipv6_forwarding_state.stdout != "1"
   ansible.builtin.command:
     cmd: /usr/sbin/sysctl -w net.ipv6.conf.all.forwarding=1 net.ipv6.conf.default.forwarding=1
 
 - name: Persist IPv6 forwarding
   become: true
   when:
-  - firewall_ipv6_forwarding
-  - firewall_persist
+    - firewall_ipv6_forwarding
+    - firewall_persist
   ansible.posix.sysctl:
     name: "{{ item }}"
     value: "1"
@@ -56,172 +56,114 @@
     sysctl_file: "{{ firewall_sysctl_file }}"
     reload: true
   loop:
-  - net.ipv6.conf.all.forwarding
-  - net.ipv6.conf.default.forwarding
+    - net.ipv6.conf.all.forwarding
+    - net.ipv6.conf.default.forwarding
 
-- name: Create custom chain
+- name: Gather service state for firewall conflict checks
+  ansible.builtin.service_facts:
+
+- name: Refuse to configure firewalld over another firewall manager
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services.get('nftables.service', {}).get('state', 'stopped') != 'running'
+      - ansible_facts.services.get('netfilter-persistent.service', {}).get('state', 'stopped') != 'running'
+      - ansible_facts.services.get('ufw.service', {}).get('state', 'stopped') != 'running'
+    fail_msg: >-
+      A conflicting firewall service is active. Clean up nftables.service,
+      netfilter-persistent.service, or ufw.service before running this role.
+
+- name: Install firewalld
   become: true
-  iptables:
-    chain: "{{ firewall_custom_chain }}"
-    chain_management: true
+  ansible.builtin.package:
+    name: firewalld
     state: present
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
 
-- name: Flush custom chain
+- name: Enable and start firewalld
   become: true
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    flush: yes
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Add custom chain to INPUT
-  become: true
-  ansible.builtin.iptables:
-    chain: INPUT
-    action: insert
-    jump: "{{ firewall_custom_chain }}"
-    comment: defer to custom chain
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept loopback traffic
-  become: true
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    in_interface: lo
-    jump: ACCEPT
-    comment: allow loopback
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept established and related connections
-  become: true
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    match: state
-    ctstate: ESTABLISHED,RELATED
-    jump: ACCEPT
-    comment: allow established,related
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept ssh
-  become: true
-  when: firewall_ssh
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: tcp
-    destination_port: 22
-    jump: ACCEPT
-    comment: ssh
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept Zerotier
-  become: true
-  when: firewall_zerotier
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: udp
-    destination_port: 9993
-    jump: ACCEPT
-    comment: zerotier
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept Tailscale
-  become: true
-  when: firewall_tailscale
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: udp
-    destination_port: 41641
-    jump: ACCEPT
-    comment: tailscale
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept Mosh
-  become: true
-  when: firewall_mosh
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: udp
-    destination_port: 60000:61000
-    jump: ACCEPT
-    comment: mosh
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept HTTP
-  become: true
-  when: firewall_http
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: tcp
-    destination_port: 80
-    jump: ACCEPT
-    comment: http
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-- name: Accept HTTPS
-  become: true
-  when: firewall_http
-  ansible.builtin.iptables:
-    chain: "{{ firewall_custom_chain }}"
-    protocol: tcp
-    destination_port: 443
-    jump: ACCEPT
-    comment: https
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-# only do this at the end so fw rules are active 
-- name: Set default policy on INPUT
-  become: true
-  ansible.builtin.iptables:
-    chain: INPUT
-    policy: "{{ firewall_default_input_policy }}"
-    ip_version: "{{ item }}"
-  with_items: "{{ firewall_ip_versions }}"
-
-# Ensure persistence tooling is present and active when requested
-- name: Ensure iptables-persistent is installed
-  become: true
-  when: firewall_persist
-  ansible.builtin.apt:
-    name: iptables-persistent
-    state: present
-    update_cache: yes
-    install_recommends: false
-  environment:
-    DEBIAN_FRONTEND: noninteractive
-
-- name: Enable and start netfilter-persistent service
-  become: true
-  when: firewall_persist
   ansible.builtin.service:
-    name: netfilter-persistent
+    name: firewalld
     enabled: true
     state: started
 
-# This will apply to all loaded/active IPv4 tables.
-- name: Save current state of the firewall in system file
+- name: Create the Ansible-managed firewall zone
   become: true
-  when: firewall_persist
-  community.general.iptables_state:
-    state: saved
-    path: /etc/iptables/rules.v4
+  ansible.posix.firewalld:
+    zone: "{{ firewall_zone }}"
+    state: present
+    permanent: true
+  register: firewall_zone_created
 
-# This will apply only to IPv6 filter table.
-- name: save current state of the firewall in system file
+# New zones exist only in the permanent configuration until firewalld reloads.
+- name: Load the new firewall zone
   become: true
-  when: firewall_persist
-  community.general.iptables_state:
-    ip_version: ipv6
-    table: filter
-    state: saved
-    path: /etc/iptables/rules.v6
+  ansible.builtin.command: firewall-cmd --reload
+  when: firewall_zone_created is changed
+  changed_when: true
+
+- name: Configure managed firewall services
+  become: true
+  ansible.posix.firewalld:
+    zone: "{{ firewall_zone }}"
+    service: "{{ item.service }}"
+    state: "{{ 'enabled' if item.enabled | bool else 'disabled' }}"
+    permanent: true
+    immediate: true
+  loop:
+    - service: ssh
+      enabled: "{{ firewall_ssh }}"
+    - service: http
+      enabled: "{{ firewall_http }}"
+    - service: https
+      enabled: "{{ firewall_http }}"
+  loop_control:
+    label: "{{ item.service }}"
+
+- name: Configure managed firewall ports
+  become: true
+  ansible.posix.firewalld:
+    zone: "{{ firewall_zone }}"
+    port: "{{ item.port }}"
+    state: "{{ 'enabled' if item.enabled | bool else 'disabled' }}"
+    permanent: true
+    immediate: true
+  loop:
+    - port: 9993/udp
+      enabled: "{{ firewall_zerotier }}"
+    - port: 41641/udp
+      enabled: "{{ firewall_tailscale }}"
+    - port: 60000-61000/udp
+      enabled: "{{ firewall_mosh }}"
+  loop_control:
+    label: "{{ item.port }}"
+
+- name: Assign the Tailscale interface to the trusted zone
+  become: true
+  ansible.posix.firewalld:
+    zone: "{{ firewall_tailscale_zone }}"
+    interface: "{{ firewall_tailscale_interface }}"
+    state: "{{ 'enabled' if firewall_tailscale | bool else 'disabled' }}"
+    permanent: true
+    immediate: true
+
+- name: Set the firewall zone target
+  become: true
+  ansible.posix.firewalld:
+    zone: "{{ firewall_zone }}"
+    target: "{{ firewall_zone_target }}"
+    state: present
+    permanent: true
+    immediate: true
+
+- name: Read the current default firewall zone
+  become: true
+  ansible.builtin.command: firewall-cmd --get-default-zone
+  register: firewall_default_zone
+  changed_when: false
+
+# This is deliberately last so SSH and all other permitted services are in
+# place before the restrictive zone begins handling unassigned interfaces.
+- name: Make the Ansible-managed zone the default
+  become: true
+  ansible.builtin.command: "firewall-cmd --set-default-zone={{ firewall_zone }}"
+  when: firewall_default_zone.stdout | trim != firewall_zone
+  changed_when: true
