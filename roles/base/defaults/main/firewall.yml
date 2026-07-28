@@ -13,11 +13,7 @@ firewall_http: false
 firewall_zone: ansible-managed
 firewall_zone_target: DROP
 
-# Persist forwarding settings in sysctl.d when enabled. Firewalld's own
-# permanent configuration is managed independently of this setting.
-firewall_persist: false
-
-# Enable forwarding for routed/bridged workloads such as Docker.
+# Enable and persist forwarding for routed workloads such as exit nodes.
 firewall_ipv4_forwarding: false
 firewall_ipv6_forwarding: false
 firewall_sysctl_file: /etc/sysctl.d/99-firewall-forwarding.conf
