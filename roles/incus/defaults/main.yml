@@ -7,6 +7,7 @@ incus_firewalld_zone: trusted
 
 # Keep the host on the Incus 7.0 LTS series supplied by Debian backports.
 incus_apt_suite: trixie-backports
+incus_package_version: "7.*"
 incus_version_minimum: "7.0"
 incus_version_maximum: "8.0"
 

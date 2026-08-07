@@ -15,7 +15,7 @@
         tasks_from: cleanup_apt_sources
         apply:
           tags: docker
-      when: "'docker_hosts' in group_names"
+      when: (compose_runtime | default('')) == 'docker'
       tags: docker
 
   roles:

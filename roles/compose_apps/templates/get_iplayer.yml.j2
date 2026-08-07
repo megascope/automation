@@ -14,7 +14,6 @@ services:
       - "{{compose_get_iplayer_downloads}}:/downloads"
 
     restart: {{ compose_get_iplayer_restart_policy }}
-    network_mode: container:nordvpn
 
 {% if compose_get_iplayer_ports %}
     ports:
@@ -24,5 +23,5 @@ services:
 {% endif %}
 
 {% if compose_get_iplayer_upstream_container %}
-    network_mode: container:{{compose_get_iplayer_upstream_container}}
+    network_mode: container:{{ compose_get_iplayer_upstream_container }}
 {% endif %}

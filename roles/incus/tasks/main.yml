@@ -37,10 +37,11 @@
 - name: Install Incus from Debian backports
   become: true
   ansible.builtin.apt:
-    name: incus
+    name: "incus={{ incus_package_version }}"
     state: latest
     default_release: "{{ incus_apt_suite }}"
     update_cache: true
+    allow_downgrade: true
   when: not (ansible_check_mode and incus_backports_source.changed)
 
 - name: Gather installed package versions

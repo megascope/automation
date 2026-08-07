@@ -84,6 +84,17 @@
   check_mode: false
   when: incus_compose_install | bool
 
+- name: Record the installed incus-compose release
+  ansible.builtin.set_fact:
+    incus_compose_installed_release: >-
+      {{
+        incus_compose_installed_version.stdout
+        | default('')
+        | regex_search('[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?')
+        | default('', true)
+      }}
+  when: incus_compose_install | bool
+
 - name: Validate the incus-compose release architecture
   ansible.builtin.assert:
     that:
@@ -106,7 +117,7 @@
     mode: '0644'
   when:
     - incus_compose_install | bool
-    - incus_compose_version not in incus_compose_installed_version.stdout | default('')
+    - incus_compose_installed_release | default('') != incus_compose_version
 
 - name: Install the pinned incus-compose release
   become: true
@@ -121,7 +132,7 @@
     remote_src: true
   when:
     - incus_compose_install | bool
-    - incus_compose_version not in incus_compose_installed_version.stdout | default('')
+    - incus_compose_installed_release | default('') != incus_compose_version
     - not ansible_check_mode
 
 - name: Remove the incus-compose archive

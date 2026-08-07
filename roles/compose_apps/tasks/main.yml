@@ -66,7 +66,9 @@
     group: "{{ compose_user }}"
     mode: '0755'
   vars:
-    compose_merge_apps: "{{ lookup('vars', item + '_merge_containers', default=[item]) }}"
+    compose_app_variable_name: "{{ item | replace('-', '_') }}"
+    compose_merge_apps: >-
+      {{ lookup('vars', compose_app_variable_name + '_merge_containers', default=[item]) }}
   loop: "{{ compose_apps }}"
 
 - name: Copy all-applications recreation helper
@@ -84,6 +86,7 @@
     - composeupdate
     - composesubtasks
   ansible.builtin.include_tasks:
-    file: "{{ item }}_tasks.yml"
-  when: lookup('vars', 'compose_' + item + '_tasks', default=false)
+    file: "{{ item | replace('-', '_') }}_tasks.yml"
+  when: >-
+    lookup('vars', 'compose_' + (item | replace('-', '_')) + '_tasks', default=false)
   loop: "{{ compose_apps }}"
