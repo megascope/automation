@@ -69,6 +69,54 @@
       - "--storage-backend={{ incus_storage_backend }}"
   when: incus_default_storage.rc != 0
 
+- name: Read the default Incus profile
+  become: true
+  ansible.builtin.command: incus profile show default
+  register: incus_default_profile_show
+  changed_when: false
+  check_mode: false
+
+- name: Record the default Incus profile
+  ansible.builtin.set_fact:
+    incus_default_profile: "{{ incus_default_profile_show.stdout | from_yaml }}"
+
+- name: Record the default Incus profile NIC
+  ansible.builtin.set_fact:
+    incus_default_profile_nic_current: >-
+      {{
+        incus_default_profile.devices
+        | default({})
+        | dict2items
+        | selectattr('key', 'equalto', incus_default_profile_nic_name)
+        | map(attribute='value')
+        | first
+        | default({})
+      }}
+
+- name: Remove the default profile NIC when it differs
+  become: true
+  ansible.builtin.command:
+    argv:
+      - incus
+      - profile
+      - device
+      - remove
+      - default
+      - "{{ incus_default_profile_nic_name }}"
+  when:
+    - incus_default_profile_nic_current | length > 0
+    - incus_default_profile_nic_current != incus_default_profile_nic
+
+- name: Add the default profile NIC when it differs
+  become: true
+  ansible.builtin.command: >-
+    incus profile device add default {{ incus_default_profile_nic_name }}
+    {{ incus_default_profile_nic.type }}
+    {% for option in incus_default_profile_nic | dict2items | rejectattr('key', 'equalto', 'type') %}
+    {{ option.key }}={{ option.value }}
+    {% endfor %}
+  when: incus_default_profile_nic_current != incus_default_profile_nic
+
 - name: Trust the Incus bridge in firewalld
   become: true
   ansible.posix.firewalld:

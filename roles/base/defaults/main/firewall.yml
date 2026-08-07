@@ -14,9 +14,10 @@ firewall_zone: ansible-managed
 firewall_zone_target: DROP
 
 # Enable and persist forwarding for routed workloads such as exit nodes.
-firewall_ipv4_forwarding: false
-firewall_ipv6_forwarding: false
-firewall_sysctl_file: /etc/sysctl.d/99-firewall-forwarding.conf
+set_ipv4_forwarding: false
+set_ipv6_forwarding: false
+set_forwarding_sysctl_file: /etc/sysctl.d/99-ip-forwarding.conf
+firewall_sysctl_file: "{{ set_forwarding_sysctl_file }}"
 
 # Tailscale is the trusted network. The UDP transport port is still opened in
 # firewall_zone because those packets arrive through a physical interface.

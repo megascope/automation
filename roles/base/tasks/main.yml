@@ -50,6 +50,14 @@
   become: true
   tags: banner
 
+- name: Configure IP forwarding
+  tags:
+    - firewall
+    - forwarding
+  ansible.builtin.include_tasks:
+    file: forwarding.yml
+  when: set_ipv4_forwarding | bool or set_ipv6_forwarding | bool
+
 - name: Setup firewall
   tags: firewall
   when: firewall_enable
