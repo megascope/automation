@@ -2,23 +2,23 @@ services:
   ultrafeeder:
     # Note - if you want to enable telegraf for use with InfluxDB/Prometheus and Grafana,
     # use the following image instead:
-{% if docker_ultrafeeder_influx_enabled %}
-    image: {{ docker_ultrafeeder_image }}:telegraf
+{% if compose_ultrafeeder_influx_enabled %}
+    image: {{ compose_ultrafeeder_image }}:telegraf
 {% else %}
-    image: {{ docker_ultrafeeder_image }}
+    image: {{ compose_ultrafeeder_image }}
 {% endif %}
     container_name: ultrafeeder
     hostname: ultrafeeder
-    restart: {{ docker_ultrafeeder_restart_policy }}
-{% if docker_ultrafeeder_device_cgroup_rules %}
+    restart: {{ compose_ultrafeeder_restart_policy }}
+{% if compose_ultrafeeder_device_cgroup_rules %}
     device_cgroup_rules:
-{% for line in docker_ultrafeeder_device_cgroup_rules %}
+{% for line in compose_ultrafeeder_device_cgroup_rules %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
-{% if docker_ultrafeeder_ports %}
+{% if compose_ultrafeeder_ports %}
     ports:
-{% for line in docker_ultrafeeder_ports %}
+{% for line in compose_ultrafeeder_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -29,7 +29,7 @@ services:
       - TZ=${FEEDER_TZ}
       # --------------------------------------------------
       # SDR related parameters:
-{% if docker_ultrafeeder_readsb_enabled %}
+{% if compose_ultrafeeder_readsb_enabled %}
       - READSB_DEVICE_TYPE=rtlsdr
       - READSB_GAIN=auto
       - READSB_RTLSDR_DEVICE=${ADSB_SDR_SERIAL}
@@ -50,13 +50,13 @@ services:
       #       - remove "adsb,dump978,30978,uat_in;" if you don't have dump978 and a UAT dongle connected to your station
       #       - !!! make sure that each line ends with a semicolon ";",  with the exception of the last line which shouldn't have a ";" !!!
 {% set ultrafeeder_config = [] %}
-{% if docker_ultrafeeder_beast_host %}
-{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ docker_ultrafeeder_beast_host ~ ',30005,beast_in'] %}
+{% if compose_ultrafeeder_beast_host %}
+{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ compose_ultrafeeder_beast_host ~ ',30005,beast_in'] %}
 {% endif %}
-{% if docker_ultrafeeder_uat_host %}
-{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ docker_ultrafeeder_uat_host ~ ',30978,uat_in'] %}
+{% if compose_ultrafeeder_uat_host %}
+{% set ultrafeeder_config = ultrafeeder_config + ['adsb,' ~ compose_ultrafeeder_uat_host ~ ',30978,uat_in'] %}
 {% endif %}
-{% set ultrafeeder_config = ultrafeeder_config + docker_ultrafeeder_config %}
+{% set ultrafeeder_config = ultrafeeder_config + compose_ultrafeeder_config %}
       - ULTRAFEEDER_CONFIG=
         {{ ultrafeeder_config | join(';\n        ') }}
       # If you really want to feed ADSBExchange, you can do so by adding this above:
@@ -88,7 +88,7 @@ services:
       # GRAPHS1090 (Decoder and System Status Web Page) parameters:
       # The two 978 related parameters should only be included if you are running dump978 for UAT reception (USA only)
       - GRAPHS1090_DARKMODE=true
-{% if docker_ultrafeeder_978_enabled %}
+{% if compose_ultrafeeder_978_enabled %}
       - ENABLE_978=yes
       - URL_978=http://dump978/skyaware978
 {% endif %}
@@ -96,12 +96,12 @@ services:
       # --------------------------------------------------
       # Prometheus and InfluxDB connection parameters:
       # (See above for the correct image tag you must use to enable this)
-{% if docker_ultrafeeder_influx_enabled %}
+{% if compose_ultrafeeder_influx_enabled %}
       - INFLUXDBV2_URL=${INFLUX_URL}
       - INFLUXDBV2_TOKEN=${INFLUX_TOKEN}
       - INFLUXDBV2_BUCKET=${INFLUX_BUCKET}
 {% endif %}
-      - PROMETHEUS_ENABLE={{ docker_ultrafeeder_prometheus_enable | string | lower }}
+      - PROMETHEUS_ENABLE={{ compose_ultrafeeder_prometheus_enable | string | lower }}
     volumes:
       - /opt/adsb/ultrafeeder/globe_history:/var/globe_history
       - /opt/adsb/ultrafeeder/graphs1090:/var/lib/collectd
@@ -110,7 +110,7 @@ services:
     tmpfs:
       - /run:exec,size=256M
 
-{% if docker_ultrafeeder_piaware_enabled %}
+{% if compose_ultrafeeder_piaware_enabled %}
   piaware:
     image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
     container_name: piaware
@@ -122,16 +122,16 @@ services:
       - BEASTPORT=30005
       - MLAT_RESULTS_BEASTHOST=ultrafeeder
       - MLAT_RESULTS_BEASTPORT=31004
-{% if docker_ultrafeeder_uat_host %}
+{% if compose_ultrafeeder_uat_host %}
       - UAT_RECEIVER_TYPE=relay
-      - UAT_RECEIVER_HOST={{docker_ultrafeeder_uat_host}}
+      - UAT_RECEIVER_HOST={{compose_ultrafeeder_uat_host}}
       - UAT_RECEIVER_PORT=30978
 {% endif %}
       - FEEDER_ID=${FLIGHTAWARE_UUID}
 
-{% if docker_ultrafeeder_piaware_ports %}
+{% if compose_ultrafeeder_piaware_ports %}
     ports:
-{% for line in docker_ultrafeeder_piaware_ports %}
+{% for line in compose_ultrafeeder_piaware_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -144,14 +144,14 @@ services:
       - /var/log
 {% endif %}
 
-{% if docker_ultrafeeder_fr24_enabled %}
+{% if compose_ultrafeeder_fr24_enabled %}
   fr24feed:
     image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
     container_name: fr24feed
     restart: always
-{% if docker_ultrafeeder_fr24_ports %}
+{% if compose_ultrafeeder_fr24_ports %}
     ports:
-{% for line in docker_ultrafeeder_fr24_ports %}
+{% for line in compose_ultrafeeder_fr24_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -159,9 +159,9 @@ services:
       - BEASTHOST=ultrafeeder
       - FR24KEY=${FR24KEY}
 
-{% if docker_ultrafeeder_fr24_uat_enabled %}
+{% if compose_ultrafeeder_fr24_uat_enabled %}
       - FR24KEY_UAT=${FR24KEY_UAT}
-      - UATHOST={{docker_ultrafeeder_uat_host}}
+      - UATHOST={{compose_ultrafeeder_uat_host}}
       - UATPORT=30978
 {% endif %}
 

@@ -2,36 +2,36 @@ services:
   caddy:
     image: caddy
     container_name: caddy
-    restart: {{ docker_caddy_restart_policy }}
+    restart: {{ compose_caddy_restart_policy }}
 
-{% if docker_caddy_capabilities %}
+{% if compose_caddy_capabilities %}
     cap_add:
-{% for line in docker_caddy_capabilities %}
+{% for line in compose_caddy_capabilities %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if docker_caddy_network_mode %}
-    network_mode: "{{ docker_caddy_network_mode }}"
-{% if docker_caddy_network_mode == 'host' and docker_userns_remap != false %}
+{% if compose_caddy_network_mode %}
+    network_mode: "{{ compose_caddy_network_mode }}"
+{% if compose_caddy_network_mode == 'host' and compose_userns_remap != false %}
     userns_mode: "host"
 {% endif %}
 {% endif %}
 
-{% if docker_caddy_ports and docker_caddy_network_mode != 'host' %}
+{% if compose_caddy_ports and compose_caddy_network_mode != 'host' %}
     ports:
-{% for line in docker_caddy_ports %}
+{% for line in compose_caddy_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
     volumes:
-      - "{{docker_caddy_conf}}:/etc/caddy"
-      - "{{docker_caddy_srv}}:/srv:ro"
+      - "{{compose_caddy_conf}}:/etc/caddy"
+      - "{{compose_caddy_srv}}:/srv:ro"
       - "caddy-data:/data"
       - "caddy-config:/config"
-{% if docker_caddy_certs %}
-      - "{{docker_caddy_certs}}:/etc/ssl/private:ro"
+{% if compose_caddy_certs %}
+      - "{{compose_caddy_certs}}:/etc/ssl/private:ro"
 {% endif %}
 volumes:
     caddy-config:

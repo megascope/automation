@@ -84,33 +84,49 @@
   check_mode: false
   when: incus_compose_install | bool
 
-- name: Download the pinned incus-compose installer
+- name: Validate the incus-compose release architecture
+  ansible.builtin.assert:
+    that:
+      - incus_compose_release_architecture | length > 0
+      - incus_compose_release_architecture in incus_compose_checksums
+    fail_msg: >-
+      incus-compose {{ incus_compose_version }} is not configured for
+      {{ ansible_facts['architecture'] }}.
+  when: incus_compose_install | bool
+
+- name: Download the pinned incus-compose release
   become: true
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/lxc/incus-compose/v{{ incus_compose_version }}/scripts/install.sh"
-    dest: "{{ incus_compose_install_script }}"
+    url: >-
+      https://github.com/lxc/incus-compose/releases/download/v{{ incus_compose_version }}/incus-compose_{{ incus_compose_version }}_linux_{{ incus_compose_release_architecture }}.tar.gz
+    dest: "{{ incus_compose_archive }}"
+    checksum: "sha256:{{ incus_compose_checksums[incus_compose_release_architecture] }}"
     owner: root
     group: root
-    mode: '0755'
+    mode: '0644'
   when:
     - incus_compose_install | bool
     - incus_compose_version not in incus_compose_installed_version.stdout | default('')
 
 - name: Install the pinned incus-compose release
   become: true
-  ansible.builtin.command:
-    argv:
-      - /bin/sh
-      - "{{ incus_compose_install_script }}"
-      - -b
-      - /usr/local/bin
-      - "{{ incus_compose_version }}"
+  ansible.builtin.unarchive:
+    src: "{{ incus_compose_archive }}"
+    dest: /usr/local/bin
+    include:
+      - incus-compose
+    owner: root
+    group: root
+    mode: '0755'
+    remote_src: true
   when:
     - incus_compose_install | bool
     - incus_compose_version not in incus_compose_installed_version.stdout | default('')
+    - not ansible_check_mode
 
-- name: Remove the incus-compose installer
+- name: Remove the incus-compose archive
   become: true
   ansible.builtin.file:
-    path: "{{ incus_compose_install_script }}"
+    path: "{{ incus_compose_archive }}"
     state: absent
+  when: not ansible_check_mode

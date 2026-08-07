@@ -1,15 +1,15 @@
 - name: Create storage directory
   file:
-    path: "{{docker_photoprism_data_root}}/storage"
+    path: "{{compose_photoprism_data_root}}/storage"
     state: directory
     mode: '0755'
-    owner: "{{docker_photoprism_uuid}}"
-    group: "{{docker_photoprism_guid}}"
+    owner: "{{compose_photoprism_uuid}}"
+    group: "{{compose_photoprism_guid}}"
   become: true
 
 - name: Create database directory
   file:
-    path: "{{docker_photoprism_data_root}}/database"
+    path: "{{compose_photoprism_data_root}}/database"
     state: directory
     mode: '0755'
     owner: "{{compose_user}}"

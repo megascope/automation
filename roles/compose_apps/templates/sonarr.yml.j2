@@ -4,18 +4,18 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID={{ docker_sonarr_uuid }}
-      - PGID={{ docker_sonarr_guid }}
+      - PUID={{ compose_sonarr_uuid }}
+      - PGID={{ compose_sonarr_guid }}
       - TZ={{ time_zone }}
     volumes:
       - sonarr-config:/config
-{% for line in docker_sonarr_volumes %}
+{% for line in compose_sonarr_volumes %}
       - "{{ line }}"
 {% endfor %}
 
-{% if docker_sonarr_ports %}
+{% if compose_sonarr_ports %}
     ports:
-{% for line in docker_sonarr_ports %}
+{% for line in compose_sonarr_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}

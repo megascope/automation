@@ -1,9 +1,9 @@
-docker_meshcommander_tasks: false
-docker_meshcommander_home: "{{compose_project_root}}/meshcommander"
+compose_meshcommander_tasks: false
+compose_meshcommander_home: "{{compose_project_root}}/meshcommander"
 
-docker_meshcommander_version: latest
+compose_meshcommander_version: latest
 
-docker_meshcommander_ports:
+compose_meshcommander_ports:
   - "127.0.0.1:3000:3000"
 
-docker_meshcommander_shared_network: null
+compose_meshcommander_shared_network: null

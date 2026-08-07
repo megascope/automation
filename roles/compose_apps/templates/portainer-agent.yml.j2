@@ -2,17 +2,17 @@ services:
   portainer_agent:
     image: portainer/agent:2.33.2
     container_name: portainer_agent
-{% if docker_userns_remap != false  %}
+{% if compose_userns_remap != false  %}
     userns_mode: "host"
 {% endif %}
-    restart: {{ docker_portainer_agent_restart_policy }}
+    restart: {{ compose_portainer_agent_restart_policy }}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
 
-{% if docker_portainer_agent_ports %}
+{% if compose_portainer_agent_ports %}
     ports:
-{% for line in docker_portainer_agent_ports %}
+{% for line in compose_portainer_agent_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}

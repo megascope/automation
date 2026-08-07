@@ -1,17 +1,17 @@
 services:
   ollama:
-    image: {{ docker_ollama_image }}
+    image: {{ compose_ollama_image }}
     container_name: ollama
-    restart: {{ docker_ollama_restart_policy }}
-{% if docker_ollama_ports %}
+    restart: {{ compose_ollama_restart_policy }}
+{% if compose_ollama_ports %}
     ports:
-{% for line in docker_ollama_ports %}
+{% for line in compose_ollama_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
-{% if docker_ollama_environment %}
+{% if compose_ollama_environment %}
     environment:
-{% for key, value in docker_ollama_environment.items() %}
+{% for key, value in compose_ollama_environment.items() %}
       {{ key }}: {{ value | to_json }}
 {% endfor %}
 {% endif %}

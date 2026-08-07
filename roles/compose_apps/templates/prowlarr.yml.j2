@@ -4,14 +4,14 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
-      - PUID={{ docker_prowlarr_uuid }}
-      - PGID={{ docker_prowlarr_guid }}
+      - PUID={{ compose_prowlarr_uuid }}
+      - PGID={{ compose_prowlarr_guid }}
       - TZ={{ time_zone }}
     volumes:
       - prowlarr-config:/config
-{% if docker_prowlarr_ports %}
+{% if compose_prowlarr_ports %}
     ports:
-{% for line in docker_prowlarr_ports %}
+{% for line in compose_prowlarr_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}

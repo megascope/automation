@@ -1,6 +1,6 @@
 - name: Create data directory
   file:
-    path: "{{docker_gluetun_data}}"
+    path: "{{compose_gluetun_data}}"
     state: directory
     mode: '0700'
     owner: "{{compose_user}}"

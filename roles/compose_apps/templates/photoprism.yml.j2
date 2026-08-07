@@ -43,9 +43,9 @@ services:
     ## Server port mapping in the format "Host:Container". To use a different port, change the host port on
     ## the left-hand side and keep the container port, e.g. "80:2342" (for HTTP) or "443:2342 (for HTTPS):
 
-{% if docker_photoprism_ports %}
+{% if compose_photoprism_ports %}
     ports:
-{% for line in docker_photoprism_ports %}
+{% for line in compose_photoprism_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -60,7 +60,7 @@ services:
       PHOTOPRISM_DEFAULT_TLS: "true"                 # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
       PHOTOPRISM_DEFAULT_LOCALE: "en"                # default user interface language, e.g. "en" or "de"
       PHOTOPRISM_PLACES_LOCALE: "local"              # location details language, e.g. "local", "en", or "de"
-      PHOTOPRISM_SITE_URL: "{{ docker_photoprism_url }}"  # server URL in the format "http(s)://domain.name(:port)/(path)"
+      PHOTOPRISM_SITE_URL: "{{ compose_photoprism_url }}"  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_SITE_TITLE: "PhotoPrism"
       PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
       PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
@@ -111,16 +111,16 @@ services:
       # NVIDIA_VISIBLE_DEVICES: "all"
       # NVIDIA_DRIVER_CAPABILITIES: "all"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      PHOTOPRISM_UID: {{ docker_photoprism_uuid }}
-      PHOTOPRISM_GID: {{ docker_photoprism_guid }}
+      PHOTOPRISM_UID: {{ compose_photoprism_uuid }}
+      PHOTOPRISM_GID: {{ compose_photoprism_guid }}
       # PHOTOPRISM_UMASK: 0000
     ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
     # user: "1000:1000"
 
 
-{% if docker_photoprism_devices %}
+{% if compose_photoprism_devices %}
     devices:
-{% for line in docker_photoprism_devices %}
+{% for line in compose_photoprism_devices %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -128,9 +128,9 @@ services:
     working_dir: "/photoprism" # do not change or remove
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
     volumes:
-      - "{{ docker_photoprism_originals }}:/photoprism/originals:ro"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
-      - "{{ docker_photoprism_data_root }}/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
-{% for line in docker_photoprism_additional_folders %}
+      - "{{ compose_photoprism_originals }}:/photoprism/originals:ro"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
+      - "{{ compose_photoprism_data_root }}/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
+{% for line in compose_photoprism_additional_folders %}
       - "{{ line }}"
 {% endfor %}
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
@@ -158,7 +158,7 @@ services:
     command: --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
     volumes:
-      - "{{ docker_photoprism_data_root }}/database:/var/lib/mysql" # DO NOT REMOVE
+      - "{{ compose_photoprism_data_root }}/database:/var/lib/mysql" # DO NOT REMOVE
     ## See https://link.photoprism.app/mariadb-enviconment-variables:
     environment:
       MARIADB_AUTO_UPGRADE: "1"

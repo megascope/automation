@@ -1,10 +1,8 @@
 time_zone: "Etc/UTC"
 
-# Generic names used by this role. The fallbacks preserve existing inventory
-# while hosts migrate away from the old docker_* global names.
-compose_user: "{{ container_user | default(docker_user | default('root')) }}"
-compose_project_root: "{{ container_project_root | default(docker_project_root | default('/opt/docker-projects')) }}"
-compose_apps: "{{ container_apps | default(docker_containers | default([])) }}"
+compose_user: root
+compose_project_root: /opt/docker-projects
+compose_apps: []
 
 compose_commands:
   docker: docker compose
@@ -22,6 +20,5 @@ compose_app_runtimes:
   portainer-agent:
     - docker
 
-# Several existing templates use this to emit Docker-only user namespace
-# options. It remains false on Incus hosts.
-docker_userns_remap: false
+# Templates use this to emit runtime-specific user namespace options.
+compose_userns_remap: false

@@ -31,11 +31,11 @@
   roles:
     - role: docker
       tags: docker
-      when: container_runtime == "docker"
+      when: compose_runtime == "docker"
 
     - role: incus
       tags: incus
-      when: container_runtime == "incus"
+      when: compose_runtime == "incus"
 
     - role: compose_apps
       tags: compose_apps

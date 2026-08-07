@@ -1,9 +1,9 @@
-docker_softether_tasks: true
-docker_softether_home: "{{compose_project_root}}/softether"
+compose_softether_tasks: true
+compose_softether_home: "{{compose_project_root}}/softether"
 
 
 # Ports forwarded from the host can be overriden here
-docker_softether_ports:
+compose_softether_ports:
     - 53:53
     - 443:443
     - 992:992

@@ -8,34 +8,34 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-{% if docker_gluetun_ports %}
+{% if compose_gluetun_ports %}
     ports:
-{% for line in docker_gluetun_ports %}
+{% for line in compose_gluetun_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
     volumes:
-      - "{{docker_gluetun_data}}:/gluetun"
+      - "{{compose_gluetun_data}}:/gluetun"
 
     environment:
       # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
-      - VPN_SERVICE_PROVIDER={{docker_gluetun_vpn}}
-      - VPN_TYPE={{docker_gluetun_vpn_type}}
-{% for line in docker_gluetun_credentials %}
+      - VPN_SERVICE_PROVIDER={{compose_gluetun_vpn}}
+      - VPN_TYPE={{compose_gluetun_vpn_type}}
+{% for line in compose_gluetun_credentials %}
       - {{line}}
 {% endfor %}
-      - SERVER_COUNTRIES={{ docker_gluetun_server_countries | join(',') }}
+      - SERVER_COUNTRIES={{ compose_gluetun_server_countries | join(',') }}
       # Timezone for accurate log times
       - TZ={{time_zone}}
       # Server list updater
       # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
-      - UPDATER_PERIOD={{docker_gluetun_updater_period}}
+      - UPDATER_PERIOD={{compose_gluetun_updater_period}}
 
-{% if docker_gluetun_shared_network %}
+{% if compose_gluetun_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{docker_gluetun_shared_network}}
+    name: {{compose_gluetun_shared_network}}
     external: true
 {% endif %}

@@ -2,7 +2,7 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
-{% if docker_userns_remap != false  %}
+{% if compose_userns_remap != false  %}
     userns_mode: "host"
 {% endif %}
     restart: unless-stopped
@@ -10,21 +10,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer-volume-data:/data
 
-{% if docker_portainer_ports %}
+{% if compose_portainer_ports %}
     ports:
-{% for line in docker_portainer_ports %}
+{% for line in compose_portainer_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if docker_portainer_shared_network == "bridge" %}
+{% if compose_portainer_shared_network == "bridge" %}
     network_mode: bridge
-{% elif docker_portainer_shared_network %}
+{% elif compose_portainer_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{docker_portainer_shared_network}}
+    name: {{compose_portainer_shared_network}}
     external: true
 {% endif %}
 

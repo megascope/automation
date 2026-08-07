@@ -1,12 +1,12 @@
-docker_plex_container_name: plex
-docker_plex_claim_code: null
-docker_plex_uuid: 1000
-docker_plex_guid: 1000
-docker_plex_advertise_ip: null
-docker_plex_network_mode: host
-docker_plex_update_version: public
-docker_plex_intel_transcode: false
+compose_plex_container_name: plex
+compose_plex_claim_code: null
+compose_plex_uuid: 1000
+compose_plex_guid: 1000
+compose_plex_advertise_ip: null
+compose_plex_network_mode: host
+compose_plex_update_version: public
+compose_plex_intel_transcode: false
 # /config and /data must be provided and mounted on the host
-docker_plex_volumes:
+compose_plex_volumes:
   - /tmp:/config
   - /tmp:/data:ro

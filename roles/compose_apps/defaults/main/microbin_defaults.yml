@@ -1,25 +1,25 @@
-docker_microbin_tasks: false
-docker_microbin_image: danielszabo99/microbin:latest
-docker_microbin_restart_policy: "unless-stopped"
+compose_microbin_tasks: false
+compose_microbin_image: danielszabo99/microbin:latest
+compose_microbin_restart_policy: "unless-stopped"
 
-docker_microbin_ports:
+compose_microbin_ports:
   - "127.0.0.1:8080:8080"
 
 # Named volume: Docker initialises it from the image with the correct
 # ownership (uid/gid 65532) so the nonroot user can write to it.
-docker_microbin_data_volume: microbin-data
-docker_microbin_data_dir: /app/microbin_data
+compose_microbin_data_volume: microbin-data
+compose_microbin_data_dir: /app/microbin_data
 
-docker_microbin_environment:
+compose_microbin_environment:
   MICROBIN_BIND: "0.0.0.0"
-  MICROBIN_DATA_DIR: "{{ docker_microbin_data_dir }}"
+  MICROBIN_DATA_DIR: "{{ compose_microbin_data_dir }}"
   MICROBIN_DISABLE_UPDATE_CHECKING: "true"
   MICROBIN_DISABLE_TELEMETRY: "true"
 
 # Optional MicroBin settings. Override this with any supported MICROBIN_*
 # environment variables such as MICROBIN_PUBLIC_PATH, auth credentials, file
 # size limits, privacy defaults, or UI toggles.
-docker_microbin_extra_environment:
+compose_microbin_extra_environment:
    MICROBIN_ADMIN_USERNAME: "admin"
    MICROBIN_ADMIN_PASSWORD: "changeme"
    MICROBIN_PORT: 8080

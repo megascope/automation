@@ -4,7 +4,7 @@ services:
     restart: always
     network_mode: host
     volumes:
-      - {{docker_homebridge_data_volume}}:/homebridge
+      - {{compose_homebridge_data_volume}}:/homebridge
     logging:
       driver: json-file
       options:

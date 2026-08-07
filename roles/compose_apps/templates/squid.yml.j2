@@ -4,41 +4,41 @@ services:
     image: ubuntu/squid:latest
     restart: unless-stopped
     container_name: squid
-{% if docker_squid_healthcheck_enabled %}
+{% if compose_squid_healthcheck_enabled %}
     healthcheck:
-      test: ["CMD-SHELL", "{{ docker_squid_healthcheck_test }}"]
-      interval: {{ docker_squid_healthcheck_interval }}
-      timeout: {{ docker_squid_healthcheck_timeout }}
-      retries: {{ docker_squid_healthcheck_retries }}
-      start_period: {{ docker_squid_healthcheck_start_period }}
+      test: ["CMD-SHELL", "{{ compose_squid_healthcheck_test }}"]
+      interval: {{ compose_squid_healthcheck_interval }}
+      timeout: {{ compose_squid_healthcheck_timeout }}
+      retries: {{ compose_squid_healthcheck_retries }}
+      start_period: {{ compose_squid_healthcheck_start_period }}
 {% endif %}
-{% if docker_squid_ports %}
+{% if compose_squid_ports %}
     ports:
-{% for line in docker_squid_ports %}
+{% for line in compose_squid_ports %}
     - "{{ line }}"
 {% endfor %}
 {% endif %}
     volumes:
       - "squid-log:/var/log/squid"
-{% if docker_squid_cache_enabled %}
+{% if compose_squid_cache_enabled %}
       - "squid-cache:/var/spool/squid"
 {% endif %}
-      - "{{docker_squid_home}}/squid.conf:/etc/squid/squid.conf"
-{% if docker_squid_upstream_container %}
-    network_mode: container:{{docker_squid_upstream_container}}
+      - "{{compose_squid_home}}/squid.conf:/etc/squid/squid.conf"
+{% if compose_squid_upstream_container %}
+    network_mode: container:{{compose_squid_upstream_container}}
 {% endif %}
 
 volumes:
-{% if docker_squid_cache_enabled %}
+{% if compose_squid_cache_enabled %}
     squid-cache:
 {% endif %}
     squid-log:
 
-{% if docker_squid_shared_network %}
+{% if compose_squid_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{docker_squid_shared_network}}
+    name: {{compose_squid_shared_network}}
     external: true
 {% endif %}

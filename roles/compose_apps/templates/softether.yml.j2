@@ -5,9 +5,9 @@ services:
     cap_add:
       - NET_ADMIN
     restart: always
-{% if docker_softether_ports %}
+{% if compose_softether_ports %}
     ports:
-{% for line in docker_softether_ports %}
+{% for line in compose_softether_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
@@ -15,7 +15,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "{{docker_softether_home}}/data:/mnt"
-      - "{{docker_softether_home}}/log:/root/server_log"
-      - "{{docker_softether_home}}/packetlog:/root/packet_log"
-      - "{{docker_softether_home}}/securitylog:/root/security_log"
+      - "{{compose_softether_home}}/data:/mnt"
+      - "{{compose_softether_home}}/log:/root/server_log"
+      - "{{compose_softether_home}}/packetlog:/root/packet_log"
+      - "{{compose_softether_home}}/securitylog:/root/security_log"

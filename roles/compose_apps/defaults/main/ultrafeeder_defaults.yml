@@ -1,24 +1,24 @@
-docker_ultrafeeder_tasks: false
-docker_ultrafeeder_image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder
-docker_ultrafeeder_restart_policy: unless-stopped
+compose_ultrafeeder_tasks: false
+compose_ultrafeeder_image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder
+compose_ultrafeeder_restart_policy: unless-stopped
 
-docker_ultrafeeder_device_cgroup_rules:
+compose_ultrafeeder_device_cgroup_rules:
   - "c 189:* rwm"
 
-docker_ultrafeeder_readsb_enabled: true
+compose_ultrafeeder_readsb_enabled: true
 
-docker_ultrafeeder_ports:
+compose_ultrafeeder_ports:
   - "8080:80"
   - "9273-9274:9273-9274"
 
-docker_ultrafeeder_piaware_ports:
+compose_ultrafeeder_piaware_ports:
   - "8081:80"
   - "8082:8080"
 
-docker_ultrafeeder_fr24_ports:
+compose_ultrafeeder_fr24_ports:
   - "8754:8754"
 
-docker_ultrafeeder_config:
+compose_ultrafeeder_config:
   - "adsb,dump978,30978,uat_in"
   - "adsb,feed.adsb.fi,30004,beast_reduce_plus_out"
   - "adsb,in.adsb.lol,30004,beast_reduce_plus_out"
@@ -36,11 +36,11 @@ docker_ultrafeeder_config:
   - "mlat,skyfeed.hpradar.com,31090,39005"
   - "mlat,dati.flyitalyadsb.com,30100,39007"
 
-docker_ultrafeeder_beast_host: null
-docker_ultrafeeder_uat_host: null
-docker_ultrafeeder_influx_enabled: true
-docker_ultrafeeder_prometheus_enable: true
-docker_ultrafeeder_978_enabled: false
-docker_ultrafeeder_piaware_enabled: false
-docker_ultrafeeder_fr24_enabled: false
-docker_ultrafeeder_fr24_uat_enabled: false
+compose_ultrafeeder_beast_host: null
+compose_ultrafeeder_uat_host: null
+compose_ultrafeeder_influx_enabled: true
+compose_ultrafeeder_prometheus_enable: true
+compose_ultrafeeder_978_enabled: false
+compose_ultrafeeder_piaware_enabled: false
+compose_ultrafeeder_fr24_enabled: false
+compose_ultrafeeder_fr24_uat_enabled: false

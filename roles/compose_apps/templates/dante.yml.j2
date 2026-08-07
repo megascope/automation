@@ -1,24 +1,24 @@
 # from https://github.com/megascope/dante
 services:
   dante:
-    image: {{ docker_dante_image }}
-    container_name: {{ docker_dante_container_name }}
-    restart: {{ docker_dante_restart_policy }}
+    image: {{ compose_dante_image }}
+    container_name: {{ compose_dante_container_name }}
+    restart: {{ compose_dante_restart_policy }}
     environment:
-      - PROXY_PASSWORD={{ docker_dante_password }}
+      - PROXY_PASSWORD={{ compose_dante_password }}
 
-{% if docker_dante_config_template %}
+{% if compose_dante_config_template %}
     volumes:
-      - "{{docker_dante_config_template_location}}:/etc/sockd.conf:ro"
+      - "{{compose_dante_config_template_location}}:/etc/sockd.conf:ro"
 {% endif %}
 
-{% if docker_dante_ports %}
+{% if compose_dante_ports %}
     ports:
-{% for line in docker_dante_ports %}
+{% for line in compose_dante_ports %}
     - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if docker_dante_upstream_container %}
-    network_mode: container:{{docker_dante_upstream_container}}
+{% if compose_dante_upstream_container %}
+    network_mode: container:{{compose_dante_upstream_container}}
 {% endif %}

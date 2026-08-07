@@ -1,14 +1,14 @@
 - name: Validate container runtime
   ansible.builtin.assert:
     that:
-      - container_runtime in compose_commands
-    fail_msg: "container_runtime must be one of: {{ compose_commands.keys() | join(', ') }}"
+      - compose_runtime in compose_commands
+    fail_msg: "compose_runtime must be one of: {{ compose_commands.keys() | join(', ') }}"
 
 - name: Validate application runtime support
   ansible.builtin.assert:
     that:
-      - container_runtime in compose_app_runtimes.get(item, ['docker', 'incus'])
-    fail_msg: "{{ item }} does not support the {{ container_runtime }} runtime"
+      - compose_runtime in compose_app_runtimes.get(item, ['docker', 'incus'])
+    fail_msg: "{{ item }} does not support the {{ compose_runtime }} runtime"
   loop: "{{ compose_apps }}"
   loop_control:
     label: "{{ item }}"
@@ -85,5 +85,5 @@
     - composesubtasks
   ansible.builtin.include_tasks:
     file: "{{ item }}_tasks.yml"
-  when: lookup('vars', 'docker_' + item + '_tasks', default=false)
+  when: lookup('vars', 'compose_' + item + '_tasks', default=false)
   loop: "{{ compose_apps }}"

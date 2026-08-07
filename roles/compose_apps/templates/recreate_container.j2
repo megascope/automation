@@ -3,14 +3,14 @@
 # from 3rd party container managers
 
 if [ "$1" = "recreate" ]; then
-    RECREATE="{{ compose_recreate_flags[container_runtime] }}"
+    RECREATE="{{ compose_recreate_flags[compose_runtime] }}"
     shift
 else
     RECREATE=''
 fi
 
 if [ -z $1 ]; then
-    echo "Usage: $0 [recreate] docker_project_name"
+    echo "Usage: $0 [recreate] compose_project_name"
     echo "Setting recreate will force-recreate the container"
     exit 1
 fi

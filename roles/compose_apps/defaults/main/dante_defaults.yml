@@ -1,13 +1,13 @@
 # only set to override the default sockd.conf in the container
-docker_dante_home: "{{compose_project_root}}/dante"
-docker_dante_config_template_location: "{{docker_dante_home}}/sockd.conf"
-docker_dante_config_template: null
-docker_dante_container_name: dante
-docker_dante_image: ghcr.io/megascope/dante
-docker_dante_password: 123456
-docker_dante_restart_policy: always
-docker_dante_upstream_container: null
-docker_dante_ports:
+compose_dante_home: "{{compose_project_root}}/dante"
+compose_dante_config_template_location: "{{compose_dante_home}}/sockd.conf"
+compose_dante_config_template: null
+compose_dante_container_name: dante
+compose_dante_image: ghcr.io/megascope/dante
+compose_dante_password: 123456
+compose_dante_restart_policy: always
+compose_dante_upstream_container: null
+compose_dante_ports:
   - 1080:1080
 
-docker_dante_tasks: "{{ docker_dante_config_template | default(false) }}"
+compose_dante_tasks: "{{ compose_dante_config_template | default(false) }}"

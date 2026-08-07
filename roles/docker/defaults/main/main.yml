@@ -1,4 +1,4 @@
-docker_user: root
+docker_user: "{{ compose_user | default('root') }}"
 
 # Set to "default" to enable Docker user namespace remapping using the
 # automatically-managed dockremap user, or to a specific username.

@@ -1,13 +1,13 @@
 - name: Create data directories
   file:
-    path: "{{docker_jackett_item}}"
+    path: "{{compose_jackett_item}}"
     state: directory
     mode: '0700'
-    owner: "{{docker_jackett_uuid}}"
-    group: "{{docker_jackett_guid}}"
+    owner: "{{compose_jackett_uuid}}"
+    group: "{{compose_jackett_guid}}"
   become: true
   loop:
-    - "{{docker_jackett_home}}/data"
-    - "{{docker_jackett_home}}/downloads"
+    - "{{compose_jackett_home}}/data"
+    - "{{compose_jackett_home}}/downloads"
   loop_control:
-    loop_var: docker_jackett_item
+    loop_var: compose_jackett_item

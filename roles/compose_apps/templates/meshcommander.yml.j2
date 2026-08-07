@@ -1,6 +1,6 @@
 services:
   meshcommander:
-    image: ghcr.io/megascope/meshcommander:{{docker_meshcommander_version}}
+    image: ghcr.io/megascope/meshcommander:{{compose_meshcommander_version}}
     container_name: meshcommander
     restart: unless-stopped
     cap_drop:
@@ -11,20 +11,20 @@ services:
     tmpfs:
       - /tmp
 
-{% if docker_meshcommander_ports %}
+{% if compose_meshcommander_ports %}
     ports:
-{% for line in docker_meshcommander_ports %}
+{% for line in compose_meshcommander_ports %}
       - "{{ line }}"
 {% endfor %}
 {% endif %}
 
-{% if docker_meshcommander_shared_network == "bridge" %}
+{% if compose_meshcommander_shared_network == "bridge" %}
     network_mode: bridge
-{% elif docker_meshcommander_shared_network %}
+{% elif compose_meshcommander_shared_network %}
     networks:
       - shared_network
 networks:
   shared_network:
-    name: {{docker_meshcommander_shared_network}}
+    name: {{compose_meshcommander_shared_network}}
     external: true
 {% endif %}

@@ -5,9 +5,9 @@ services:
     container_name: uptime-kuma
     volumes:
       - kuma-data:/app/data
-{% if docker_uptimekuma_ports %}
+{% if compose_uptimekuma_ports %}
     ports:
-{% for line in docker_uptimekuma_ports %}
+{% for line in compose_uptimekuma_ports %}
     - "{{ line }}"
 {% endfor %}
 {% endif %}

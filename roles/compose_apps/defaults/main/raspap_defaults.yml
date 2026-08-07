@@ -1,2 +1,2 @@
-docker_raspap_ssid: raspap
-docker_raspap_country: US
+compose_raspap_ssid: raspap
+compose_raspap_country: US
