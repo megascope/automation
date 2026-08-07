@@ -1,0 +1,85 @@
+- name: Require Debian 13 for Incus hosts
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution'] == 'Debian'
+      - ansible_facts['distribution_major_version'] == '13'
+      - ansible_facts['distribution_release'] == 'trixie'
+    fail_msg: >-
+      The Incus role currently supports Debian 13 (trixie) only; found
+      {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+      ({{ ansible_facts['distribution_release'] }}).
+
+- name: Configure Debian backports
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/debian-backports.sources
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      Types: deb
+      URIs: https://deb.debian.org/debian
+      Suites: {{ incus_apt_suite }}
+      Components: main
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+  register: incus_backports_source
+
+- name: Install Incus installation prerequisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - tar
+    state: present
+    update_cache: true
+
+- name: Install Incus from Debian backports
+  become: true
+  ansible.builtin.apt:
+    name: incus
+    state: latest
+    default_release: "{{ incus_apt_suite }}"
+    update_cache: true
+  when: not (ansible_check_mode and incus_backports_source.changed)
+
+- name: Gather installed package versions
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Record the installed Incus version
+  ansible.builtin.set_fact:
+    incus_installed_version: >-
+      {{ ansible_facts.packages.get('incus', [{}])[0].get('version', '') }}
+
+- name: Determine whether Incus can be configured
+  ansible.builtin.set_fact:
+    incus_runtime_ready: >-
+      {{
+        incus_installed_version | length > 0
+        and incus_installed_version is version(incus_version_minimum, '>=')
+        and incus_installed_version is version(incus_version_maximum, '<')
+      }}
+
+- name: Require the Incus 7 series
+  ansible.builtin.assert:
+    that:
+      - incus_runtime_ready
+    fail_msg: >-
+      Expected Incus >= {{ incus_version_minimum }} and < {{ incus_version_maximum }},
+      found {{ incus_installed_version | default('not installed', true) }}.
+  when: not ansible_check_mode
+
+- name: Configure the installed Incus runtime
+  ansible.builtin.include_tasks: configure.yml
+  when: incus_runtime_ready
+
+- name: Explain deferred Incus configuration in check mode
+  ansible.builtin.debug:
+    msg: >-
+      Incus package installation or upgrade is pending. Runtime initialization,
+      firewall configuration, and incus-compose checks will run after Incus 7
+      is actually installed.
+  when:
+    - ansible_check_mode
+    - not incus_runtime_ready

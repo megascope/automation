@@ -1,5 +1,5 @@
 docker_gluetun_tasks: true
-docker_gluetun_home: "{{docker_project_root}}/gluetun"
+docker_gluetun_home: "{{compose_project_root}}/gluetun"
 docker_gluetun_data: "{{docker_gluetun_home}}/data"
 
 # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup

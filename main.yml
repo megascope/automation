@@ -27,9 +27,18 @@
   roles:
     - { role: packages, tags: packages }
 
-- hosts: docker_hosts
+- hosts: container_hosts
   roles:
-    - { role: docker, tags: docker }
+    - role: docker
+      tags: docker
+      when: container_runtime == "docker"
+
+    - role: incus
+      tags: incus
+      when: container_runtime == "incus"
+
+    - role: compose_apps
+      tags: compose_apps
 
 - hosts: lxc_hosts
   roles:

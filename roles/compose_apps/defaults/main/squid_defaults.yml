@@ -1,6 +1,6 @@
 docker_squid_tasks: true
 docker_squid_conf_template: squid_squid.conf.j2
-docker_squid_home: "{{docker_project_root}}/squid"
+docker_squid_home: "{{compose_project_root}}/squid"
 docker_squid_cache_enabled: true
 docker_squid_healthcheck_enabled: true
 docker_squid_healthcheck_test: "squid -k check -f /etc/squid/squid.conf >/dev/null 2>&1 || exit 1"

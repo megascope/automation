@@ -1,5 +1,5 @@
 docker_jackett_tasks: true
-docker_jackett_home: "{{docker_project_root}}/jackett"
+docker_jackett_home: "{{compose_project_root}}/jackett"
 
 # set this if you want jackett to be in the same docker network
 # as something else

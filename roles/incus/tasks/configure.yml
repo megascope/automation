@@ -1,0 +1,116 @@
+- name: Add administrators to the incus-admin group
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: incus-admin
+    append: true
+  loop: "{{ incus_admin_users }}"
+
+- name: Wait for the Incus daemon
+  become: true
+  ansible.builtin.command: incus info
+  register: incus_daemon_ready
+  changed_when: false
+  check_mode: false
+  retries: 10
+  delay: 2
+  until: incus_daemon_ready.rc == 0
+
+- name: Check for the default Incus storage pool
+  become: true
+  ansible.builtin.command: incus storage show default
+  register: incus_default_storage
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: Initialize Incus
+  become: true
+  ansible.builtin.command:
+    argv:
+      - incus
+      - admin
+      - init
+      - --auto
+      - "--storage-backend={{ incus_storage_backend }}"
+  when: incus_default_storage.rc != 0
+
+- name: Trust the Incus bridge in firewalld
+  become: true
+  ansible.posix.firewalld:
+    zone: "{{ incus_firewalld_zone }}"
+    interface: "{{ incus_bridge_name }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  when: firewall_enable | default(false) | bool
+
+- name: Read the Incus bridge IPv4 address
+  become: true
+  ansible.builtin.command: "incus network get {{ incus_bridge_name }} ipv4.address"
+  register: incus_bridge_ipv4
+  changed_when: false
+  check_mode: false
+  when: incus_compose_install | bool
+
+- name: Read the Incus API listen address
+  become: true
+  ansible.builtin.command: incus config get core.https_address
+  register: incus_https_address
+  changed_when: false
+  check_mode: false
+  when: incus_compose_install | bool
+
+- name: Bind the Incus API to its private bridge for incus-compose
+  become: true
+  ansible.builtin.command:
+    argv:
+      - incus
+      - config
+      - set
+      - core.https_address
+      - "{{ (incus_bridge_ipv4.stdout | trim).split('/')[0] }}:{{ incus_compose_api_port }}"
+  vars:
+    incus_compose_https_address: "{{ (incus_bridge_ipv4.stdout | trim).split('/')[0] }}:{{ incus_compose_api_port }}"
+  when:
+    - incus_compose_install | bool
+    - incus_https_address.stdout | trim != incus_compose_https_address
+
+- name: Check the installed incus-compose version
+  ansible.builtin.command: /usr/local/bin/incus-compose version
+  register: incus_compose_installed_version
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: incus_compose_install | bool
+
+- name: Download the pinned incus-compose installer
+  become: true
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/lxc/incus-compose/v{{ incus_compose_version }}/scripts/install.sh"
+    dest: "{{ incus_compose_install_script }}"
+    owner: root
+    group: root
+    mode: '0755'
+  when:
+    - incus_compose_install | bool
+    - incus_compose_version not in incus_compose_installed_version.stdout | default('')
+
+- name: Install the pinned incus-compose release
+  become: true
+  ansible.builtin.command:
+    argv:
+      - /bin/sh
+      - "{{ incus_compose_install_script }}"
+      - -b
+      - /usr/local/bin
+      - "{{ incus_compose_version }}"
+  when:
+    - incus_compose_install | bool
+    - incus_compose_version not in incus_compose_installed_version.stdout | default('')
+
+- name: Remove the incus-compose installer
+  become: true
+  ansible.builtin.file:
+    path: "{{ incus_compose_install_script }}"
+    state: absent

@@ -3,8 +3,8 @@
     path: "{{docker_softether_item}}"
     state: directory
     mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
   become: true
   loop:
     - "{{docker_softether_home}}/data"

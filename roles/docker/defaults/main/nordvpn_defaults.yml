@@ -1,3 +1,0 @@
-docker_nordvpn_tasks: false
-docker_nordvpn_home: "{{docker_project_root}}/nordvpn"
-docker_nordvpn_ports: []

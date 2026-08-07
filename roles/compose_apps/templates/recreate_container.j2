@@ -3,7 +3,7 @@
 # from 3rd party container managers
 
 if [ "$1" = "recreate" ]; then
-    RECREATE="--force-recreate"
+    RECREATE="{{ compose_recreate_flags[container_runtime] }}"
     shift
 else
     RECREATE=''
@@ -15,7 +15,7 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-PROJECT={{docker_project_root}}/$1
+PROJECT={{ compose_project_root }}/$1
 
 if ! test -f $PROJECT/stack; then
     echo Could not find $PROJECT/stack

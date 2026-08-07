@@ -1,7 +1,4 @@
-time_zone: "Etc/UTC"
 docker_user: root
-docker_project_root: "/opt/docker-projects"
-docker_containers: []
 
 # Set to "default" to enable Docker user namespace remapping using the
 # automatically-managed dockremap user, or to a specific username.

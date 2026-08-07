@@ -1,5 +1,5 @@
 # from https://hub.docker.com/_/caddy/
-docker_caddy_home: "{{docker_project_root}}/caddy"
+docker_caddy_home: "{{compose_project_root}}/caddy"
 docker_caddy_tasks: true
 
 docker_caddy_capabilities: []

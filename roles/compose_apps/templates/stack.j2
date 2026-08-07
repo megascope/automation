@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{% if not compose_merge_apps %}
+echo "No containers defined, nothing to do"
+{% else %}
+{{ compose_commands[container_runtime] }} {% for item in compose_merge_apps %} -f {{ compose_project_root }}/{{ item }}/compose.yaml {% endfor %} "$@"
+{% endif %}

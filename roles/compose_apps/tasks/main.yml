@@ -1,0 +1,89 @@
+- name: Validate container runtime
+  ansible.builtin.assert:
+    that:
+      - container_runtime in compose_commands
+    fail_msg: "container_runtime must be one of: {{ compose_commands.keys() | join(', ') }}"
+
+- name: Validate application runtime support
+  ansible.builtin.assert:
+    that:
+      - container_runtime in compose_app_runtimes.get(item, ['docker', 'incus'])
+    fail_msg: "{{ item }} does not support the {{ container_runtime }} runtime"
+  loop: "{{ compose_apps }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Create compose project directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ compose_project_root }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+
+- name: Create compose application directories
+  tags: composeupdate
+  become: true
+  ansible.builtin.file:
+    path: "{{ compose_project_root }}/{{ item }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+  loop: "{{ compose_apps }}"
+
+- name: Copy application recreation helper
+  tags: composeupdate
+  become: true
+  ansible.builtin.template:
+    src: recreate_container.j2
+    dest: "{{ compose_project_root }}/recreate_container"
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+    mode: '0700'
+
+- name: Render compose application definitions
+  tags: composeupdate
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}.yml.j2"
+    dest: "{{ compose_project_root }}/{{ item }}/compose.yaml"
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+    mode: '0600'
+  loop: "{{ compose_apps }}"
+
+# Allows multiple application definitions to be operated as one stack when
+# <app>_merge_containers is set.
+- name: Render compose stack helpers
+  tags: composeupdate
+  become: true
+  ansible.builtin.template:
+    src: stack.j2
+    dest: "{{ compose_project_root }}/{{ item }}/stack"
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+    mode: '0755'
+  vars:
+    compose_merge_apps: "{{ lookup('vars', item + '_merge_containers', default=[item]) }}"
+  loop: "{{ compose_apps }}"
+
+- name: Copy all-applications recreation helper
+  tags: composeupdate
+  become: true
+  ansible.builtin.template:
+    src: recreate_all_containers.j2
+    dest: "{{ compose_project_root }}/recreate_all_containers"
+    owner: "{{ compose_user }}"
+    group: "{{ compose_user }}"
+    mode: '0700'
+
+- name: Run per-application task sets
+  tags:
+    - composeupdate
+    - composesubtasks
+  ansible.builtin.include_tasks:
+    file: "{{ item }}_tasks.yml"
+  when: lookup('vars', 'docker_' + item + '_tasks', default=false)
+  loop: "{{ compose_apps }}"

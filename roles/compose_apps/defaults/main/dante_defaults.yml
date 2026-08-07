@@ -1,5 +1,5 @@
 # only set to override the default sockd.conf in the container
-docker_dante_home: "{{docker_project_root}}/dante"
+docker_dante_home: "{{compose_project_root}}/dante"
 docker_dante_config_template_location: "{{docker_dante_home}}/sockd.conf"
 docker_dante_config_template: null
 docker_dante_container_name: dante

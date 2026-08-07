@@ -1,5 +1,5 @@
 docker_rclonewebdav_tasks: false
-docker_rclonewebdav_home: "{{docker_project_root}}/rclonewebdav"
+docker_rclonewebdav_home: "{{compose_project_root}}/rclonewebdav"
 docker_rclonewebdav_container_name: rclonewebdav
 docker_rclonewebdav_site_path: /var/tmp
 docker_rclonewebdav_user: guest

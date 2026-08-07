@@ -3,8 +3,8 @@
     path: "{{docker_caddy_conf}}"
     state: directory
     mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
   become: true
 
 - name: Create caddy srv directory
@@ -12,8 +12,8 @@
     path: "{{docker_caddy_srv}}"
     state: directory
     mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
   become: true
 
 - name: Set caddyfile
@@ -24,8 +24,8 @@
   ansible.builtin.template:
     src: "{{docker_caddy_caddyfile_template}}"
     dest: "{{docker_caddy_caddyfile}}"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
     mode: '600'
   become: true
 
@@ -33,8 +33,8 @@
   ansible.builtin.template:
     src: "{{ docker_caddy_item }}"
     dest: "{{docker_caddy_srv}}/{{ docker_caddy_item | basename | regex_replace('\\.j2$', '') }}"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
     mode: '444'
   loop: "{{ docker_caddy_srv_templates }}"
   loop_control:

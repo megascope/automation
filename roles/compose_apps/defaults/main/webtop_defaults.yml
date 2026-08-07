@@ -1,6 +1,6 @@
 
 docker_webtop_tasks: true
-docker_webtop_home: "{{docker_project_root}}/webtop"
+docker_webtop_home: "{{compose_project_root}}/webtop"
 docker_webtop_data: "{{docker_webtop_home}}/data"
 docker_webtop_tag: debian-xfce
 docker_webtop_uuid: 1000

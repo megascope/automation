@@ -1,5 +1,5 @@
 docker_meshcommander_tasks: false
-docker_meshcommander_home: "{{docker_project_root}}/meshcommander"
+docker_meshcommander_home: "{{compose_project_root}}/meshcommander"
 
 docker_meshcommander_version: latest
 

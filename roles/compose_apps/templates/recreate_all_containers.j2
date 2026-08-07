@@ -1,0 +1,5 @@
+#!/bin/sh
+
+{% for item in compose_apps %}
+{{ compose_project_root }}/recreate_container {{ item }} "$@"
+{% endfor %}
