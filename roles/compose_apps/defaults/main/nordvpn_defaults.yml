@@ -1,0 +1,3 @@
+compose_nordvpn_tasks: false
+compose_nordvpn_home: "{{compose_project_root}}/nordvpn"
+compose_nordvpn_ports: []

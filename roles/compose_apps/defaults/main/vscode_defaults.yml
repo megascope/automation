@@ -1,0 +1,5 @@
+compose_vscode_tasks: true
+compose_vscode_home: "{{compose_project_root}}/vscode"
+compose_vscode_instances:
+  - rust
+  - typescript

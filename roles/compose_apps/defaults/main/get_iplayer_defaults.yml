@@ -1,0 +1,13 @@
+compose_get_iplayer_downloads: "{{compose_project_root}}/get_iplayer/downloads"
+compose_get_iplayer_config: "{{compose_project_root}}/get_iplayer/config"
+compose_get_iplayer_container_name: get_iplayer
+compose_get_iplayer_image: ghcr.io/thespad/get_iplayer
+compose_get_iplayer_restart_policy: unless-stopped
+compose_get_iplayer_upstream_container: null
+compose_get_iplayer_ports:
+  - 1935:1935
+
+compose_get_iplayer_uuid: 1000
+compose_get_iplayer_guid: 1000
+
+compose_get_iplayer_tasks: true

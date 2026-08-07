@@ -1,0 +1,21 @@
+services:
+  firefox:
+    image: lscr.io/linuxserver/firefox:latest
+    container_name: firefox
+    environment:
+      - PUID={{ compose_firefox_vnc_uuid }}
+      - PGID={{ compose_firefox_vnc_guid }}
+      - TZ=Etc/UTC
+    volumes:
+      - "{{compose_firefox_vnc_persistent_config}}:/config"
+    shm_size: "1gb"
+    restart: unless-stopped
+
+  # configure this in cloudflared zero trust to connect to http://firefox:3000
+  tunnel:
+    container_name: cloudflared-firefox-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN={{compose_firefox_vnc_cloudflared_token}}

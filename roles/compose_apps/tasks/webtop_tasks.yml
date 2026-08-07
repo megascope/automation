@@ -1,0 +1,8 @@
+- name: Create data directory
+  file:
+    path: "{{compose_webtop_data}}"
+    state: directory
+    mode: '0700'
+    owner: "{{compose_webtop_uuid}}"
+    group: "{{compose_webtop_guid}}"
+  become: true

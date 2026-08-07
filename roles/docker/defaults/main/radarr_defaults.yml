@@ -1,8 +1,0 @@
-docker_radarr_uuid: 1000
-docker_radarr_guid: 1000
-
-docker_radarr_ports:
-  - 127.0.0.1:9010:7878
-
-docker_radarr_volumes:
-  - /tmp/radarr/downloads:/downloads/

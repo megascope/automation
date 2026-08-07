@@ -1,0 +1,31 @@
+# from https://docs.searxng.org/admin/installation-docker.html
+services:
+  searxng:
+    image: {{ compose_searxng_image }}
+    container_name: searxng
+    restart: {{ compose_searxng_restart_policy }}
+    environment:
+      - SEARXNG_BASE_URL={{compose_searxng_uri}}
+      - TZ=Etc/UTC
+
+{% if compose_searxng_ports %}
+    ports:
+{% for line in compose_searxng_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - searxng-config:/etc/searxng
+      - searxng-data:/var/cache/searxng
+{% if compose_searxng_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_searxng_shared_network}}
+    external: true
+{% endif %}
+
+volumes:
+  searxng-config:
+  searxng-data:

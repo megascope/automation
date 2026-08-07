@@ -1,0 +1,35 @@
+compose_gluetun_tasks: true
+compose_gluetun_home: "{{compose_project_root}}/gluetun"
+compose_gluetun_data: "{{compose_gluetun_home}}/data"
+
+# See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+compose_gluetun_vpn: null
+
+# e.g.
+# - "OPENVPN_USER=abc"
+# - "OPENVPN_PASSWORD=abc"
+# OR
+# - "WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
+compose_gluetun_credentials: null
+
+compose_gluetun_vpn_type: openvpn
+
+compose_gluetun_ports:
+  - "8888:8888/tcp # HTTP proxy"
+  - "8388:8388/tcp # Shadowsocks"
+  - "8388:8388/udp # Shadowsocks"
+
+compose_gluetun_updater_period: 72h
+
+# example list of countries
+compose_gluetun_server_countries:
+  - United States
+  - Germany
+  - France
+  - Ireland
+  - United Kingdom
+  - Canada
+  - Australia
+  - Japan
+
+compose_gluetun_shared_network: null

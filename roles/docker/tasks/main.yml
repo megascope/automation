@@ -52,85 +52,9 @@
     mode: '644'
   become: true
 
-- name: Create docker project directory
-  ansible.builtin.file:
-    path: "{{ docker_project_root }}"
-    state: directory
-    mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-  become: true
-
 - name: Make sure docker_user in docker group
-  user:
+  ansible.builtin.user:
     name: '{{docker_user}}'
     groups: docker
     append: yes
   become: true
-
-- name: Create docker project item directories
-  tags: dockerupdate
-  ansible.builtin.file:
-    path: "{{ docker_project_root }}/{{ item }}"
-    state: directory
-    mode: '0700'
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-  become: true
-  loop: "{{ docker_containers }}"
-
-- name: Copy recreate container
-  tags: dockerupdate
-  ansible.builtin.template:
-    src: "recreate_container.j2"
-    dest: "{{docker_project_root}}/recreate_container"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-    mode: '700'
-  become: true
-
-- name: Copy templated dockerfiles
-  tags: dockerupdate
-  ansible.builtin.template:
-    src: "{{ item }}.yml.j2"
-    dest: "{{ docker_project_root }}/{{ item }}/docker-compose.yml"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-    mode: '600'
-  become: true
-  loop: "{{ docker_containers }}"
-
-# Allows for merging of containers into a single stack if xxx_merge_containers
-# is set. Make sure yyy_merge_containers is null for all dependant containers.
-- name: Copy templated stack file
-  tags: dockerupdate
-  ansible.builtin.template:
-    src: "stack.j2"
-    dest: "{{ docker_project_root }}/{{ item }}/stack"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-    mode: '755'
-  vars:
-    docker_merge_containers: "{{ lookup('vars', item + '_merge_containers', default=[item]) }}"
-  become: true
-  loop: "{{ docker_containers }}"
-
-- name: Write start everything file, ansible does not start the containers as that would not be idempotent
-  tags: dockerupdate
-  ansible.builtin.template:
-    src: "recreate_all_containers.j2"
-    dest: "{{docker_project_root}}/recreate_all_containers"
-    owner: "{{docker_user}}"
-    group: "{{docker_user}}"
-    mode: '700'
-  become: true
-
-- name: Run any per-container task sets
-  tags:
-    - dockerupdate
-    - dockersubtasks
-  block:
-  - include_tasks:
-      file: "{{item}}_tasks.yml"
-    when: lookup('vars', 'docker_' + item + '_tasks', default=false)
-    loop: "{{ docker_containers }}"

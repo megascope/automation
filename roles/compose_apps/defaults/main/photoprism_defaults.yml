@@ -1,0 +1,28 @@
+compose_photoprism_tasks: true
+
+compose_photoprism_ports:
+  - "127.0.0.1:2342:2342"
+
+## Shared devices for video hardware transcoding (optional):
+compose_photoprism_devices:
+#  - "/dev/dri:/dev/dri"                         # Required Intel QSV or VAAPI hardware transcoding
+#  - "/dev/video11:/dev/video11"
+
+compose_photoprism_additional_folders: []
+      # "/host/folder:/photoprism/folder"                # Example
+
+# required, location of storage folder on host
+compose_photoprism_data_storage: null
+
+# required, primary photo folder
+compose_photoprism_originals: null
+
+# required, root data directory
+compose_photoprism_data_root: /mnt/dockerdata/photoprism/
+
+# user/group to run as
+compose_photoprism_uuid: 1000
+compose_photoprism_guid: 1000
+
+# URL to access photoprism
+compose_photoprism_url: http://localhost:2342

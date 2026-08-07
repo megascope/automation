@@ -1,0 +1,22 @@
+services:
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: docker.io/cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN={{compose_cloudflared_tunnel_token}}
+
+{% if compose_cloudflared_tunnel_network_mode is defined %}
+    network_mode: {{compose_cloudflared_tunnel_network_mode}}
+{% if compose_cloudflared_tunnel_network_mode == 'host' and compose_userns_remap != false %}
+    userns_mode: "host"
+{% endif %}
+{% elif compose_cloudflared_tunnel_network is defined %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_cloudflared_tunnel_network}}
+    external: true
+{% endif %}

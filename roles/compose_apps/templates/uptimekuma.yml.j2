@@ -1,0 +1,16 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    container_name: uptime-kuma
+    volumes:
+      - kuma-data:/app/data
+{% if compose_uptimekuma_ports %}
+    ports:
+{% for line in compose_uptimekuma_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+volumes:
+  kuma-data:

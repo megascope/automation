@@ -1,0 +1,12 @@
+compose_plex_container_name: plex
+compose_plex_claim_code: null
+compose_plex_uuid: 1000
+compose_plex_guid: 1000
+compose_plex_advertise_ip: null
+compose_plex_network_mode: host
+compose_plex_update_version: public
+compose_plex_intel_transcode: false
+# /config and /data must be provided and mounted on the host
+compose_plex_volumes:
+  - /tmp:/config
+  - /tmp:/data:ro

@@ -1,0 +1,8 @@
+- name: Create data directory
+  file:
+    path: "{{compose_gluetun_data}}"
+    state: directory
+    mode: '0700'
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+  become: true

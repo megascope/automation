@@ -1,0 +1,8 @@
+compose_radarr_uuid: 1000
+compose_radarr_guid: 1000
+
+compose_radarr_ports:
+  - 127.0.0.1:9010:7878
+
+compose_radarr_volumes:
+  - /tmp/radarr/downloads:/downloads/

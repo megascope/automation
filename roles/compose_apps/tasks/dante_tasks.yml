@@ -1,0 +1,9 @@
+- name: Set dante socks.conf
+  ansible.builtin.template:
+    src: "{{compose_dante_config_template}}"
+    dest: "{{compose_dante_config_template_location}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+    mode: '444'
+  become: true
+  when: compose_dante_config_template is defined

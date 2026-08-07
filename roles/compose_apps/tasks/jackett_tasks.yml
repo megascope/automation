@@ -1,0 +1,13 @@
+- name: Create data directories
+  file:
+    path: "{{compose_jackett_item}}"
+    state: directory
+    mode: '0700'
+    owner: "{{compose_jackett_uuid}}"
+    group: "{{compose_jackett_guid}}"
+  become: true
+  loop:
+    - "{{compose_jackett_home}}/data"
+    - "{{compose_jackett_home}}/downloads"
+  loop_control:
+    loop_var: compose_jackett_item

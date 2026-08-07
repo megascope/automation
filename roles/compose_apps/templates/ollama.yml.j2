@@ -1,0 +1,22 @@
+services:
+  ollama:
+    image: {{ compose_ollama_image }}
+    container_name: ollama
+    restart: {{ compose_ollama_restart_policy }}
+{% if compose_ollama_ports %}
+    ports:
+{% for line in compose_ollama_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+{% if compose_ollama_environment %}
+    environment:
+{% for key, value in compose_ollama_environment.items() %}
+      {{ key }}: {{ value | to_json }}
+{% endfor %}
+{% endif %}
+    volumes:
+      - ollama-data:/root/.ollama
+
+volumes:
+  ollama-data:

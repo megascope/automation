@@ -1,0 +1,23 @@
+compose_syncthing_image: syncthing/syncthing
+compose_syncthing_hostname: syncthing
+
+# user/group to run as
+compose_syncthing_uuid: 1000
+compose_syncthing_guid: 1000
+
+compose_syncthing_config_volume: syncthing-config
+compose_syncthing_volumes:
+  - "/tmp:/var/syncthing"
+
+compose_syncthing_ports:
+  - "8384:8384"
+  - "22000:22000"
+  - "22000:22000/udp"
+
+compose_syncthing_restart_policy: unless-stopped
+
+compose_syncthing_healthcheck_enabled: true
+compose_syncthing_healthcheck_test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+compose_syncthing_healthcheck_interval: 1m
+compose_syncthing_healthcheck_timeout: 10s
+compose_syncthing_healthcheck_retries: 3

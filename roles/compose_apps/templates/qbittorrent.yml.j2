@@ -1,0 +1,28 @@
+# from https://docs.linuxserver.io/images/docker-qbittorrent
+services:
+  qbittorrent:
+    image: {{ compose_qbittorrent_image }}
+    container_name: qbittorrent
+    restart: {{ compose_qbittorrent_restart_policy }}
+    environment:
+      - PUID={{compose_qbittorrent_uuid}}
+      - PGID={{compose_qbittorrent_guid}}
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+
+{% if compose_qbittorrent_ports %}
+    ports:
+{% for line in compose_qbittorrent_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+    volumes:
+      - "{{compose_qbittorrent_config}}:/config"
+      - "{{compose_qbittorrent_downloads}}:/downloads"
+
+
+{% if compose_qbittorrent_upstream_container %}
+    network_mode: container:{{compose_qbittorrent_upstream_container}}
+{% endif %}

@@ -1,0 +1,27 @@
+services:
+  get_iplayer:
+    image: {{ compose_get_iplayer_image }}
+    container_name: {{ compose_get_iplayer_container_name }}
+    environment:
+      - PUID={{ compose_get_iplayer_uuid }}
+      - PGID={{ compose_get_iplayer_guid }}
+      - TZ=America/New_York
+      - INCLUDERADIO= #optional
+      - BASEURL= #optional
+      - ENABLEIMPORT= #optional
+    volumes:
+      - "{{compose_get_iplayer_config}}:/config"
+      - "{{compose_get_iplayer_downloads}}:/downloads"
+
+    restart: {{ compose_get_iplayer_restart_policy }}
+
+{% if compose_get_iplayer_ports %}
+    ports:
+{% for line in compose_get_iplayer_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+{% if compose_get_iplayer_upstream_container %}
+    network_mode: container:{{ compose_get_iplayer_upstream_container }}
+{% endif %}

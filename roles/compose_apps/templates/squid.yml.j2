@@ -1,0 +1,44 @@
+# from https://hub.docker.com/r/ubuntu/squid
+services:
+  squid:
+    image: ubuntu/squid:latest
+    restart: unless-stopped
+    container_name: squid
+{% if compose_squid_healthcheck_enabled %}
+    healthcheck:
+      test: ["CMD-SHELL", "{{ compose_squid_healthcheck_test }}"]
+      interval: {{ compose_squid_healthcheck_interval }}
+      timeout: {{ compose_squid_healthcheck_timeout }}
+      retries: {{ compose_squid_healthcheck_retries }}
+      start_period: {{ compose_squid_healthcheck_start_period }}
+{% endif %}
+{% if compose_squid_ports %}
+    ports:
+{% for line in compose_squid_ports %}
+    - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - "squid-log:/var/log/squid"
+{% if compose_squid_cache_enabled %}
+      - "squid-cache:/var/spool/squid"
+{% endif %}
+      - "{{compose_squid_home}}/squid.conf:/etc/squid/squid.conf"
+{% if compose_squid_upstream_container %}
+    network_mode: container:{{compose_squid_upstream_container}}
+{% endif %}
+
+volumes:
+{% if compose_squid_cache_enabled %}
+    squid-cache:
+{% endif %}
+    squid-log:
+
+{% if compose_squid_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_squid_shared_network}}
+    external: true
+{% endif %}

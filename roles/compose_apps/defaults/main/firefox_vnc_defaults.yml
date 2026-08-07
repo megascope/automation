@@ -1,0 +1,3 @@
+compose_firefox_vnc_uuid: 1000
+compose_firefox_vnc_guid: 1000
+compose_firefox_vnc_persistent_config: "{{compose_project_root}}/firefox_vnc/config"

@@ -1,0 +1,32 @@
+# from https://github.com/linuxserver/docker-jackett
+services:
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID={{compose_jackett_uuid}}
+      - PGID={{compose_jackett_guid}}
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=true #optional
+      - RUN_OPTS= #optional
+    volumes:
+      - {{compose_jackett_home}}/data:/config
+      - {{compose_jackett_home}}/downloads:/downloads
+
+{% if compose_jackett_ports %}
+    ports:
+{% for line in compose_jackett_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+    restart: unless-stopped
+
+{% if compose_jackett_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_jackett_shared_network}}
+    external: true
+{% endif %}

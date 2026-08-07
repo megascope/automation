@@ -1,0 +1,24 @@
+incus_admin_users:
+  - "{{ compose_user | default('root') }}"
+
+incus_storage_backend: dir
+incus_bridge_name: incusbr0
+incus_firewalld_zone: trusted
+
+# Keep the host on the Incus 7.0 LTS series supplied by Debian backports.
+incus_apt_suite: trixie-backports
+incus_package_version: "7.*"
+incus_version_minimum: "7.0"
+incus_version_maximum: "8.0"
+
+incus_compose_install: true
+incus_compose_version: "1.1.0"
+incus_compose_architectures:
+  x86_64: amd64
+  aarch64: arm64
+incus_compose_checksums:
+  amd64: 7be727d246fb74951b8990d07836022db591ee0cd048b38f195bd3e94dc19fbb
+  arm64: 83a28394c06481c88f599e5ced523dc9e36de9e93a54052e9d5ac51057c80b6c
+incus_compose_release_architecture: "{{ incus_compose_architectures.get(ansible_facts['architecture'], '') }}"
+incus_compose_archive: "/var/tmp/incus-compose_{{ incus_compose_version }}_linux_{{ incus_compose_release_architecture }}.tar.gz"
+incus_compose_api_port: 8443

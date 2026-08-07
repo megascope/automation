@@ -1,0 +1,30 @@
+services:
+  meshcommander:
+    image: ghcr.io/megascope/meshcommander:{{compose_meshcommander_version}}
+    container_name: meshcommander
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+
+{% if compose_meshcommander_ports %}
+    ports:
+{% for line in compose_meshcommander_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+{% if compose_meshcommander_shared_network == "bridge" %}
+    network_mode: bridge
+{% elif compose_meshcommander_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_meshcommander_shared_network}}
+    external: true
+{% endif %}

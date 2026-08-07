@@ -15,7 +15,7 @@
         tasks_from: cleanup_apt_sources
         apply:
           tags: docker
-      when: "'docker_hosts' in group_names"
+      when: (compose_runtime | default('')) == 'docker'
       tags: docker
 
   roles:
@@ -27,9 +27,18 @@
   roles:
     - { role: packages, tags: packages }
 
-- hosts: docker_hosts
+- hosts: container_hosts
   roles:
-    - { role: docker, tags: docker }
+    - role: docker
+      tags: docker
+      when: compose_runtime == "docker"
+
+    - role: incus
+      tags: incus
+      when: compose_runtime == "incus"
+
+    - role: compose_apps
+      tags: compose_apps
 
 - hosts: lxc_hosts
   roles:

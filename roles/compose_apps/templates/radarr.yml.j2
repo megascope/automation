@@ -1,0 +1,24 @@
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID={{ compose_radarr_uuid }}
+      - PGID={{ compose_radarr_guid }}
+      - TZ={{ time_zone }}
+    volumes:
+      - radarr-config:/config
+{% for line in compose_radarr_volumes %}
+      - "{{ line }}"
+{% endfor %}
+
+{% if compose_radarr_ports %}
+    ports:
+{% for line in compose_radarr_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    restart: unless-stopped
+
+volumes:
+  radarr-config:

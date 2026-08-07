@@ -1,0 +1,13 @@
+compose_rclonewebdav_tasks: false
+compose_rclonewebdav_home: "{{compose_project_root}}/rclonewebdav"
+compose_rclonewebdav_container_name: rclonewebdav
+compose_rclonewebdav_site_path: /var/tmp
+compose_rclonewebdav_user: guest
+compose_rclonewebdav_password: guest
+
+# user/group to run as
+compose_rclonewebdav_uuid: 65534
+compose_rclonewebdav_guid: 65534
+
+compose_rclonewebdav_ports:
+  - "127.0.0.1:8080:8080"

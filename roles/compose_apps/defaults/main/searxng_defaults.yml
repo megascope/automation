@@ -1,0 +1,14 @@
+compose_searxng_tasks: false
+compose_searxng_image: searxng/searxng:latest
+
+compose_searxng_ports:
+  - "127.0.0.1:8080:8080"
+
+# set this if you want searxng to be in the same docker network
+# as something else
+compose_searxng_shared_network: null
+
+# restart policy
+compose_searxng_restart_policy: "unless-stopped"
+
+compose_searxng_uri: https://127.0.0.0:8080

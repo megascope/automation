@@ -1,0 +1,22 @@
+compose_immich_tasks: false
+
+# eg v2
+compose_immich_version: release
+
+compose_immich_ports:
+  - "127.0.0.1:2283:2283"
+
+compose_immich_additional_folders: []
+      # "/host/folder:/immich/folder:ro"                # Example
+
+# required, writable location of upload folder on host
+compose_immich_upload_location: null
+
+# required, writable db data directory
+compose_immich_db_root: null
+
+# Connection secret for postgres. You should change it to a random password
+# Please use only the characters `A-Za-z0-9`, without special characters or spaces
+compose_immich_db_password: postgres
+compose_immich_db_username: postgres
+compose_immich_db_name: immich

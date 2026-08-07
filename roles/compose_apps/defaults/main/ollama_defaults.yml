@@ -1,0 +1,12 @@
+compose_ollama_tasks: false
+compose_ollama_image: ollama/ollama:latest
+compose_ollama_restart_policy: unless-stopped
+
+compose_ollama_ports:
+  - "127.0.0.1:11434:11434"
+
+compose_ollama_environment:
+  OLLAMA_HOST: "0.0.0.0:11434"
+  OLLAMA_NUM_PARALLEL: "1"
+  OLLAMA_MAX_LOADED_MODELS: "1"
+  OLLAMA_KEEP_ALIVE: "10m"

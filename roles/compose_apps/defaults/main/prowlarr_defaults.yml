@@ -1,0 +1,5 @@
+compose_prowlarr_uuid: 1000
+compose_prowlarr_guid: 1000
+
+compose_prowlarr_ports:
+  - 127.0.0.1:9696:9696

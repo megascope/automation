@@ -1,0 +1,15 @@
+
+compose_webtop_tasks: true
+compose_webtop_home: "{{compose_project_root}}/webtop"
+compose_webtop_data: "{{compose_webtop_home}}/data"
+compose_webtop_tag: debian-xfce
+compose_webtop_uuid: 1000
+compose_webtop_guid: 1000
+compose_webtop_privileged: False
+
+# set this if you want the ports to be forwarded
+compose_webtop_port: null
+
+# set this if you want this to be in the same docker network
+# as something else
+compose_webtop_shared_network: null

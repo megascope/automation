@@ -1,0 +1,8 @@
+compose_openwebui_tasks: false
+compose_openwebui_version: latest
+compose_openwebui_ports:
+  - "127.0.0.1:8080:8080"
+compose_openwebui_environment: {}
+# required, writable location of upload folder on host
+compose_openwebui_uri: http://localhost:3000
+compose_openwebui_depends_on: []

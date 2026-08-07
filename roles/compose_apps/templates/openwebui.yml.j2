@@ -1,0 +1,28 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:{{compose_openwebui_version}}
+    container_name: openwebui
+    restart: unless-stopped
+{% if compose_openwebui_ports %}
+    ports:
+{% for line in compose_openwebui_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - openwebui-data:/app/backend/data
+    environment:
+      # Leave providers/keys to the UI (PersistentConfig stored in the DB/volume).
+      WEBUI_URL: {{ compose_openwebui_uri | to_json }}
+{% for key, value in compose_openwebui_environment.items() %}
+      {{ key }}: {{ value | to_json }}
+{% endfor %}
+
+{% if compose_openwebui_depends_on %}
+    depends_on:
+{% for service in compose_openwebui_depends_on %}
+      - {{ service }}
+{% endfor %}
+{% endif %}
+volumes:
+  openwebui-data:

@@ -1,0 +1,21 @@
+# from https://github.com/SoftEtherVPN/SoftetherVPN-docker
+services:
+  softether:
+    image: softethervpn/vpnserver:stable
+    cap_add:
+      - NET_ADMIN
+    restart: always
+{% if compose_softether_ports %}
+    ports:
+{% for line in compose_softether_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "{{compose_softether_home}}/data:/mnt"
+      - "{{compose_softether_home}}/log:/root/server_log"
+      - "{{compose_softether_home}}/packetlog:/root/packet_log"
+      - "{{compose_softether_home}}/securitylog:/root/security_log"

@@ -1,0 +1,25 @@
+---
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID={{ compose_sonarr_uuid }}
+      - PGID={{ compose_sonarr_guid }}
+      - TZ={{ time_zone }}
+    volumes:
+      - sonarr-config:/config
+{% for line in compose_sonarr_volumes %}
+      - "{{ line }}"
+{% endfor %}
+
+{% if compose_sonarr_ports %}
+    ports:
+{% for line in compose_sonarr_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    restart: unless-stopped
+
+volumes:
+  sonarr-config:

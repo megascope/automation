@@ -1,0 +1,42 @@
+- name: Create caddy conf directory
+  file:
+    path: "{{compose_caddy_conf}}"
+    state: directory
+    mode: '0700'
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+  become: true
+
+- name: Create caddy srv directory
+  file:
+    path: "{{compose_caddy_srv}}"
+    state: directory
+    mode: '0700'
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+  become: true
+
+- name: Set caddyfile
+  debug:
+    msg: "{{compose_caddy_caddyfile}}"
+
+- name: Set caddyfile
+  ansible.builtin.template:
+    src: "{{compose_caddy_caddyfile_template}}"
+    dest: "{{compose_caddy_caddyfile}}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+    mode: '600'
+  become: true
+
+- name: Copy caddy web data
+  ansible.builtin.template:
+    src: "{{ compose_caddy_item }}"
+    dest: "{{compose_caddy_srv}}/{{ compose_caddy_item | basename | regex_replace('\\.j2$', '') }}"
+    owner: "{{compose_user}}"
+    group: "{{compose_user}}"
+    mode: '444'
+  loop: "{{ compose_caddy_srv_templates }}"
+  loop_control:
+    loop_var: compose_caddy_item
+  become: true

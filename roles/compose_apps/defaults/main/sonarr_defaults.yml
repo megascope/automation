@@ -1,0 +1,8 @@
+compose_sonarr_uuid: 1000
+compose_sonarr_guid: 1000
+
+compose_sonarr_ports:
+  - 127.0.0.1:8989:8989
+
+compose_sonarr_volumes:
+  - /tmp/sonarr/downloads:/downloads/

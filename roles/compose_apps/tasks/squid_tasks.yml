@@ -1,0 +1,8 @@
+- name: Set squid.conf
+  ansible.builtin.template:
+    src: "{{compose_squid_conf_template}}"
+    dest: "{{compose_squid_home}}/squid.conf"
+    owner: "{{compose_squid_proxy_user}}"
+    group: "{{compose_squid_proxy_user}}"
+    mode: '600'
+  become: true

@@ -1,0 +1,24 @@
+time_zone: "Etc/UTC"
+
+compose_user: root
+compose_project_root: /opt/docker-projects
+compose_apps: []
+
+compose_commands:
+  docker: docker compose
+  incus: incus-compose
+
+compose_recreate_flags:
+  docker: --force-recreate
+  incus: --recreate
+
+# Applications not listed here are allowed on both runtimes. Add an entry when
+# a compose definition relies on a runtime-specific API or feature.
+compose_app_runtimes:
+  portainer:
+    - docker
+  portainer-agent:
+    - docker
+
+# Templates use this to emit runtime-specific user namespace options.
+compose_userns_remap: false

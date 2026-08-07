@@ -1,0 +1,21 @@
+compose_qbittorrent_tasks: true
+compose_qbittorrent_image: lscr.io/linuxserver/qbittorrent:latest
+compose_qbittorrent_home: "{{compose_project_root}}/qbittorrent"
+
+compose_qbittorrent_ports:
+  - "127.0.0.1:8080:8080"
+  - "6881:6881"
+  - "6881:6881/udp"
+
+compose_qbittorrent_downloads: "{{compose_qbittorrent_home}}/downloads"
+compose_qbittorrent_config: "{{compose_qbittorrent_home}}/config"
+
+# use this to have the container share network namespace with another
+compose_qbittorrent_network_mode: null
+
+# user/group to run as
+compose_qbittorrent_uuid: 1000
+compose_qbittorrent_guid: 1000
+
+# want to be careful about restarting this in case it needs a proxy
+compose_qbittorrent_restart_policy: "no"

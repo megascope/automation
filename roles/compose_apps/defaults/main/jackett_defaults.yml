@@ -1,0 +1,13 @@
+compose_jackett_tasks: true
+compose_jackett_home: "{{compose_project_root}}/jackett"
+
+# set this if you want jackett to be in the same docker network
+# as something else
+compose_jackett_shared_network: null
+
+# user/group to run as
+compose_jackett_uuid: 65534
+compose_jackett_guid: 65534
+
+compose_jackett_ports:
+  - "127.0.0.1:9117:9117"

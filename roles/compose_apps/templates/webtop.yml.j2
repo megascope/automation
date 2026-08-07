@@ -1,0 +1,38 @@
+# from https://docs.linuxserver.io/images/docker-webtop
+services:
+  webtop:
+    image: lscr.io/linuxserver/webtop:{{compose_webtop_tag}}
+    container_name: webtop
+{% if compose_webtop_privileged == true %}
+    security_opt:
+      - seccomp:unconfined
+{% endif %}
+    environment:
+      - PUID={{compose_webtop_uuid}}
+      - PGID={{compose_webtop_guid}}
+      - TZ=Etc/UTC
+      - SUBFOLDER=/ #optional
+      - TITLE=Webtop #optional
+    volumes:
+      - {{compose_webtop_data}}:/config
+{% if compose_webtop_privileged == true %}
+      - /var/run/docker.sock:/var/run/docker.sock
+{% endif %}
+{% if compose_webtop_port %}
+    ports:
+      - 3000:3000
+      - 3001:3001
+{% endif %}
+    devices:
+      - /dev/dri:/dev/dri #optional
+    shm_size: "1gb" #optional
+    restart: unless-stopped
+
+{% if compose_webtop_shared_network %}
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    name: {{compose_webtop_shared_network}}
+    external: true
+{% endif %}
