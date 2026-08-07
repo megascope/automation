@@ -6,6 +6,40 @@
     append: true
   loop: "{{ incus_admin_users }}"
 
+- name: Read administrators' Incus client defaults
+  become: true
+  become_user: "{{ incus_admin_user }}"
+  become_flags: -H
+  ansible.builtin.command:
+    argv:
+      - incus
+      - default
+      - show
+  register: incus_admin_client_defaults
+  changed_when: false
+  check_mode: false
+  loop: "{{ incus_admin_users }}"
+  loop_control:
+    loop_var: incus_admin_user
+
+- name: Configure administrators' SPICE HTML5 console helper
+  become: true
+  become_user: "{{ incus_admin_default.incus_admin_user }}"
+  become_flags: -H
+  ansible.builtin.command:
+    argv:
+      - incus
+      - default
+      - set
+      - console_spice_command=/usr/local/bin/incus-spice-html5 SOCKET
+  loop: "{{ incus_admin_client_defaults.results }}"
+  loop_control:
+    loop_var: incus_admin_default
+    label: "{{ incus_admin_default.incus_admin_user }}"
+  when: >-
+    (incus_admin_default.stdout | from_yaml).console_spice_command
+    != '/usr/local/bin/incus-spice-html5 SOCKET'
+
 - name: Wait for the Incus daemon
   become: true
   ansible.builtin.command: incus info

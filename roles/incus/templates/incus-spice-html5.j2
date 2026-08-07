@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: incus-spice-html5 spice+unix:///path/to/socket" >&2
+    exit 2
+fi
+
+case "$1" in
+    spice+unix://*) socket=${1#spice+unix://} ;;
+    *)
+        echo "Expected a spice+unix:// socket URI, got: $1" >&2
+        exit 2
+        ;;
+esac
+
+exec /usr/bin/websockify \
+    --web=/usr/share/spice-html5 \
+    --unix-target="$socket" \
+    "127.0.0.1:{{ incus_spice_html5_port }}"

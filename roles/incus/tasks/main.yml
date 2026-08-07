@@ -9,6 +9,16 @@
       {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
       ({{ ansible_facts['distribution_release'] }}).
 
+- name: Validate the SPICE HTML5 listener port
+  ansible.builtin.assert:
+    that:
+      - (incus_spice_html5_port | string) is match('^[0-9]+$')
+      - incus_spice_html5_port | int > 0
+      - incus_spice_html5_port | int < 65536
+    fail_msg: >-
+      incus_spice_html5_port must be a TCP port between 1 and 65535;
+      found {{ incus_spice_html5_port }}.
+
 - name: Configure Debian backports
   become: true
   ansible.builtin.copy:
@@ -24,15 +34,26 @@
       Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
   register: incus_backports_source
 
-- name: Install Incus installation prerequisites
+- name: Install Incus host packages
   become: true
   ansible.builtin.apt:
     name:
       - ca-certificates
       - curl
+      - spice-html5
       - tar
+      - websockify
     state: present
     update_cache: true
+
+- name: Install the Incus SPICE HTML5 console helper
+  become: true
+  ansible.builtin.template:
+    src: incus-spice-html5.j2
+    dest: /usr/local/bin/incus-spice-html5
+    owner: root
+    group: root
+    mode: '0755'
 
 - name: Install Incus from Debian backports
   become: true
