@@ -13,9 +13,17 @@ services:
       PUID: {{ compose_plex_uuid }}
       PGID: {{ compose_plex_guid }}
       VERSION: "{{ compose_plex_update_version }}"
-{% if compose_plex_network_mode == 'bridge' %}
+{% if compose_plex_group_add %}
+    group_add:
+{% for group in compose_plex_group_add %}
+      - "{{ group }}"
+{% endfor %}
+{% endif %}
+{% if compose_plex_network_mode != 'host' and compose_plex_ports %}
     ports:
-      - 32400:32400
+{% for line in compose_plex_ports %}
+      - "{{ line }}"
+{% endfor %}
 {% endif %}
     volumes:
 {% for line in compose_plex_volumes %}
@@ -27,5 +35,7 @@ services:
       - /dev/dri:/dev/dri
 {% endif %}
 
-    network_mode: {{compose_plex_network_mode}}
+{% if compose_plex_network_mode is not none %}
+    network_mode: {{ compose_plex_network_mode }}
+{% endif %}
     restart: unless-stopped
