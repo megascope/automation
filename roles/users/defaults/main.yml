@@ -1,2 +1,3 @@
 main_user_shell: "/bin/bash"
 automation_user_shell: "/bin/bash"
+users_extra_users: []

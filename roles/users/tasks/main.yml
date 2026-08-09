@@ -39,6 +39,23 @@
   become: true
   tags: automation_user
 
+- name: Add extra users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment | default(item.name) }}"
+    shell: "{{ item.shell | default(omit) }}"
+    create_home: "{{ item.create_home | default(omit) }}"
+    system: "{{ item.system | default(omit) }}"
+    password_lock: "{{ item.password_lock | default(omit) }}"
+    password: "{{ item.password | default(omit) }}"
+    groups: "{{ item.groups | default(omit) }}"
+    append: "{{ item.append | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ users_extra_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  become: true
+
 - name: Set authorized key taken from file for automation user
   ansible.posix.authorized_key:
     user: "{{ automation_user }}"
