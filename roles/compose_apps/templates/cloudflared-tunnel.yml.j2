@@ -3,6 +3,11 @@ services:
     container_name: cloudflared-tunnel
     image: docker.io/cloudflare/cloudflared:latest
     restart: unless-stopped
+{% if compose_runtime == 'incus' %}
+    entrypoint:
+      - cloudflared
+      - --no-autoupdate
+{% endif %}
     command: tunnel run
     environment:
       - TUNNEL_TOKEN={{compose_cloudflared_tunnel_token}}

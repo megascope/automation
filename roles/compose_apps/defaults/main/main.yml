@@ -8,6 +8,8 @@ compose_commands:
   docker: docker compose
   incus: incus-compose
 
+compose_incus_storage_pool: detect
+
 compose_recreate_flags:
   docker: --force-recreate
   incus: --recreate

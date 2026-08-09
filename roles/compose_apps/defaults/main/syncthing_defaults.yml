@@ -5,7 +5,10 @@ compose_syncthing_hostname: syncthing
 compose_syncthing_uuid: 1000
 compose_syncthing_guid: 1000
 
-compose_syncthing_config_volume: syncthing-config
+compose_syncthing_tasks: true
+compose_syncthing_config_directory: null
+compose_syncthing_config_volume: "{{ compose_syncthing_config_directory if compose_runtime == 'incus' else 'syncthing-config' }}"
+compose_syncthing_config_target: "{{ '/config' if compose_runtime == 'incus' else '/var/syncthing/config' }}"
 compose_syncthing_volumes:
   - "/tmp:/var/syncthing"
 
@@ -16,7 +19,7 @@ compose_syncthing_ports:
 
 compose_syncthing_restart_policy: unless-stopped
 
-compose_syncthing_healthcheck_enabled: true
+compose_syncthing_healthcheck_enabled: "{{ compose_runtime != 'incus' }}"
 compose_syncthing_healthcheck_test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
 compose_syncthing_healthcheck_interval: 1m
 compose_syncthing_healthcheck_timeout: 10s
