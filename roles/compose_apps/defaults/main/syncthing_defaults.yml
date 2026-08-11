@@ -7,7 +7,7 @@ compose_syncthing_guid: 1000
 
 compose_syncthing_tasks: true
 compose_syncthing_config_directory: null
-compose_syncthing_config_volume: "{{ compose_syncthing_config_directory if compose_runtime == 'incus' else 'syncthing-config' }}"
+compose_syncthing_config_volume: "{{ compose_syncthing_config_directory if compose_runtime == 'incus' and compose_syncthing_config_directory is not none else 'syncthing-config' }}"
 compose_syncthing_config_target: "{{ '/config' if compose_runtime == 'incus' else '/var/syncthing/config' }}"
 compose_syncthing_volumes:
   - "/tmp:/var/syncthing"
