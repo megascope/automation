@@ -1,0 +1,24 @@
+- name: Enable and persist IPv4 forwarding
+  become: true
+  when: set_ipv4_forwarding | bool
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    sysctl_set: true
+    sysctl_file: "{{ set_forwarding_sysctl_file }}"
+    reload: true
+
+- name: Enable and persist IPv6 forwarding
+  become: true
+  when: set_ipv6_forwarding | bool
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: "1"
+    state: present
+    sysctl_set: true
+    sysctl_file: "{{ set_forwarding_sysctl_file }}"
+    reload: true
+  loop:
+    - net.ipv6.conf.all.forwarding
+    - net.ipv6.conf.default.forwarding

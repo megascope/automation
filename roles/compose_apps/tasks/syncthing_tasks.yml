@@ -1,0 +1,11 @@
+- name: Create Syncthing config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ compose_syncthing_config_directory }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ compose_syncthing_uuid }}"
+    group: "{{ compose_syncthing_guid }}"
+  when:
+    - compose_runtime == 'incus'
+    - compose_syncthing_config_volume.startswith('/')

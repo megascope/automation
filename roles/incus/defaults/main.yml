@@ -2,9 +2,20 @@ incus_admin_users:
   - "{{ compose_user | default('root') }}"
 
 incus_storage_backend: dir
+incus_storage_pools: []
 incus_bridge_name: incusbr0
 incus_firewalld_zone: trusted
 incus_spice_html5_port: 8059
+incus_default_profile_nic_name: eth0
+incus_default_profile_root_name: root
+incus_default_profile_root:
+  path: /
+  pool: default
+  type: disk
+incus_default_profile_nic:
+  name: "{{ incus_default_profile_nic_name }}"
+  network: "{{ incus_bridge_name }}"
+  type: nic
 
 # Keep the host on the Incus 7.0 LTS series supplied by Debian backports.
 incus_apt_suite: trixie-backports
