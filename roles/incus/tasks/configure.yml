@@ -260,16 +260,30 @@
       {{ ansible_facts['architecture'] }}.
   when: incus_compose_install | bool
 
-- name: Download the pinned incus-compose release
-  become: true
-  ansible.builtin.get_url:
-    url: >-
-      https://github.com/lxc/incus-compose/releases/download/v{{ incus_compose_version }}/incus-compose_{{ incus_compose_version }}_linux_{{ incus_compose_release_architecture }}.tar.gz
-    dest: "{{ incus_compose_archive }}"
-    checksum: "sha256:{{ incus_compose_checksums[incus_compose_release_architecture] }}"
-    owner: root
-    group: root
-    mode: '0644'
+- name: Download and verify the pinned incus-compose release
+  block:
+    - name: Download the pinned incus-compose release
+      become: true
+      ansible.builtin.get_url:
+        url: >-
+          https://github.com/lxc/incus-compose/releases/download/v{{ incus_compose_version }}/incus-compose_{{ incus_compose_version }}_linux_{{ incus_compose_release_architecture }}.tar.gz
+        dest: "{{ incus_compose_archive }}"
+        checksum: "sha256:{{ incus_compose_checksums[incus_compose_release_architecture] }}"
+        owner: root
+        group: root
+        mode: '0644'
+  rescue:
+    - name: Explain how to fix incus-compose release checksum failures
+      ansible.builtin.fail:
+        msg: >-
+          Failed to download or verify incus-compose {{ incus_compose_version }}
+          for linux/{{ incus_compose_release_architecture }}.
+          {{ ansible_failed_result.msg | default('Original download error was not provided.') }}
+          If this is a checksum mismatch, check the digest for
+          incus-compose_{{ incus_compose_version }}_linux_{{ incus_compose_release_architecture }}.tar.gz
+          on https://github.com/lxc/incus-compose/releases/tag/v{{ incus_compose_version }}
+          or with `gh release view v{{ incus_compose_version }} --repo lxc/incus-compose --json assets`,
+          then update incus_compose_checksums in automation/roles/incus/defaults/main.yml.
   when:
     - incus_compose_install | bool
     - incus_compose_installed_release | default('') != incus_compose_version
