@@ -209,23 +209,15 @@
     immediate: true
   when: firewall_enable | default(false) | bool
 
-- name: Read the Incus bridge IPv4 address
-  become: true
-  ansible.builtin.command: "incus network get {{ incus_bridge_name }} ipv4.address"
-  register: incus_bridge_ipv4
-  changed_when: false
-  check_mode: false
-  when: incus_compose_install | bool
-
 - name: Read the Incus API listen address
   become: true
   ansible.builtin.command: incus config get core.https_address
-  register: incus_https_address
+  register: incus_current_https_address
   changed_when: false
   check_mode: false
   when: incus_compose_install | bool
 
-- name: Bind the Incus API to its private bridge for incus-compose
+- name: Bind the Incus API for incus-compose
   become: true
   ansible.builtin.command:
     argv:
@@ -233,12 +225,11 @@
       - config
       - set
       - core.https_address
-      - "{{ (incus_bridge_ipv4.stdout | trim).split('/')[0] }}:{{ incus_compose_api_port }}"
-  vars:
-    incus_compose_https_address: "{{ (incus_bridge_ipv4.stdout | trim).split('/')[0] }}:{{ incus_compose_api_port }}"
+      - "{{ incus_https_address }}"
   when:
     - incus_compose_install | bool
-    - incus_https_address.stdout | trim != incus_compose_https_address
+    - incus_https_address | trim | length > 0
+    - incus_current_https_address.stdout | trim != incus_https_address
 
 - name: Check the installed incus-compose version
   ansible.builtin.command: /usr/local/bin/incus-compose version
