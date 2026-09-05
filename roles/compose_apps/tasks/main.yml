@@ -43,6 +43,15 @@
     group: "{{ compose_user }}"
     mode: '0700'
 
+- name: Validate Radarr config directory
+  tags: composeupdate
+  ansible.builtin.assert:
+    that:
+      - compose_radarr_config is string
+      - compose_radarr_config is match('^/')
+    fail_msg: "compose_radarr_config must be a single absolute directory path, not a list."
+  when: "'radarr' in compose_apps"
+
 - name: Render compose application definitions
   tags: composeupdate
   become: true

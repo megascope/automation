@@ -1,0 +1,8 @@
+- name: Create Radarr config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ compose_radarr_config }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ compose_radarr_uuid }}"
+    group: "{{ compose_radarr_guid }}"

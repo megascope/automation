@@ -7,7 +7,7 @@ services:
       - PGID={{ compose_radarr_guid }}
       - TZ={{ time_zone }}
     volumes:
-      - radarr-config:/config
+      - "{{ compose_radarr_config }}:/config"
 {% for line in compose_radarr_volumes %}
       - "{{ line }}"
 {% endfor %}
@@ -19,6 +19,3 @@ services:
 {% endfor %}
 {% endif %}
     restart: unless-stopped
-
-volumes:
-  radarr-config:

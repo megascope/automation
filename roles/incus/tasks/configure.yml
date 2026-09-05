@@ -231,6 +231,45 @@
     - incus_https_address | trim | length > 0
     - incus_current_https_address.stdout | trim != incus_https_address
 
+# Incus client remotes are per-user, including for local daemon connections.
+- name: Read Incus Compose users' image remotes
+  become: true
+  become_user: "{{ incus_compose_remote_user }}"
+  become_flags: -H
+  ansible.builtin.command:
+    argv:
+      - incus
+      - remote
+      - list
+      - --format=json
+  register: incus_compose_user_remotes
+  changed_when: false
+  check_mode: false
+  loop: "{{ (['root'] + incus_admin_users) | unique }}"
+  loop_control:
+    loop_var: incus_compose_remote_user
+  when: incus_compose_install | bool
+
+- name: Add missing Incus Compose OCI image remotes
+  become: true
+  become_user: "{{ item.0.incus_compose_remote_user }}"
+  become_flags: -H
+  ansible.builtin.command:
+    argv:
+      - incus
+      - remote
+      - add
+      - "{{ item.1.key }}"
+      - "{{ item.1.value }}"
+      - --protocol=oci
+  changed_when: true
+  loop: "{{ incus_compose_user_remotes.results | default([]) | product(incus_compose_oci_remotes | dict2items) | list }}"
+  loop_control:
+    label: "{{ item.0.incus_compose_remote_user }}: {{ item.1.key }}"
+  when:
+    - incus_compose_install | bool
+    - item.1.key not in (item.0.stdout | from_json)
+
 - name: Check the installed incus-compose version
   ansible.builtin.command: /usr/local/bin/incus-compose version
   register: incus_compose_installed_version
