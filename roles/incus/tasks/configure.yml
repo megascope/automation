@@ -199,14 +199,15 @@
     {% endfor %}
   when: incus_default_profile_nic_current != incus_default_profile_nic
 
-- name: Trust the Incus bridge in firewalld
+- name: Trust the Incus and Compose bridges in firewalld
   become: true
   ansible.posix.firewalld:
     zone: "{{ incus_firewalld_zone }}"
-    interface: "{{ incus_bridge_name }}"
+    interface: "{{ item }}"
     state: enabled
     permanent: true
     immediate: true
+  loop: "{{ ([incus_bridge_name] + (incus_compose_firewalld_interfaces if incus_compose_install | bool else [])) | unique }}"
   when: firewall_enable | default(false) | bool
 
 - name: Read the Incus API listen address

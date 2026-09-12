@@ -22,7 +22,7 @@ if ! test -f "$PROJECT/stack"; then
     exit 1
 fi
 
-"$PROJECT/stack" pull
+"$PROJECT/stack" pull --policy always
 if [ -n "$RECREATE" ]; then
     "$PROJECT/stack" up "$RECREATE" --build -d
 else
