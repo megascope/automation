@@ -3,6 +3,17 @@ compose_openwebui_version: latest
 compose_openwebui_ports:
   - "127.0.0.1:8080:8080"
 compose_openwebui_environment: {}
-# required, writable location of upload folder on host
+# These connection defaults apply when LiteLLM is enabled on the same host.
+# compose_openwebui_environment can override individual values.
+compose_openwebui_litellm_environment:
+  ENABLE_OPENAI_API: "True"
+  ENABLE_OLLAMA_API: "False"
+  OPENAI_API_BASE_URL: http://litellm:4000/v1
+  OPENAI_API_KEY: "{{ compose_litellm_master_key }}"
+  # Keep connection settings managed by Ansible, including on existing volumes.
+  # Admin UI configuration changes will not persist across restarts.
+  ENABLE_PERSISTENT_CONFIG: "False"
 compose_openwebui_uri: http://localhost:3000
-compose_openwebui_depends_on: []
+compose_openwebui_depends_on: "{{ ['litellm'] if 'litellm' in compose_apps else [] }}"
+# One Compose stack gives both services the same default network and service DNS.
+openwebui_merge_containers: "{{ ['openwebui', 'litellm'] if 'litellm' in compose_apps else ['openwebui'] }}"

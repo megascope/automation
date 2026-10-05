@@ -1,0 +1,25 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:{{ compose_litellm_version }}
+    container_name: litellm
+    restart: unless-stopped
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+{% if compose_litellm_ports %}
+    ports:
+{% for line in compose_litellm_ports %}
+      - "{{ line }}"
+{% endfor %}
+{% endif %}
+    volumes:
+      - {{ (compose_project_root ~ '/litellm/config.yaml:/app/config.yaml:ro') | to_json }}
+    environment:
+      LITELLM_MASTER_KEY: {{ compose_litellm_master_key | replace('$', '$$') | to_json }}
+{% for key, value in compose_litellm_environment.items() %}
+      {{ key }}: {{ (value | replace('$', '$$') if value is string else value) | to_json }}
+{% endfor %}
+{% if compose_litellm_depends_on %}
+    depends_on:
+{% for service in compose_litellm_depends_on %}
+      - {{ service }}
+{% endfor %}
+{% endif %}

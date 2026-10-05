@@ -1,0 +1,29 @@
+compose_litellm_tasks: true
+# Override with a pinned release tag for reproducible deployments.
+compose_litellm_version: main-stable
+compose_litellm_ports:
+  - "127.0.0.1:4000:4000"
+# Provider keys belong here (preferably using Ansible Vault). Values are literal,
+# including dollar signs; Docker Compose interpolation is escaped by the template.
+compose_litellm_environment: {}
+compose_litellm_depends_on: []
+# Open WebUI's stack helper operates both services when they are enabled together.
+litellm_merge_containers: "{{ [] if 'openwebui' in compose_apps else ['litellm'] }}"
+
+# Required: set this in inventory, preferably using Ansible Vault.
+compose_litellm_master_key: ""
+
+# Rendered to config.yaml and mounted read-only. Configure models, routing,
+# fallbacks, and other LiteLLM settings here; no database is required.
+# Example:
+# compose_litellm_config:
+#   model_list:
+#     - model_name: my-model
+#       litellm_params:
+#         model: openai/my-model
+#         api_base: http://model-server:8000/v1
+#         api_key: os.environ/MODEL_API_KEY
+# compose_litellm_environment:
+#   MODEL_API_KEY: "{{ vault_model_api_key }}"
+compose_litellm_config:
+  model_list: []

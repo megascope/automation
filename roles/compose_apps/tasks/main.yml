@@ -52,6 +52,27 @@
     fail_msg: "compose_radarr_config must be a single absolute directory path, not a list."
   when: "'radarr' in compose_apps"
 
+- name: Validate LiteLLM secrets
+  tags: composeupdate
+  ansible.builtin.assert:
+    that:
+      - compose_litellm_master_key | length > 0
+    fail_msg: "Set compose_litellm_master_key (preferably with Ansible Vault)."
+  when: "'litellm' in compose_apps"
+  no_log: true
+
+- name: Validate LiteLLM file configuration
+  tags: composeupdate
+  ansible.builtin.assert:
+    that:
+      - compose_litellm_tasks | bool
+      - compose_litellm_config is mapping
+      - compose_litellm_config.get('model_list', []) | length > 0
+      - "'DATABASE_URL' not in compose_litellm_environment"
+      - "'STORE_MODEL_IN_DB' not in compose_litellm_environment"
+    fail_msg: "Enable compose_litellm_tasks and configure at least one model in compose_litellm_config.model_list; database environment settings are not supported."
+  when: "'litellm' in compose_apps"
+
 - name: Render compose application definitions
   tags: composeupdate
   become: true
@@ -96,6 +117,10 @@
     - composesubtasks
   ansible.builtin.include_tasks:
     file: "{{ item | replace('-', '_') }}_tasks.yml"
+    apply:
+      tags:
+        - composeupdate
+        - composesubtasks
   when: >-
     lookup('vars', 'compose_' + (item | replace('-', '_')) + '_tasks', default=false)
   loop: "{{ compose_apps }}"

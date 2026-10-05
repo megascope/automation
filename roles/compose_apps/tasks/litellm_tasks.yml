@@ -1,0 +1,41 @@
+- name: Read Docker subordinate group mappings for LiteLLM
+  become: true
+  ansible.builtin.slurp:
+    src: /etc/subgid
+  register: compose_litellm_subgid
+  when:
+    - compose_runtime == 'docker'
+    - (docker_userns_remap | default(compose_userns_remap)) != false
+
+- name: Resolve LiteLLM remapped root group
+  vars:
+    remap_setting: "{{ docker_userns_remap | default(compose_userns_remap) }}"
+    remap_group: "{{ 'dockremap' if remap_setting == 'default' else (remap_setting | string).split(':')[-1] }}"
+  ansible.builtin.set_fact:
+    compose_litellm_remapped_gid: >-
+      {{ (compose_litellm_subgid.content | b64decode).splitlines()
+         | select('match', '^' ~ (remap_group | regex_escape) ~ ':')
+         | map('split', ':') | map(attribute=1) | first | default('') }}
+  when:
+    - compose_runtime == 'docker'
+    - (docker_userns_remap | default(compose_userns_remap)) != false
+
+- name: Validate LiteLLM remapped root group
+  ansible.builtin.assert:
+    that:
+      - compose_litellm_remapped_gid | length > 0
+    fail_msg: "Docker userns-remap is enabled but its group has no mapping in /etc/subgid."
+  when:
+    - compose_runtime == 'docker'
+    - (docker_userns_remap | default(compose_userns_remap)) != false
+
+- name: Render LiteLLM configuration
+  vars:
+    remap_enabled: "{{ compose_runtime == 'docker' and (docker_userns_remap | default(compose_userns_remap)) != false }}"
+  become: true
+  ansible.builtin.template:
+    src: litellm_config.yaml.j2
+    dest: "{{ compose_project_root }}/litellm/config.yaml"
+    owner: "{{ compose_user }}"
+    group: "{{ compose_litellm_remapped_gid if remap_enabled else compose_user }}"
+    mode: "{{ '0640' if remap_enabled else '0600' }}"
