@@ -1,0 +1,8 @@
+compose_audiobookshelf_image: ghcr.io/advplyr/audiobookshelf:latest
+compose_audiobookshelf_ports:
+  - "127.0.0.1:13378:80"
+
+# Override these bind mounts with the host's audiobook and podcast directories.
+compose_audiobookshelf_volumes:
+  - /tmp/audiobookshelf/audiobooks:/audiobooks
+  - /tmp/audiobookshelf/podcasts:/podcasts
