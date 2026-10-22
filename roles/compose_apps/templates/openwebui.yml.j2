@@ -1,8 +1,25 @@
 services:
+{% if compose_openwebui_nonroot_init %}
+  openwebui-init:
+    image: ghcr.io/open-webui/open-webui:{{ compose_openwebui_version }}
+    user: "0:0"
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE]
+    security_opt: ["no-new-privileges:true"]
+    entrypoint: ["chown", "-R", "{{ compose_openwebui_security.user }}", "/app/backend/data"]
+    volumes:
+      - openwebui-data:/app/backend/data
+    restart: "no"
+{% endif %}
   openwebui:
     image: ghcr.io/open-webui/open-webui:{{compose_openwebui_version}}
     container_name: openwebui
     restart: unless-stopped
+{% if compose_openwebui_security %}
+{{ compose_openwebui_security | to_nice_yaml(indent=2) | indent(4, true) }}
+{% endif %}
 {% if compose_openwebui_ports %}
     ports:
 {% for line in compose_openwebui_ports %}
@@ -18,10 +35,15 @@ services:
       {{ key }}: {{ (value | replace('$', '$$') if value is string else value) | to_json }}
 {% endfor %}
 
-{% if compose_openwebui_depends_on %}
+{% if compose_openwebui_depends_on or compose_openwebui_nonroot_init %}
     depends_on:
+{% if compose_openwebui_nonroot_init %}
+      openwebui-init:
+        condition: service_completed_successfully
+{% endif %}
 {% for service in compose_openwebui_depends_on %}
-      - {{ service }}
+      {{ service }}:
+        condition: service_started
 {% endfor %}
 {% endif %}
 volumes:

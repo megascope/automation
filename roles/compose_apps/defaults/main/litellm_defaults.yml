@@ -1,6 +1,8 @@
 compose_litellm_tasks: true
 # Override with a pinned release tag for reproducible deployments.
 compose_litellm_version: main-stable
+# Compose service security settings, supplied by inventory for the chosen image.
+compose_litellm_security: {}
 compose_litellm_ports:
   - "127.0.0.1:4000:4000"
 # Provider keys belong here (preferably using Ansible Vault). Values are literal,

@@ -1,0 +1,38 @@
+- name: Validate Open WebUI volume initialization
+  ansible.builtin.assert:
+    that:
+      - compose_runtime == 'docker'
+      - compose_openwebui_security.user is match('^[0-9]+:[0-9]+$')
+    fail_msg: "Open WebUI non-root volume initialization requires Docker and a numeric UID:GID."
+
+- name: Inspect existing Open WebUI container
+  ansible.builtin.command:
+    argv: [docker, inspect, openwebui]
+  register: compose_openwebui_existing
+  changed_when: false
+  failed_when: compose_openwebui_existing.rc not in [0, 1]
+  # Container inspection includes credentials; never log its contents.
+  no_log: true
+
+- name: Preserve existing Open WebUI session secret in the data volume
+  ansible.builtin.command:
+    argv:
+      - docker
+      - exec
+      - openwebui
+      - sh
+      - -c
+      - >-
+        if [ -f /app/backend/.webui_secret_key ] &&
+           [ ! -e /app/backend/data/.webui_secret_key ]; then
+          cp /app/backend/.webui_secret_key /app/backend/data/.webui_secret_key &&
+          chmod 600 /app/backend/data/.webui_secret_key || exit 1;
+          exit 3;
+        fi
+  register: compose_openwebui_secret_migration
+  changed_when: compose_openwebui_secret_migration.rc == 3
+  failed_when: compose_openwebui_secret_migration.rc not in [0, 3]
+  when:
+    - compose_openwebui_existing.rc == 0
+    - (compose_openwebui_existing.stdout | from_json | first).State.Running
+  no_log: true

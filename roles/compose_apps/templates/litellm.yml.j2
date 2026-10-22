@@ -3,6 +3,9 @@ services:
     image: ghcr.io/berriai/litellm:{{ compose_litellm_version }}
     container_name: litellm
     restart: unless-stopped
+{% if compose_litellm_security %}
+{{ compose_litellm_security | to_nice_yaml(indent=2) | indent(4, true) }}
+{% endif %}
     command: ["--config", "/app/config.yaml", "--port", "4000"]
 {% if compose_litellm_ports %}
     ports:
@@ -13,6 +16,7 @@ services:
     volumes:
       - {{ (compose_project_root ~ '/litellm/config.yaml:/app/config.yaml:ro') | to_json }}
     environment:
+      PYTHONDONTWRITEBYTECODE: "1"
       LITELLM_MASTER_KEY: {{ compose_litellm_master_key | replace('$', '$$') | to_json }}
 {% for key, value in compose_litellm_environment.items() %}
       {{ key }}: {{ (value | replace('$', '$$') if value is string else value) | to_json }}
