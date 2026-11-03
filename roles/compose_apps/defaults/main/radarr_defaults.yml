@@ -1,4 +1,5 @@
-compose_radarr_version: latest
+# renovate: datasource=docker depName=lscr.io/linuxserver/radarr
+compose_radarr_version: "6.4.4.10685-ls324@sha256:41fdc1672209c2ef31c5260015ec8b96e3c75513e60a667eb052e1ff54b4cfa9"
 compose_radarr_uuid: 1000
 compose_radarr_guid: 1000
 compose_radarr_tasks: true

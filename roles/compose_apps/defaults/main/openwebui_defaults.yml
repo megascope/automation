@@ -1,5 +1,6 @@
 compose_openwebui_tasks: "{{ compose_openwebui_nonroot_init }}"
-compose_openwebui_version: latest
+# renovate: datasource=docker depName=ghcr.io/open-webui/open-webui
+compose_openwebui_version: "v0.12.5@sha256:03443b8de6b617da9d900edd09b4bf1cb0ddbfdcba6afb42c548336a0b821ded"
 compose_openwebui_security: {}
 # Docker-only initialization of the data volume for the configured numeric user.
 compose_openwebui_nonroot_init: false
