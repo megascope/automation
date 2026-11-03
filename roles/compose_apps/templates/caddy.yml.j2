@@ -1,6 +1,6 @@
 services:
   caddy:
-    image: caddy
+    image: caddy:{{ compose_caddy_version }}
     container_name: caddy
     restart: {{ compose_caddy_restart_policy }}
 

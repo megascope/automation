@@ -14,7 +14,7 @@ services:
   # configure this in cloudflared zero trust to connect to http://firefox:3000
   tunnel:
     container_name: cloudflared-firefox-tunnel
-    image: cloudflare/cloudflared
+    image: cloudflare/cloudflared:{{ compose_cloudflared_version }}
     restart: unless-stopped
     command: tunnel run
     environment:

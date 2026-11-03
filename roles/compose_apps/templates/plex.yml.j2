@@ -1,7 +1,7 @@
 # from https://hub.docker.com/r/linuxserver/plex
 services:
   plex:
-    image: linuxserver/plex
+    image: linuxserver/plex:{{ compose_plex_version }}
     container_name: "{{ compose_plex_container_name }}"
     hostname: {{ inventory_hostname_short }}-plex
     environment:

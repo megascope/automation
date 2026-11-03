@@ -1,7 +1,7 @@
 services:
 {% if compose_runtime != 'incus' %}
   syncthing-init:
-    image: alpine
+    image: alpine:{{ compose_syncthing_init_version }}
     container_name: syncthing-init
     user: "0"
     command: chown -R {{ compose_syncthing_uuid }}:{{ compose_syncthing_guid }} {{ compose_syncthing_config_target }}

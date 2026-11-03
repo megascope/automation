@@ -1,10 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^roles/compose_apps/defaults/main/[^/]+_defaults\\.yml$/"],
+      "managerFilePatterns": [
+        "/^roles/compose_apps/defaults/main/[^/]+_defaults\\.yml$/"
+      ],
       "matchStrings": [
         "# renovate: datasource=docker depName=(?<depName>[^\\s]+)\\r?\\ncompose_[a-z0-9_]+_version: \"(?<currentValue>[^\"@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})\""
       ],
@@ -13,15 +17,45 @@
   ],
   "packageRules": [
     {
-      "matchManagers": ["custom.regex"],
-      "matchDatasources": ["docker"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
       "minimumReleaseAge": "3 days",
       "minimumReleaseAgeBehaviour": "timestamp-optional",
       "automerge": false
     },
     {
-      "matchPackageNames": ["lscr.io/linuxserver/radarr"],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/radarr",
+        "lscr.io/linuxserver/sonarr",
+        "lscr.io/linuxserver/prowlarr"
+      ],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)-ls(?<revision>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "linuxserver/plex"
+      ],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)-[a-f0-9]+-ls(?<revision>\\d+)$"
+    },
+    {
+      "matchPackageNames": [
+        "searxng/searxng"
+      ],
+      "versioning": "regex:^(?<major>\\d{4})\\.(?<minor>\\d+)\\.(?<patch>\\d+)-[a-f0-9]+$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/immich-app/immich-server",
+        "ghcr.io/immich-app/immich-machine-learning"
+      ],
+      "groupName": "Immich {{newValue}}",
+      "minimumGroupSize": 2,
+      "separateMajorMinor": false,
+      "separateMinorPatch": false
     }
   ]
 }

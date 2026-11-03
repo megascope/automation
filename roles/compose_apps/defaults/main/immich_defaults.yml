@@ -1,7 +1,10 @@
-compose_immich_tasks: false
+# renovate: datasource=docker depName=ghcr.io/immich-app/immich-server
+compose_immich_server_version: "v3.2.4@sha256:d317916b28090c33eb36b308464ea391f8b7df1d850fcfea227a39ec879718c2"
 
-# eg v2
-compose_immich_version: release
+# renovate: datasource=docker depName=ghcr.io/immich-app/immich-machine-learning
+compose_immich_ml_version: "v3.2.4@sha256:e16c2f166a8174901959fdf85e2e4c7bd1ebc4b37e0b6655de97c41408a260c4"
+
+compose_immich_tasks: false
 
 compose_immich_ports:
   - "127.0.0.1:2283:2283"

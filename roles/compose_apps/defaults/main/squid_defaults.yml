@@ -1,3 +1,6 @@
+# renovate: datasource=docker depName=ubuntu/squid
+compose_squid_version: "6.6-24.04_beta@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029"
+
 compose_squid_tasks: true
 compose_squid_conf_template: squid_squid.conf.j2
 compose_squid_home: "{{compose_project_root}}/squid"

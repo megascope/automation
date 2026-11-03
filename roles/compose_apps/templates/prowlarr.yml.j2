@@ -1,7 +1,7 @@
 ---
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
+    image: lscr.io/linuxserver/prowlarr:{{ compose_prowlarr_version }}
     container_name: prowlarr
     environment:
       - PUID={{ compose_prowlarr_uuid }}
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   flaresolverr:
-    image: flaresolverr/flaresolverr:latest
+    image: flaresolverr/flaresolverr:{{ compose_flaresolverr_version }}
     container_name: flaresolverr
     environment:
       - LOG_HTML=false

@@ -1,7 +1,7 @@
 ---
 services:
   sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
+    image: lscr.io/linuxserver/sonarr:{{ compose_sonarr_version }}
     container_name: sonarr
     environment:
       - PUID={{ compose_sonarr_uuid }}

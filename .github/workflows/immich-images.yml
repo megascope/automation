@@ -1,0 +1,78 @@
+name: Immich image review
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  immich-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check Immich release and companion images
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          ruby <<'RUBY'
+          require 'open3'
+          require 'yaml'
+
+          defaults = 'roles/compose_apps/defaults/main/immich_defaults.yml'
+          keys = %w[compose_immich_server_version compose_immich_ml_version]
+          pins = YAML.safe_load(File.read(defaults))
+          tags = keys.map do |key|
+            match = /\A(v\d+\.\d+\.\d+)@sha256:[a-f0-9]{64}\z/.match(pins.fetch(key))
+            abort "Invalid Immich image pin for #{key}" unless match
+            match[1]
+          end
+          abort 'Immich server and machine learning tags must match' unless tags.uniq.size == 1
+
+          base_yaml, status = Open3.capture2('git', 'show', "#{ENV.fetch('BASE_SHA')}:#{defaults}")
+          abort 'Could not read base Immich defaults' unless status.success?
+          base = YAML.safe_load(base_yaml)
+          exit if keys.all? { |key| pins[key] == base[key] }
+
+          def companion_images(tag)
+            abort 'Invalid Immich release tag' unless tag.match?(/\Av\d+\.\d+\.\d+\z/)
+            url = "https://github.com/immich-app/immich/releases/download/#{tag}/docker-compose.yml"
+            yaml, status = Open3.capture2('curl', '--fail', '--silent', '--show-error',
+                                         '--location', '--max-time', '30', '--retry', '2', url)
+            abort "Could not fetch Immich release Compose file for #{tag}" unless status.success?
+            services = YAML.safe_load(yaml, aliases: true).fetch('services')
+            %w[database redis].to_h { |name| [name, services.fetch(name).fetch('image')] }
+          end
+
+          target = tags.first
+          upstream = companion_images(target)
+          base_tag = base[keys.first]&.split('@')&.first
+          if base_tag
+            previous = base_tag == target ? upstream : companion_images(base_tag)
+            comparison = "upstream #{base_tag}"
+          else
+            template = File.read('roles/compose_apps/templates/immich.yml.j2')
+            previous = upstream.keys.to_h do |name|
+              image = template[/^  #{name}:\n(?:    [^\n]*\n)*?    image: (\S+)/, 1]
+              abort "Could not find the local #{name} image" unless image
+              [name, image]
+            end
+            comparison = 'the local Compose template'
+          end
+
+          upstream.each do |name, image|
+            next if image == previous.fetch(name)
+
+            component = { 'database' => 'Postgres', 'redis' => 'Valkey' }.fetch(name)
+            puts "::warning title=Immich #{component} review required::Upstream #{target} differs from #{comparison}."
+            File.open(ENV.fetch('GITHUB_STEP_SUMMARY'), 'a') do |summary|
+              summary.puts "### Review Immich #{component} before merging"
+              summary.puts "- #{comparison}: `#{previous.fetch(name)}`"
+              summary.puts "- Upstream #{target}: `#{image}`"
+            end
+          end
+          RUBY

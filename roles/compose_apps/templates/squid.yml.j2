@@ -1,7 +1,7 @@
 # from https://hub.docker.com/r/ubuntu/squid
 services:
   squid:
-    image: ubuntu/squid:latest
+    image: ubuntu/squid:{{ compose_squid_version }}
     restart: unless-stopped
     container_name: squid
 {% if compose_squid_healthcheck_enabled %}

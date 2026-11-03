@@ -1,3 +1,6 @@
+# renovate: datasource=docker depName=lscr.io/linuxserver/sonarr
+compose_sonarr_version: "4.0.20.3014-ls2@sha256:386c962ee6e260e3a5656b25df2ed056bcc9b6410e197d075f9547fd14c23bca"
+
 compose_sonarr_uuid: 1000
 compose_sonarr_guid: 1000
 

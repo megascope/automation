@@ -1,7 +1,7 @@
 services:
   tunnel:
     container_name: cloudflared-tunnel
-    image: docker.io/cloudflare/cloudflared:latest
+    image: docker.io/cloudflare/cloudflared:{{ compose_cloudflared_version }}
     restart: unless-stopped
 {% if compose_runtime == 'incus' %}
     entrypoint:

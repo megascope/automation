@@ -1,3 +1,6 @@
+# renovate: datasource=docker depName=linuxserver/plex
+compose_plex_version: "1.43.5.11079-b3b13e506-ls331@sha256:0c2f1122a4275efeea953a9882359f3809b27279d3c3022392e8e610a2eccc67"
+
 compose_plex_container_name: plex
 compose_plex_claim_code: null
 compose_plex_uuid: 1000
