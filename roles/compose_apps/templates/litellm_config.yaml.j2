@@ -1,2 +1,11 @@
-# Managed by Ansible. Edit compose_litellm_config in inventory.
-{{ compose_litellm_config | to_nice_yaml(indent=2, sort_keys=false) }}
+# Managed by Ansible. Edit compose_litellm_providers / compose_litellm_config in inventory.
+{% set expanded = namespace(models=compose_litellm_config.get('model_list', []) | list) %}
+{% for provider in compose_litellm_providers.values() %}
+{% for alias, entry in provider.models.items() %}
+{% set model = {'model': entry} if entry is string else entry %}
+{% set params = provider | dict2items | rejectattr('key', 'equalto', 'models') | list | items2dict %}
+{% set params = params | combine(model | dict2items | rejectattr('key', 'equalto', 'model_info') | list | items2dict) %}
+{% set expanded.models = expanded.models + [{'model_name': alias, 'litellm_params': params} | combine({'model_info': model.model_info} if model.model_info is defined else {})] %}
+{% endfor %}
+{% endfor %}
+{{ compose_litellm_config | combine({'model_list': expanded.models}) | to_nice_yaml(indent=2, sort_keys=false) }}

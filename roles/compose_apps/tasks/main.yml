@@ -67,10 +67,11 @@
     that:
       - compose_litellm_tasks | bool
       - compose_litellm_config is mapping
-      - compose_litellm_config.get('model_list', []) | length > 0
+      - compose_litellm_providers is mapping
+      - (compose_litellm_config.get('model_list', []) | length > 0) or (compose_litellm_providers.values() | map(attribute='models') | map('length') | sum > 0)
       - "'DATABASE_URL' not in compose_litellm_environment"
       - "'STORE_MODEL_IN_DB' not in compose_litellm_environment"
-    fail_msg: "Enable compose_litellm_tasks and configure at least one model in compose_litellm_config.model_list; database environment settings are not supported."
+    fail_msg: "Enable compose_litellm_tasks and configure at least one model in compose_litellm_providers or compose_litellm_config.model_list; database environment settings are not supported."
   when: "'litellm' in compose_apps"
 
 - name: Render compose application definitions

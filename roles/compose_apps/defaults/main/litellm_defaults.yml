@@ -30,3 +30,19 @@ compose_litellm_master_key: ""
 #   MODEL_API_KEY: "{{ vault_model_api_key }}"
 compose_litellm_config:
   model_list: []
+
+# Optional provider groups expanded into model_list alongside any explicit entries.
+# Provider fields are shared litellm_params; model fields override provider fields.
+# Models map client-facing aliases to LiteLLM model IDs, or mappings with model,
+# extra litellm_params (e.g. temperature), and optional model_info metadata.
+# compose_litellm_providers:
+#   example:
+#     api_key: os.environ/MODEL_API_KEY
+#     api_base: https://example.com/v1
+#     models:
+#       my-chat: openai/my-chat
+#       my-whisper:
+#         model: openai/whisper-large-v3
+#         model_info:
+#           mode: transcription
+compose_litellm_providers: {}
