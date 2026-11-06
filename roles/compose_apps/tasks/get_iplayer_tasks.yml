@@ -2,7 +2,7 @@
   file:
     path: "{{compose_get_iplayer_config}}"
     state: directory
-    mode: '0700'
+    mode: '0755'
     owner: "{{compose_get_iplayer_uuid}}"
     group: "{{compose_get_iplayer_guid}}"
   become: true
@@ -11,7 +11,7 @@
   file:
     path: "{{compose_get_iplayer_downloads}}"
     state: directory
-    mode: '0700'
+    mode: '0755'
     owner: "{{compose_get_iplayer_uuid}}"
     group: "{{compose_get_iplayer_guid}}"
   become: true
