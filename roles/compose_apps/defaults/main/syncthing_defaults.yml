@@ -2,7 +2,7 @@
 compose_syncthing_version: "2.1.7@sha256:2b71da7c0d0a91a6ae5285ad079226fecc0a365d08b27720e1f7037b018f7546"
 
 # renovate: datasource=docker depName=alpine
-compose_syncthing_init_version: "3.22.4@sha256:310c62b5e7ca5b08167e4384c68db0fd2905dd9c7493756d356e893909057601"
+compose_syncthing_init_version: "3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"
 
 compose_syncthing_image: "syncthing/syncthing:{{ compose_syncthing_version }}"
 compose_syncthing_hostname: syncthing
