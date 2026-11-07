@@ -1,7 +1,7 @@
 compose_litellm_tasks: true
 # Override with a pinned release tag for reproducible deployments.
 # renovate: datasource=docker depName=ghcr.io/berriai/litellm
-compose_litellm_version: "v1.106.6@sha256:37e2dafb088a7723beb998590682957386dfc83ffea1848486f8e0e5cfac0b06"
+compose_litellm_version: "v1.108.2@sha256:d8b4ac356743d647a13bb93f45b941fcd5f5354122cfd205948a1b192790389d"
 # Compose service security settings, supplied by inventory for the chosen image.
 compose_litellm_security: {}
 compose_litellm_ports:
