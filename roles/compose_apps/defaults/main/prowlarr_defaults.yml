@@ -1,5 +1,5 @@
 # renovate: datasource=docker depName=lscr.io/linuxserver/prowlarr
-compose_prowlarr_version: "2.7.0.5723-ls166@sha256:04be30163fbaf48d6aeee7b5893c9f6614ffbad6d853971df0d6dcdf01c7f104"
+compose_prowlarr_version: "2.7.0.5723-ls167@sha256:431d7efebcef466e56adaa40a7a2fa2b0e85159a037b8bf465eaadbf0cf5bedf"
 
 # renovate: datasource=docker depName=flaresolverr/flaresolverr
 compose_flaresolverr_version: "v3.5.2@sha256:c80ae007ce2ccdcd217a12426e4f039ef763ff90738c808d38810c3e59323767"
