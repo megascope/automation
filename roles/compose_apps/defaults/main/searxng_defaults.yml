@@ -1,5 +1,5 @@
 # renovate: datasource=docker depName=searxng/searxng
-compose_searxng_version: "2026.10.30-ffa88e3ba@sha256:f4aa660c54d062dedb268be84e821ea24e39f48c7a496af8dd02cc9eedb93847"
+compose_searxng_version: "2026.11.21-c6ee3e9fd@sha256:fc1d81d7e9d04d3c8b3e23c7162feddf5c3d6aecd32e67a56eaabcb8d8747f79"
 
 compose_searxng_tasks: false
 compose_searxng_image: "searxng/searxng:{{ compose_searxng_version }}"
