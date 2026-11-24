@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+# Keep retrying if a configured bind address is not available during boot.
+[Unit]
+StartLimitIntervalSec=0
+
+[Service]
+Restart=on-failure
+RestartSec={{ packages_caddy_restart_sec }}

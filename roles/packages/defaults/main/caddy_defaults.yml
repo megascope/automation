@@ -4,6 +4,7 @@ packages_caddy_srv: /var/www
 packages_caddy_user: caddy
 packages_caddy_group: caddy
 packages_caddy_caddyfile_template: Caddyfile.j2
+packages_caddy_restart_sec: 5s
 
 # A list of jinja templates to copy to the web root.
 packages_caddy_srv_templates: []
